@@ -1,0 +1,39 @@
+<resources>
+
+    <style name="Match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="Wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="MatchHeight">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="MatchWidthWrapHeight">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <!-- Drawer -->
+    <style name="DrawerIcon" >
+        <item name="android:layout_height">@dimen/large</item>
+        <item name="android:layout_width">@dimen/large</item>
+        <item name="android:layout_marginTop">@dimen/normal</item>
+        <item name="android:layout_marginBottom">@dimen/normal</item>
+        <item name="android:layout_marginLeft">@dimen/normal</item>
+    </style>
+
+    <style name="DrawerTitle" parent="Wrap">
+        <item name="android:textColor">@drawable/selector_text_color</item>
+        <item name="android:padding">@dimen/normal</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="oakFont">@string/font_roboto_bold</item>
+    </style>
+</resources>

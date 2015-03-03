@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    style="@style/MatchWidthWrapHeight"
+    android:gravity="center_vertical"
+    >
+
+    <ImageView
+        android:id="@+id/drawer_icon"
+        style="@style/DrawerIcon"
+        android:src="@drawable/selector_ic_about"
+        android:contentDescription="@string/drawer_icon"
+        />
+    
+    <oak.widget.TextViewWithFont
+        android:id="@+id/drawer_title"
+        style="@style/DrawerTitle"
+        tools:text="Home"
+        />
+
+</LinearLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Drawer IDs -->
+    <item type="id" name="drawer_home" />
+    <item type="id" name="drawer_favorites" />
+    <item type="id" name="drawer_timeline" />
+    <item type="id" name="drawer_next" />
+    <item type="id" name="drawer_settings" />
+    <item type="id" name="drawer_about" />
+    <item type="id" name="drawer_contact" />
+
+    <!-- Drawer Titles -->
+    <string name="drawer_home">Home</string>
+    <string name="drawer_favorites">Favorites</string>
+    <string name="drawer_timeline">Timeline</string>
+    <string name="drawer_next">Next</string>
+    <string name="drawer_about">About</string>
+    <string name="drawer_contact">Contact Me</string>
+
+    <string name="drawer_icon">Drawer Icon</string>
+
+</resources>
