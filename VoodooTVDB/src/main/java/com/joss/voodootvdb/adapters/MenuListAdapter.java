@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.joss.voodootvdb.models.DrawerModel;
+import com.joss.voodootvdb.model.DrawerModel;
 import com.joss.voodootvdb.views.DrawerView;
 
 import java.util.List;

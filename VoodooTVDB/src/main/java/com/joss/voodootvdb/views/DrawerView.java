@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
-import com.joss.voodootvdb.models.DrawerModel;
+import com.joss.voodootvdb.model.DrawerModel;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;

@@ -17,7 +17,7 @@ import android.widget.ListView;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.adapters.MenuListAdapter;
 import com.joss.voodootvdb.interfaces.BaseFragmementListener;
-import com.joss.voodootvdb.models.DrawerModel;
+import com.joss.voodootvdb.model.DrawerModel;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.joss.voodootvdb.models;
+package com.joss.voodootvdb.model;
 
 /**
  * Created by: jossayjacobo

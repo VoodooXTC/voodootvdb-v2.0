@@ -1,9 +1,14 @@
 package com.joss.voodootvdb.activities;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -15,12 +20,14 @@ import com.joss.voodootvdb.fragments.HomeFragment;
 import com.joss.voodootvdb.fragments.NextFragment;
 import com.joss.voodootvdb.fragments.SettingsFragment;
 import com.joss.voodootvdb.fragments.TimelineFragment;
-import com.joss.voodootvdb.models.DrawerModel;
+import com.joss.voodootvdb.model.DrawerModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseDrawerActivity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String CURRENT_FRAGMENT_ID = "current_fragment_id";
 

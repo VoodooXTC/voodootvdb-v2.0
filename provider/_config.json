@@ -1,0 +1,16 @@
+{
+    "toolVersion": "1.0",
+    "projectPackageId": "com.joss.voodootvdb",
+    "authority": ".VoodooProvider",
+    "providerJavaPackage": "com.joss.voodootvdb.provider",
+    "providerClassName": "VoodooProvider",
+    "sqliteHelperClassName": "VoodooSQLiteOpenHelper",
+    "databaseFileName": "voodoo.db",
+    "enableForeignKeys": true,
+    "generateProvider":true,
+    "generateModels":true,
+    "generateViews":false,
+    "generateApi": false,
+    "projectBaseUrl": "",
+    "generateFragments": false
+}
