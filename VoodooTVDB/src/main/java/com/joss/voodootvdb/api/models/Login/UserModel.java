@@ -13,4 +13,10 @@ public class UserModel {
 
     public String token;
 
+    public String message;
+
+    public UserModel(String username, String password) {
+        this.login = username;
+        this.password = password;
+    }
 }

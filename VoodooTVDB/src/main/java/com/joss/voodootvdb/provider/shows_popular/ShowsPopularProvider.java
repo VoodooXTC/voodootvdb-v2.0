@@ -32,4 +32,8 @@ public class ShowsPopularProvider {
         }
         return items;
     }
+
+    public static Show getFirst(ShowsPopularCursor cursor) {
+        return cursor.moveToFirst() ? GGson.fromJson(cursor.getJson(), Show.class) : new Show();
+    }
 }

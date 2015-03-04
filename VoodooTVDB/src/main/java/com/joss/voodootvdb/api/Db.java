@@ -18,6 +18,7 @@ import java.util.List;
 public class Db {
 
     public static void updatePopularShows(Context context, List<Show> shows){
+        context.getContentResolver().delete(ShowsPopularColumns.CONTENT_URI, null, null);
         ContentValues[] showsPopularCV = ShowsPopularContentValues.getContentValues(ShowsPopularProvider.get(shows));
         context.getContentResolver().bulkInsert(ShowsPopularColumns.CONTENT_URI, showsPopularCV);
     }

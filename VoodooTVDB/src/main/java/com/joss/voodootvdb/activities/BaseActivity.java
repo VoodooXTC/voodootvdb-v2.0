@@ -1,11 +1,17 @@
 package com.joss.voodootvdb.activities;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.ApiService;
 
 import butterknife.InjectView;
+import butterknife.Optional;
 
 /**
  * Created by: jossayjacobo
@@ -14,6 +20,7 @@ import butterknife.InjectView;
  */
 public class BaseActivity extends ActionBarActivity {
 
+    @Optional
     @InjectView(R.id.toolbar)
     public Toolbar toolbar;
 
@@ -34,5 +41,19 @@ public class BaseActivity extends ActionBarActivity {
             toolbar.setTitle(title);
             toolbar.setSubtitle(subtitle);
         }
+    }
+
+    public void toast(String message){
+        Toast.makeText(this,
+                message,
+                Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    public void hideSoftKeyboard(View view){
+        view.requestFocus();
+        InputMethodManager imm = (InputMethodManager)getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

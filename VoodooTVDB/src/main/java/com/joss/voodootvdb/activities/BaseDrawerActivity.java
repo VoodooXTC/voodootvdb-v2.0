@@ -101,7 +101,7 @@ public abstract class BaseDrawerActivity extends BaseActivity implements BaseFra
     }
 
     private void setupDrawerLayout() {
-        drawerLayout.setDrawerShadow(R.mipmap.drawer_shadow, GravityCompat.START);
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         adapter = new MenuListAdapter(this, getDrawerItems());
         drawerListView.setAdapter(adapter);
         drawerToggle = new DrawerToggle(this, drawerLayout, toolbar, 0, 0);

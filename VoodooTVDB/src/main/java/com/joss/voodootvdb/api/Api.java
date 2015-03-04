@@ -13,10 +13,10 @@ import com.joss.voodootvdb.utils.GGson;
  */
 public class Api {
 
-    public static void login(Context context, UserModel userModel){
+    public static void login(Context context, String username, String password){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_LOGIN);
-        intent.putExtra(ApiService.ARGS_USER, GGson.toJson(userModel));
+        intent.putExtra(ApiService.ARGS_USER, GGson.toJson(new UserModel(username, password)));
         context.startService(intent);
     }
 
@@ -24,7 +24,7 @@ public class Api {
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_POPULAR_SHOWS);
 
-        String extendedValues = null;
+        String extendedValues = "";
         for(String ex : extended){
             extendedValues += ex + ",";
         }

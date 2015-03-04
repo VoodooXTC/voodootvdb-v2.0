@@ -20,7 +20,6 @@
         <item name="android:layout_width">match_parent</item>
     </style>
 
-    <!-- Drawer -->
     <style name="DrawerIcon" >
         <item name="android:layout_height">@dimen/large</item>
         <item name="android:layout_width">@dimen/large</item>
@@ -36,4 +35,45 @@
         <item name="android:textAllCaps">true</item>
         <item name="oakFont">@string/font_roboto_bold</item>
     </style>
+
+    <style name="VoodooEditText" parent="MatchWidthWrapHeight">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="android:singleLine">true</item>
+        <item name="floatLabelColor">@color/blue</item>
+    </style>
+
+    <style name="VoodooButton" parent="Wrap">
+        <item name="android:layout_margin">@dimen/normal</item>
+        <item name="android:paddingTop">@dimen/small</item>
+        <item name="android:paddingBottom">@dimen/small</item>
+        <item name="android:paddingStart">@dimen/largest</item>
+        <item name="android:paddingEnd">@dimen/largest</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+    </style>
+
+    <style name="VoodooButton.Blue">
+        <item name="android:background">@drawable/selector_button</item>
+    </style>
+
+    <style name="VoodooButtonRound">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+    </style>
+
+    <style name="VoodooCard" parent="MatchWidthWrapHeight">
+        <item name="cardBackgroundColor">@color/white_ish</item>
+        <item name="cardElevation">5dp</item>
+        <item name="cardUseCompatPadding">true</item>
+    </style>
+
+    <style name="VoodooCard.ListItem" parent="VoodooCard">
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardUseCompatPadding">false</item>
+    </style>
+
 </resources>

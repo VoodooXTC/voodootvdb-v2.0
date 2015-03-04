@@ -9,6 +9,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.DataStore;
+import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.*;
+import com.joss.voodootvdb.api.models.Error;
 import com.joss.voodootvdb.api.models.Login.UserModel;
 import com.joss.voodootvdb.utils.GGson;
 
@@ -36,7 +39,8 @@ public class ApiService extends IntentService {
     public static final String ARGS_USER = "user";
     public static final String ARG_EXTENDED = "extended";
 
-    public static final String RESULT_STATUS = "api_result_status";
+    public static final String RESULT_MESSAGE = "message";
+    public static final String RESULT_STATUS = "result_status";
     public static final int RESULT_ERROR = 0;
     public static final int RESULT_SUCCESS = 1;
 
@@ -91,8 +95,12 @@ public class ApiService extends IntentService {
         try{
             switch (type){
                 case REQUEST_LOGIN:
-                    UserModel user = service.login(GGson.fromJson(intent.getStringExtra(ARGS_USER), UserModel.class));
-                    DataStore.persistUser(this, user);
+                    UserModel loginUser = GGson.fromJson(intent.getStringExtra(ARGS_USER), UserModel.class);
+                    UserModel user = service.login(loginUser);
+
+                    loginUser.token = user.token;
+                    DataStore.persistUser(this, loginUser);
+
                     broadcastLoginSuccess(type);
                     break;
 
@@ -103,7 +111,7 @@ public class ApiService extends IntentService {
         } catch(RetrofitError e){
             handleRetrofitError(type, e);
         } catch (Exception e) {
-            broadcastRequestFailed(type, ERROR_RESPONSE);
+            broadcastRequestFailed(type, ERROR_RESPONSE, getString(R.string.error_generic_network));
         }
     }
 
@@ -111,6 +119,7 @@ public class ApiService extends IntentService {
         Intent intent = new Intent();
         intent.setAction(BROADCAST);
         intent.putExtra(REQUEST_TYPE, type);
+        intent.putExtra(RESULT_STATUS, RESULT_SUCCESS);
         broadcastManager.sendBroadcast(intent);
     }
 
@@ -119,16 +128,21 @@ public class ApiService extends IntentService {
      */
     private void handleRetrofitError(int requestType, RetrofitError error){
         if (error.getKind() == RetrofitError.Kind.NETWORK){
-            broadcastRequestFailed(requestType, ERROR_NETWORK);
+            broadcastRequestFailed(requestType, ERROR_NETWORK, getString(R.string.error_generic_network));
         } else {
-            broadcastRequestFailed(requestType, ERROR_RESPONSE);
+            try {
+                broadcastRequestFailed(requestType, ERROR_RESPONSE, ((Error) error.getBodyAs(Error.class)).message);
+            } catch (Exception e){
+                broadcastRequestFailed(requestType, ERROR_RESPONSE, getString(R.string.error_generic_network));
+            }
         }
     }
-    private void broadcastRequestFailed(int requestType, int errorType){
+    private void broadcastRequestFailed(int requestType, int errorType, String message){
         Intent intent = new Intent(BROADCAST);
         intent.putExtra(REQUEST_TYPE, requestType);
         intent.putExtra(ERROR_TYPE, errorType);
         intent.putExtra(RESULT_STATUS, RESULT_ERROR);
+        intent.putExtra(RESULT_MESSAGE, message);
         broadcastManager.sendBroadcast(intent);
     }
 }
