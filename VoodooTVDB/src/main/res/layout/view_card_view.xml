@@ -7,7 +7,7 @@
     >
 
     <android.support.v7.widget.CardView
-        android:id="@+id/login_card_view"
+        android:id="@+id/card_view"
         style="@style/VoodooCard"
         android:layout_margin="@dimen/tiny"
         >
@@ -21,6 +21,7 @@
                 android:layout_height="195dp"
                 android:contentDescription="@string/card_image"
                 android:layout_alignParentStart="true"
+                android:src="@drawable/placeholder_vertical"
                 />
 
             <ImageView

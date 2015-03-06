@@ -131,6 +131,12 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
     }
 
     @Override
+    public void onShowMenuClicked(Show show) {
+        // TODO maybe move this into the actual view??
+        Utils.toast(getActivity(), show.getTitle() + " : Show Menu Clicked");
+    }
+
+    @Override
     public void onTrailerClicked(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);

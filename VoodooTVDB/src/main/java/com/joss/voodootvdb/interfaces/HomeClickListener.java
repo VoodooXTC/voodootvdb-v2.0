@@ -11,6 +11,8 @@ public interface HomeClickListener {
 
     public void onShowClicked(Show show);
 
+    public void onShowMenuClicked(Show show);
+
     public void onTrailerClicked(String url);
 
 }

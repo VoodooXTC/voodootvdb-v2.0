@@ -60,6 +60,7 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
         DrawerModel drawerModel = ((DrawerModel) adapter.getItem(position));
         if(drawerModel.id != currentId){
             selectFragment(drawerModel.id);
+            swapFragments();
         }
     }
 
@@ -119,7 +120,7 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
             case R.id.drawer_contact:
                 id = currentId;
                 // TODO Open email thing
-                Toast.makeText(this, "Email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Open email thing", Toast.LENGTH_SHORT).show();
                 break;
         }
 

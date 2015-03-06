@@ -1,11 +1,11 @@
 package com.joss.voodootvdb.views;
 
-import android.animation.Animator;
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.interfaces.HomeClickListener;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -23,8 +24,10 @@ import butterknife.InjectView;
  * Date: 3/5/15
  * Time: 6:53 PM
  */
-public class VoodooCardView extends LinearLayout {
+public class VoodooCardView extends LinearLayout implements View.OnClickListener {
 
+    @InjectView(R.id.card_view)
+    CardView cardView;
     @InjectView(R.id.card_image)
     ImageView image;
     @InjectView(R.id.card_menu)
@@ -32,6 +35,7 @@ public class VoodooCardView extends LinearLayout {
     @InjectView(R.id.card_title)
     TextView title;
 
+    HomeClickListener listener;
     Context context;
     Show show;
 
@@ -55,15 +59,21 @@ public class VoodooCardView extends LinearLayout {
         image.setVisibility(INVISIBLE);
         title.setVisibility(INVISIBLE);
         menu.setVisibility(INVISIBLE);
+
+        cardView.setOnClickListener(this);
+        menu.setOnClickListener(this);
     }
 
-    public void setContent(Show show) {
+    public void setContent(Show show, HomeClickListener homeClickListener) {
+        this.listener = homeClickListener;
         this.show = show;
         this.title.setText(show.getTitle());
         Picasso.with(context)
                 .load(show.getImages().getPoster().getFull())
                 .fit()
                 .centerCrop()
+                .placeholder(R.drawable.placeholder_vertical)
+                .error(R.drawable.placeholder_vertical)
                 .into(image);
     }
 
@@ -97,5 +107,20 @@ public class VoodooCardView extends LinearLayout {
             }
         });
         image.startAnimation(scaleAnimation);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.card_view:
+                if(listener != null)
+                    listener.onShowClicked(show);
+                break;
+
+            case R.id.card_menu:
+                if(listener != null)
+                    listener.onShowMenuClicked(show);
+                break;
+        }
     }
 }

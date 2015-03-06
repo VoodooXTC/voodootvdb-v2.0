@@ -16,6 +16,7 @@
         android:scrollbars="none"
         android:paddingStart="@dimen/tiny"
         android:paddingEnd="@dimen/tiny"
+        android:clipToPadding="false"
         >
 
         <LinearLayout

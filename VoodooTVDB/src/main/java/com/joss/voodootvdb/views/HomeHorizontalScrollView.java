@@ -78,7 +78,7 @@ public class HomeHorizontalScrollView extends LinearLayout {
             }else if(type == TYPE_NORMAL){
                 VoodooCardView cardView = new VoodooCardView(context);
                 if(o instanceof Show)
-                    cardView.setContent((Show) o);
+                    cardView.setContent((Show) o, listener);
 
                 container.addView(cardView);
 
