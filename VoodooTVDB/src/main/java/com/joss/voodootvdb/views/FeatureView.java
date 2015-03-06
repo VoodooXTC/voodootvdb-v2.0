@@ -3,12 +3,14 @@ package com.joss.voodootvdb.views;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.interfaces.HomeClickListener;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +22,7 @@ import butterknife.InjectView;
  * Date: 3/5/15
  * Time: 6:19 PM
  */
-public class FeatureView extends LinearLayout {
+public class FeatureView extends LinearLayout implements View.OnClickListener {
 
     @InjectView(R.id.feature_image)
     ImageView image;
@@ -31,6 +33,7 @@ public class FeatureView extends LinearLayout {
 
     Context context;
     Show show;
+    HomeClickListener listener;
 
     public FeatureView(Context context) {
         this(context, null);
@@ -44,6 +47,9 @@ public class FeatureView extends LinearLayout {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init(context);
+
+        image.setOnClickListener(this);
+        floatingActionButton.setOnClickListener(this);
     }
 
     private void init(Context context) {
@@ -51,25 +57,44 @@ public class FeatureView extends LinearLayout {
         ButterKnife.inject(this);
     }
 
-    public void setContent(Show show){
+    public void setContent(Show show, HomeClickListener listener){
+        this.listener = listener;
         this.show = show;
-        title.setText(show.getTitle());
+        this.title.setText(show.getTitle());
         Picasso.with(context)
                 .load(show.getImages().getFanart().getFull())
                 .fit()
                 .centerCrop()
                 .into(image);
 
-        floatingActionButton.setVisibility(!show.getTrailer().isEmpty()
-                ? VISIBLE
-                : GONE);
+        title.setVisibility(INVISIBLE);
+        floatingActionButton.setVisibility(INVISIBLE);
     }
 
-    public void showPlayButton(){
-        floatingActionButton.show();
+    public void animateIn(){
+        title.setVisibility(VISIBLE);
+        title.setAlpha(0);
+        title.animate().alpha(1).setDuration(800).start();
+
+        if(!show.getTrailer().isEmpty()){
+            floatingActionButton.setVisibility(VISIBLE);
+            floatingActionButton.animate().scaleX(0).scaleY(0).setDuration(0).start();
+            floatingActionButton.animate().scaleX(1).scaleY(1).setDuration(800).start();
+        }
     }
 
-    public void hidePlayButton(){
-        floatingActionButton.hide();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.feature_image:
+                if(listener != null)
+                    listener.onShowClicked(show);
+                break;
+
+            case R.id.feature_play_button:
+                if(listener != null)
+                    listener.onTrailerClicked(show.getTrailer());
+                break;
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.joss.voodootvdb.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -12,9 +14,13 @@ import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.adapters.HomeAdapter;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.HomeItem;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularCursor;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
+import com.joss.voodootvdb.utils.Utils;
 import com.joss.voodootvdb.views.ErrorView;
 import com.joss.voodootvdb.views.HomeHorizontalScrollView;
 import com.joss.voodootvdb.views.LoadingView;
@@ -27,7 +33,8 @@ import java.util.List;
  * Date: 3/2/15
  * Time: 5:57 PM
  */
-public class HomeFragment extends BaseListFragment implements AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class HomeFragment extends BaseListFragment implements AdapterView.OnItemClickListener,
+        LoaderManager.LoaderCallbacks<Cursor>, HomeClickListener {
 
     public static final String TAG = HomeFragment.class.getSimpleName();
     private static final int POPULAR_SHOWS_CALLBACK = 456;
@@ -65,9 +72,9 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setToolbarTitle(getString(R.string.drawer_home));
+        listener.onSetToolbarTitles(getString(R.string.drawer_home), null);
 
-        adapter = new HomeAdapter(getActivity());
+        adapter = new HomeAdapter(getActivity(), this);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
 
@@ -89,32 +96,43 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
                 ShowsPopularColumns.FULL_PROJECTION,
                 null,
                 null,
-                ShowsPopularColumns.DEFAULT_ORDER + " LIMIT 5");
+                ShowsPopularColumns.DEFAULT_ORDER + " DESC LIMIT 5");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null){
             ShowsPopularCursor cursor = new ShowsPopularCursor(data);
-            List<Object> shows = ShowsPopularProvider.getObjectList(cursor);
+            List<HomeItem> shows = ShowsPopularProvider.getHomeItems(cursor,
+                    HomeHorizontalScrollView.TYPE_FEATURE,
+                    "Featured");
 
             if(shows.size() > 0)
                 showContent();
 
-            List<List<Object>> items = new ArrayList<>();
+            List<List<HomeItem>> items = new ArrayList<>();
             items.add(shows);
-            items.add(shows);
+            items.add(ShowsPopularProvider.getHomeItems(cursor, HomeHorizontalScrollView.TYPE_NORMAL, "Recommended"));
+            items.add(ShowsPopularProvider.getHomeItems(cursor, HomeHorizontalScrollView.TYPE_NORMAL, "Action/Adventure"));
+            items.add(ShowsPopularProvider.getHomeItems(cursor, HomeHorizontalScrollView.TYPE_NORMAL, "New Releases"));
 
-            List<Integer> types = new ArrayList<>();
-            types.add(HomeHorizontalScrollView.TYPE_FEATURE);
-            types.add(HomeHorizontalScrollView.TYPE_NORMAL);
-
-            adapter.setContent(items, types);
+            adapter.setContent(items);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onShowClicked(Show show) {
+        Utils.toast(getActivity(), show.getTitle() + " : Show Clicked");
+    }
+
+    @Override
+    public void onTrailerClicked(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
     }
 }

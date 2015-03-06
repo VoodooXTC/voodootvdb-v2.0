@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.provider.shows_popular;
 
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.interfaces.HomeItem;
 import com.joss.voodootvdb.model.ShowsPopularModel;
 import com.joss.voodootvdb.utils.GGson;
 
@@ -37,11 +38,17 @@ public class ShowsPopularProvider {
         return cursor.moveToFirst() ? GGson.fromJson(cursor.getJson(), Show.class) : new Show();
     }
 
-    public static List<Object> getObjectList(ShowsPopularCursor cursor) {
-        List<Object> items = new ArrayList<>();
+    public static List<HomeItem> getHomeItems(ShowsPopularCursor cursor, int type, String sectionTitle) {
+        List<HomeItem> items = new ArrayList<>();
         if(cursor.moveToFirst()){
             while (!cursor.isAfterLast()){
-                items.add(GGson.fromJson(cursor.getJson(), Show.class));
+
+                Show show = GGson.fromJson(cursor.getJson(), Show.class);
+                show.setType(type);
+                show.setSectionTitle(sectionTitle);
+
+                items.add(show);
+
                 cursor.moveToNext();
             }
         }

@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.joss.voodootvdb.interfaces.HomeItem;
 
-public class Show {
+public class Show implements HomeItem{
 
     @Expose
     private String title;
@@ -54,6 +55,32 @@ public class Show {
     private Integer airedEpisodes;
     @Expose
     private Images images;
+
+    private int type;
+    private String sectionTitle;
+
+    @Override
+    public int getType() {
+        return type;
+    }
+
+    @Override
+    public int getId() {
+        return getIds().getTrakt();
+    }
+
+    @Override
+    public String getSectionTitle() {
+        return sectionTitle == null ? "" : sectionTitle;
+    }
+
+    public void setType(int type){
+        this.type = type;
+    }
+
+    public void setSectionTitle(String title){
+        this.sectionTitle = title;
+    }
 
     /**
      * 

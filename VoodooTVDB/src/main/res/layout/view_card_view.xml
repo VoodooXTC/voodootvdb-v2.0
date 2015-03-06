@@ -20,6 +20,7 @@
                 android:layout_width="130dp"
                 android:layout_height="195dp"
                 android:contentDescription="@string/card_image"
+                android:layout_alignParentStart="true"
                 />
 
             <ImageView

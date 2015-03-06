@@ -11,6 +11,7 @@
         android:layout_width="300dp"
         android:layout_height="150dp"
         android:contentDescription="@string/feature_image"
+        tools:background="@color/black_10_percent_transparency"
         />
 
     <com.melnykov.fab.FloatingActionButton
@@ -20,12 +21,11 @@
         android:src="@drawable/ic_play"
         />
 
-    <oak.widget.TextViewWithFont
+    <TextView
         android:id="@+id/feature_title"
-        style="@style/FeatureTitle"
-        tools:text="Walking Dead"
-        android:layout_below="@+id/feature_image"
-        android:layout_centerHorizontal="true"
-        />
+        style="@style/Feature.Title"
+        android:layout_alignBottom="@id/feature_image"
+        android:layout_alignStart="@id/feature_image"
+        tools:text="Game of Thrones"/>
 
 </RelativeLayout>

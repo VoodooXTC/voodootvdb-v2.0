@@ -147,6 +147,6 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
 
     @Override
     public void onSetToolbarTitles(String title, String subtitle) {
-        setToolbarTitles(title, subtitle);
+        setTitlesAndSave(title, subtitle);
     }
 }

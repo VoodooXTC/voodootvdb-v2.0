@@ -1,11 +1,12 @@
 package com.joss.voodootvdb.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.HomeItem;
 import com.joss.voodootvdb.views.HomeHorizontalScrollView;
 
 import java.util.ArrayList;
@@ -21,14 +22,13 @@ public class HomeAdapter extends BaseAdapter {
     public static final String TAG = HomeAdapter.class.getSimpleName();
 
     Context context;
-    List<List<Object>> items;
-    List<Integer> types;
+    List<List<HomeItem>> items;
+    HomeClickListener homeClickListener;
 
-    // TODO types getType()
-
-    public HomeAdapter(Context context){
+    public HomeAdapter(Context context, HomeClickListener listener){
         this.context = context;
         this.items = new ArrayList<>();
+        this.homeClickListener = listener;
     }
 
     @Override
@@ -46,9 +46,18 @@ public class HomeAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setContent(List<List<Object>> items, List<Integer> types){
+    @Override
+    public int getItemViewType(int position){
+        return items.get(position).get(0).getType();
+    }
+
+    @Override
+    public int getViewTypeCount(){
+        return HomeHorizontalScrollView.TYPE_FEATURE + 1;
+    }
+
+    public void setContent(List<List<HomeItem>> items){
         this.items = items;
-        this.types = types;
         notifyDataSetChanged();
     }
 
@@ -56,16 +65,12 @@ public class HomeAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         HomeHorizontalScrollView homeHorizontalScrollView =
                 convertView == null
-                    ? new HomeHorizontalScrollView(context, types.get(position))
+                    ? new HomeHorizontalScrollView(context,
+                        items.get(position).get(0).getType(),
+                        homeClickListener)
                     : (HomeHorizontalScrollView) convertView;
 
-        if(convertView == null){
-            Log.e(TAG, position + "convertView == null");
-        }else{
-            Log.e(TAG, position + "convertView != null");
-        }
-
-        homeHorizontalScrollView.setItems(items.get(position));
+        homeHorizontalScrollView.setItems(items.get(position).get(0).getSectionTitle(), items.get(position));
 
         return homeHorizontalScrollView;
     }
