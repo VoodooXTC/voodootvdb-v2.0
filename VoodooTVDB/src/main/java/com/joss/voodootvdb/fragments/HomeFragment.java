@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.activities.ShowActivity;
 import com.joss.voodootvdb.adapters.HomeAdapter;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
@@ -127,7 +128,9 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
 
     @Override
     public void onShowClicked(Show show) {
-        Utils.toast(getActivity(), show.getTitle() + " : Show Clicked");
+        Intent intent = new Intent(getActivity(), ShowActivity.class);
+        intent.putExtra(ShowActivity.ID, show.getIds().getTrakt());
+        startActivity(intent);
     }
 
     @Override

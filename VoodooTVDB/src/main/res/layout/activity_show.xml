@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nirhart.parallaxscroll.views.ParallaxScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Match"
+    app:parallax_factor="1.9"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        style="@style/Match"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/show_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="@string/show_parallax_image"
+            tools:background="@color/black_10_percent_transparency"
+            />
+
+        <LinearLayout
+            android:id="@+id/show_content"
+            style="@style/Match"
+            android:orientation="vertical"
+            >
+
+            <oak.widget.TextViewWithFont
+                android:id="@+id/show_title"
+                style="@style/Wrap"
+                tools:text="Big Trouble in Little China"
+                android:textColor="@color/black"
+                android:padding="@dimen/normal"
+                android:textSize="@dimen/text_size_larger"
+                app:oakFont="@string/font_roboto_regular"
+                />
+
+            <RelativeLayout
+                style="@style/MatchWidthWrapHeight"
+                android:gravity="center_vertical"
+                android:padding="@dimen/normal">
+
+                <RatingBar
+                    android:id="@+id/show_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:numStars="5"
+                    android:stepSize="0.1"
+                    android:isIndicator="true"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="@dimen/normal"
+                    />
+
+                <oak.widget.TextViewWithFont
+                    android:id="@+id/show_info"
+                    style="@style/Wrap"
+                    tools:text="1986 PG-13 99 Mins"
+                    android:textColor="@color/grey"
+                    android:gravity="center"
+                    android:layout_toEndOf="@+id/show_rating"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="@dimen/normal"
+                    app:oakFont="@string/font_roboto_regular"
+                    />
+
+                <oak.widget.TextViewWithFont
+                    style="@style/Wrap"
+                    tools:text="Action|Comedy"
+                    android:textColor="@color/grey"
+                    android:gravity="center|end"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"
+                    android:layout_toEndOf="@+id/show_info"
+                    app:oakFont="@string/font_roboto_regular"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/grey" />
+
+            <oak.widget.TextViewWithFont
+                android:id="@+id/show_description"
+                style="@style/MatchWidthWrapHeight"
+                tools:text="An All-American trucker gets dragged into a centries-old mystical battle in Chinatown."
+                app:oakFont="@string/font_roboto_light"
+                android:padding="@dimen/normal"
+                android:textColor="@color/black"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.nirhart.parallaxscroll.views.ParallaxScrollView>

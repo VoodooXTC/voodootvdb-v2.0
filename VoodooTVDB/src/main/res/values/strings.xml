@@ -22,5 +22,6 @@
     <string name="feature_image">Feature Image</string>
     <string name="card_more">card more</string>
     <string name="card_image">card image</string>
+    <string name="show_parallax_image">show parallax image</string>
 
 </resources>
