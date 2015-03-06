@@ -36,4 +36,15 @@ public class ShowsPopularProvider {
     public static Show getFirst(ShowsPopularCursor cursor) {
         return cursor.moveToFirst() ? GGson.fromJson(cursor.getJson(), Show.class) : new Show();
     }
+
+    public static List<Object> getObjectList(ShowsPopularCursor cursor) {
+        List<Object> items = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            while (!cursor.isAfterLast()){
+                items.add(GGson.fromJson(cursor.getJson(), Show.class));
+                cursor.moveToNext();
+            }
+        }
+        return items;
+    }
 }

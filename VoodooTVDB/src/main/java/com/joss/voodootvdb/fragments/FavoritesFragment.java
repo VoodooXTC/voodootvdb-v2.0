@@ -8,5 +8,9 @@ package com.joss.voodootvdb.fragments;
 public class FavoritesFragment extends BaseFragment{
 
     public static final String TAG = FavoritesFragment.class.getSimpleName();
-    
+
+    @Override
+    int getLayoutId() {
+        return 0;
+    }
 }

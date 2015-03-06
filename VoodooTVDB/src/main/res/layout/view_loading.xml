@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/Match"
+    android:gravity="center"
+    android:background="@color/appMainBgColor">
+
+    <ProgressBar
+        style="@style/Wrap"/>
+
+</LinearLayout>

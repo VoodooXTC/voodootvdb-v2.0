@@ -66,7 +66,7 @@
     </style>
 
     <style name="VoodooCard" parent="MatchWidthWrapHeight">
-        <item name="cardBackgroundColor">@color/white_ish</item>
+        <item name="cardBackgroundColor">@color/white</item>
         <item name="cardElevation">5dp</item>
         <item name="cardUseCompatPadding">true</item>
     </style>
@@ -74,6 +74,37 @@
     <style name="VoodooCard.ListItem" parent="VoodooCard">
         <item name="cardCornerRadius">0dp</item>
         <item name="cardUseCompatPadding">false</item>
+    </style>
+
+    <style name="VoodooErrorText" parent="Wrap">
+        <item name="android:padding">@dimen/normal</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="oakFont">@string/font_roboto_regular</item>
+    </style>
+
+    <style name="FloatingButton" parent="Wrap">
+        <item name="android:layout_margin">8dp</item>
+        <item name="fab_colorNormal">@color/colorPrimary</item>
+        <item name="fab_colorPressed">@color/colorPrimary</item>
+        <item name="fab_colorRipple">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="FeatureTitle" parent="Wrap">
+        <item name="android:padding">@dimen/tiny</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="CardTitle" parent="Wrap">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:lines">2</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/tiny</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 </resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    style="@style/Match"
+    android:background="@color/appMainBgColor">
+
+    <ImageView
+        android:id="@+id/error_icon"
+        android:layout_height="80dp"
+        android:layout_width="80dp"
+        android:src="@drawable/ic_error"
+        android:contentDescription="@string/error_icon"
+        android:layout_centerInParent="true"
+        />
+
+    <oak.widget.TextViewWithFont
+        android:id="@+id/error_text"
+        style="@style/VoodooErrorText"
+        android:text="@string/error_generic_retry"
+        android:layout_below="@+id/error_icon"
+        android:layout_centerInParent="true"
+        />
+
+</RelativeLayout>

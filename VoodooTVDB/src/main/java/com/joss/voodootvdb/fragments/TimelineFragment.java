@@ -9,4 +9,8 @@ public class TimelineFragment extends BaseFragment{
 
     public static final String TAG = TimelineFragment.class.getSimpleName();
 
+    @Override
+    int getLayoutId() {
+        return 0;
+    }
 }

@@ -1,14 +1,9 @@
 package com.joss.voodootvdb.activities;
 
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -20,12 +15,13 @@ import com.joss.voodootvdb.fragments.HomeFragment;
 import com.joss.voodootvdb.fragments.NextFragment;
 import com.joss.voodootvdb.fragments.SettingsFragment;
 import com.joss.voodootvdb.fragments.TimelineFragment;
+import com.joss.voodootvdb.interfaces.ToolbarListener;
 import com.joss.voodootvdb.model.DrawerModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseDrawerActivity {
+public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -147,5 +143,10 @@ public class MainActivity extends BaseDrawerActivity {
             ft.replace(contentView.getId(), currentFrag);
             ft.commit();
         }
+    }
+
+    @Override
+    public void onSetToolbarTitles(String title, String subtitle) {
+        setToolbarTitles(title, subtitle);
     }
 }

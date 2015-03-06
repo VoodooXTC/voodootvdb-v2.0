@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.fragments;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +18,14 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.dd.CircularProgressButton;
 import com.iangclifton.android.floatlabel.FloatLabel;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.interfaces.LoginListener;
 import com.joss.voodootvdb.utils.Utils;
 
 import butterknife.ButterKnife;
@@ -37,6 +40,10 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
 
     public static final String TAG = LoginFragment.class.getSimpleName();
 
+    public static final String ALLOW_CANCEL = "allow_cancel";
+
+    @InjectView(R.id.login_container)
+    RelativeLayout container;
     @InjectView(R.id.login_card_view)
     CardView cardView;
     @InjectView(R.id.login_username)
@@ -48,9 +55,22 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
     @InjectView(R.id.login_icon_launcher)
     ImageView iconLauncher;
 
-    private LocalBroadcastManager broadcastManager;
-    private ApiReceiver apiReceiver;
+    LocalBroadcastManager broadcastManager;
+    ApiReceiver apiReceiver;
     boolean loginInProgress;
+    LoginListener listener;
+    boolean allowCancel;
+    boolean animatedIn = false;
+
+    public static LoginFragment getInstance(boolean allowCancel){
+        Bundle b = new Bundle();
+        b.putBoolean(ALLOW_CANCEL, allowCancel);
+
+        LoginFragment loginFragment = new LoginFragment();
+        loginFragment.setArguments(b);
+
+        return loginFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -59,10 +79,15 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-        ButterKnife.inject(this, view);
+    int getLayoutId() {
+        return R.layout.fragment_login;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        allowCancel = getArguments().getBoolean(ALLOW_CANCEL);
 
         broadcastManager = LocalBroadcastManager.getInstance(getActivity());
         apiReceiver = new ApiReceiver();
@@ -72,6 +97,7 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
 
         password.getEditText().setOnKeyListener(this);
 
+        container.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 
         cardView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -81,27 +107,57 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
                 animateViewsIn();
             }
         });
-
-        return view;
     }
 
     private void animateViewsIn() {
-        cardView.animate().translationY(cardView.getMeasuredHeight()).setDuration(0).start();
-        cardView.animate()
-                .translationY(0)
-                .setDuration(1000)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
+        if(!animatedIn){
+            cardView.animate().translationY(cardView.getMeasuredHeight() * 2).setDuration(0).start();
+            cardView.animate()
+                    .translationY(0)
+                    .setDuration(800)
+                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            iconLauncher.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            iconLauncher.setVisibility(View.VISIBLE);
+                            iconLauncher.animate().alpha(0.0f).setDuration(0).start();
+                            iconLauncher.animate().alpha(1.0f).setDuration(300).start();
+                            animatedIn = true;
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    })
+                    .start();
+        }
+    }
+
+    public void animateViewOut(){
+        allowCancel = false;
+        iconLauncher.animate().alpha(0.0f).setDuration(300).start();
+        cardView.animate().translationY(cardView.getMeasuredHeight() * 2).alpha(0).setDuration(500)
                 .setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
-                        iconLauncher.setVisibility(View.GONE);
+
                     }
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        iconLauncher.setVisibility(View.VISIBLE);
-                        iconLauncher.animate().alpha(0.0f).setDuration(0).start();
-                        iconLauncher.animate().alpha(1.0f).setDuration(300).start();
+                        listener.onAnimateOutFinished();
+                        allowCancel = true;
                     }
 
                     @Override
@@ -115,12 +171,6 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
                     }
                 })
                 .start();
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -152,6 +202,7 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
                         case ApiService.RESULT_SUCCESS:
                             setButtonSuccessState();
                             Utils.toast(getActivity(), getString(R.string.login_success));
+                            listener.onLoginSuccess();
                             break;
                         case ApiService.RESULT_ERROR:
                             setButtonErrorState();
@@ -168,9 +219,14 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+
             case R.id.login_button:
                 attemptLogin();
                 break;
+
+            default:
+                if(allowCancel)
+                    listener.onCancel();
         }
     }
 
@@ -197,6 +253,17 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof LoginListener){
+            listener = (LoginListener) activity;
+        }else{
+            throw new IllegalStateException(activity.getClass().getSimpleName()
+                    + " must implement LoginListener");
+        }
     }
 
     private void attemptLogin() {
