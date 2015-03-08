@@ -23,7 +23,7 @@ import com.joss.voodootvdb.provider.shows_popular.ShowsPopularCursor;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
 import com.joss.voodootvdb.utils.Utils;
 import com.joss.voodootvdb.views.ErrorView;
-import com.joss.voodootvdb.views.HomeHorizontalScrollView;
+import com.joss.voodootvdb.views.VoodooHorizontalScrollView;
 import com.joss.voodootvdb.views.LoadingView;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
     @Override
     List<Integer> getApiTypes() {
         List<Integer> types = new ArrayList<>();
-        types.add(ApiService.REQUEST_POPULAR_SHOWS);
+        types.add(ApiService.REQUEST_SHOWS_POPULAR);
         return types;
     }
 
@@ -105,7 +105,7 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
         if(data != null){
             ShowsPopularCursor cursor = new ShowsPopularCursor(data);
             List<HomeItem> shows = ShowsPopularProvider.getHomeItems(cursor,
-                    HomeHorizontalScrollView.TYPE_FEATURE,
+                    VoodooHorizontalScrollView.TYPE_FEATURE,
                     "Featured");
 
             if(shows.size() > 0)
@@ -113,9 +113,9 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
 
             List<List<HomeItem>> items = new ArrayList<>();
             items.add(shows);
-            items.add(ShowsPopularProvider.getHomeItems(cursor, HomeHorizontalScrollView.TYPE_NORMAL, "Recommended"));
-            items.add(ShowsPopularProvider.getHomeItems(cursor, HomeHorizontalScrollView.TYPE_NORMAL, "Action/Adventure"));
-            items.add(ShowsPopularProvider.getHomeItems(cursor, HomeHorizontalScrollView.TYPE_NORMAL, "New Releases"));
+            items.add(ShowsPopularProvider.getHomeItems(cursor, VoodooHorizontalScrollView.TYPE_NORMAL, "Recommended"));
+            items.add(ShowsPopularProvider.getHomeItems(cursor, VoodooHorizontalScrollView.TYPE_NORMAL, "Action/Adventure"));
+            items.add(ShowsPopularProvider.getHomeItems(cursor, VoodooHorizontalScrollView.TYPE_NORMAL, "New Releases"));
 
             adapter.setContent(items);
         }

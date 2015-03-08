@@ -18,6 +18,7 @@ import android.util.Log;
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
+import com.joss.voodootvdb.provider.shows_related.ShowsRelatedColumns;
 
 public class VoodooProvider extends ContentProvider {
     private static final String TAG = VoodooProvider.class.getSimpleName();
@@ -37,6 +38,9 @@ public class VoodooProvider extends ContentProvider {
     private static final int URI_TYPE_SHOWS_POPULAR = 2;
     private static final int URI_TYPE_SHOWS_POPULAR_ID = 3;
 
+    private static final int URI_TYPE_SHOWS_RELATED = 4;
+    private static final int URI_TYPE_SHOWS_RELATED_ID = 5;
+
 
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -46,6 +50,8 @@ public class VoodooProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, ShowsColumns.TABLE_NAME + "/#", URI_TYPE_SHOWS_ID);
         URI_MATCHER.addURI(AUTHORITY, ShowsPopularColumns.TABLE_NAME, URI_TYPE_SHOWS_POPULAR);
         URI_MATCHER.addURI(AUTHORITY, ShowsPopularColumns.TABLE_NAME + "/#", URI_TYPE_SHOWS_POPULAR_ID);
+        URI_MATCHER.addURI(AUTHORITY, ShowsRelatedColumns.TABLE_NAME, URI_TYPE_SHOWS_RELATED);
+        URI_MATCHER.addURI(AUTHORITY, ShowsRelatedColumns.TABLE_NAME + "/#", URI_TYPE_SHOWS_RELATED_ID);
     }
 
     private VoodooSQLiteOpenHelper mVoodooSQLiteOpenHelper;
@@ -69,6 +75,11 @@ public class VoodooProvider extends ContentProvider {
                 return TYPE_CURSOR_DIR + ShowsPopularColumns.TABLE_NAME;
             case URI_TYPE_SHOWS_POPULAR_ID:
                 return TYPE_CURSOR_ITEM + ShowsPopularColumns.TABLE_NAME;
+
+            case URI_TYPE_SHOWS_RELATED:
+                return TYPE_CURSOR_DIR + ShowsRelatedColumns.TABLE_NAME;
+            case URI_TYPE_SHOWS_RELATED_ID:
+                return TYPE_CURSOR_ITEM + ShowsRelatedColumns.TABLE_NAME;
 
         }
         return null;
@@ -196,6 +207,12 @@ public class VoodooProvider extends ContentProvider {
                 res.orderBy = ShowsPopularColumns.DEFAULT_ORDER;
                 break;
 
+            case URI_TYPE_SHOWS_RELATED:
+            case URI_TYPE_SHOWS_RELATED_ID:
+                res.table = ShowsRelatedColumns.TABLE_NAME;
+                res.orderBy = ShowsRelatedColumns.DEFAULT_ORDER;
+                break;
+
             default:
                 throw new IllegalArgumentException("The uri '" + uri + "' is not supported by this ContentProvider");
         }
@@ -203,6 +220,7 @@ public class VoodooProvider extends ContentProvider {
         switch (matchedId) {
             case URI_TYPE_SHOWS_ID:
             case URI_TYPE_SHOWS_POPULAR_ID:
+            case URI_TYPE_SHOWS_RELATED_ID:
                 id = uri.getLastPathSegment();
         }
         if (id != null) {

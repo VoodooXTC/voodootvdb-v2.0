@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 
 import com.joss.voodootvdb.interfaces.HomeClickListener;
 import com.joss.voodootvdb.interfaces.HomeItem;
-import com.joss.voodootvdb.views.HomeHorizontalScrollView;
+import com.joss.voodootvdb.views.VoodooHorizontalScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class HomeAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount(){
-        return HomeHorizontalScrollView.TYPE_FEATURE + 1;
+        return VoodooHorizontalScrollView.TYPE_FEATURE + 1;
     }
 
     public void setContent(List<List<HomeItem>> items){
@@ -63,15 +63,15 @@ public class HomeAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        HomeHorizontalScrollView homeHorizontalScrollView =
+        VoodooHorizontalScrollView voodooHorizontalScrollView =
                 convertView == null
-                    ? new HomeHorizontalScrollView(context,
+                    ? new VoodooHorizontalScrollView(context,
                         items.get(position).get(0).getType(),
                         homeClickListener)
-                    : (HomeHorizontalScrollView) convertView;
+                    : (VoodooHorizontalScrollView) convertView;
 
-        homeHorizontalScrollView.setItems(items.get(position).get(0).getSectionTitle(), items.get(position));
+        voodooHorizontalScrollView.setItems(items.get(position).get(0).getSectionTitle(), items.get(position));
 
-        return homeHorizontalScrollView;
+        return voodooHorizontalScrollView;
     }
 }

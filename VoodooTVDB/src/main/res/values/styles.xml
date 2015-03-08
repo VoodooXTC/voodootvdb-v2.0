@@ -177,4 +177,11 @@
         <item name="oakFont">@string/font_roboto_light</item>
     </style>
 
+    <style name="Show.Related.Title" parent="MatchWidthWrapHeight">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:paddingTop">@dimen/normal</item>
+        <item name="android:paddingEnd">@dimen/normal</item>
+        <item name="android:paddingStart">@dimen/normal</item>
+    </style>
+
 </resources>

@@ -139,7 +139,7 @@ public class ShowsContentValues extends AbstractContentValues {
     }
 
 
-    public static ContentValues[] getContentValues(ShowsModel... items){
+    public static ContentValues[] getContentValues(List<ShowsModel> items){
         List<ContentValues> values = new ArrayList<ContentValues>();
         for(ShowsModel item : items){
             values.add(getSingleContentValue(item));

@@ -22,7 +22,7 @@ public class Api {
 
     public static void getPopularShows(Context context, String... extended){
         Intent intent = new Intent(context, ApiService.class);
-        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_POPULAR_SHOWS);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOWS_POPULAR);
 
         String extendedValues = "";
         for(String ex : extended){
@@ -35,6 +35,19 @@ public class Api {
     public static void getShow(Context context, int traktId, String... extended){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOW);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+
+        String extendedValues = "";
+        for(String ex : extended){
+            extendedValues += ex + ",";
+        }
+        intent.putExtra(ApiService.ARG_EXTENDED, extendedValues);
+        context.startService(intent);
+    }
+
+    public static void getShowRelated(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOWS_RELATED);
         intent.putExtra(ApiService.ARG_ID, traktId);
 
         String extendedValues = "";

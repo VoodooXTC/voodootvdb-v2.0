@@ -8,10 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -21,12 +24,21 @@ import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.HomeItem;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsCursor;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
 import com.joss.voodootvdb.provider.shows.ShowsSelection;
+import com.joss.voodootvdb.provider.shows_related.ShowsRelatedColumns;
+import com.joss.voodootvdb.provider.shows_related.ShowsRelatedCursor;
+import com.joss.voodootvdb.provider.shows_related.ShowsRelatedProvider;
+import com.joss.voodootvdb.provider.shows_related.ShowsRelatedSelection;
+import com.joss.voodootvdb.utils.CustomTypefaceSpan;
+import com.joss.voodootvdb.utils.Utils;
 import com.joss.voodootvdb.views.ErrorView;
 import com.joss.voodootvdb.views.LoadingView;
+import com.joss.voodootvdb.views.VoodooHorizontalScrollView;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -34,18 +46,20 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import oak.util.OakUtils;
 
 /**
  * Created by jossayjacobo
  * Date: 3/4/15
  * Time: 10:01 AM
  */
-public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener {
+public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, HomeClickListener {
 
     public static final String TAG = ShowActivity.class.getSimpleName();
     public static final String ID = "id";
 
     private static final int SHOW_CALLBACK = 32145;
+    private static final int SHOW_RELATED_CALLBACK = 32146;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -67,6 +81,10 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     TextView actors;
     @InjectView(R.id.show_status)
     TextView status;
+    @InjectView(R.id.show_related_title)
+    TextView relatedTitle;
+    @InjectView(R.id.show_related_container)
+    VoodooHorizontalScrollView relatedContainer;
     @InjectView(R.id.show_loading)
     LoadingView loadingView;
     @InjectView(R.id.show_error)
@@ -89,7 +107,14 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         showLoading();
 
         getLoaderManager().initLoader(SHOW_CALLBACK, getIntent().getExtras(), this);
+        getLoaderManager().initLoader(SHOW_RELATED_CALLBACK, getIntent().getExtras(), this);
+
         Api.getShow(this,
+                getIntent().getIntExtra(ID, 0),
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
+        Api.getShowRelated(this,
                 getIntent().getIntExtra(ID, 0),
                 ApiService.EXT_FULL,
                 ApiService.EXT_IMAGES,
@@ -125,6 +150,24 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         }
     }
 
+    @Override
+    public void onShowClicked(Show show) {
+        Intent intent = new Intent(this, ShowActivity.class);
+        intent.putExtra(ShowActivity.ID, show.getIds().getTrakt());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onShowMenuClicked(Show show) {
+        // TODO maybe move this into the actual view??
+        Utils.toast(this, show.getTitle() + " : Show Menu Clicked");
+    }
+
+    @Override
+    public void onTrailerClicked(String url) {
+
+    }
+
     private class ApiReceiver extends BroadcastReceiver {
 
         @Override
@@ -142,28 +185,52 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
         int traktId = getIntent().getIntExtra(ID, 0);
-        ShowsSelection where = new ShowsSelection();
-        where.traktId(traktId);
+        switch (id){
+            case SHOW_CALLBACK:
+                ShowsSelection where = new ShowsSelection();
+                where.traktId(traktId);
+                return new CursorLoader(this,
+                        ShowsColumns.CONTENT_URI,
+                        ShowsColumns.FULL_PROJECTION,
+                        where.sel(),
+                        where.args(),
+                        ShowsColumns.DEFAULT_ORDER + " LIMIT 1");
 
-        return new CursorLoader(this,
-                ShowsColumns.CONTENT_URI,
-                ShowsColumns.FULL_PROJECTION,
-                where.sel(),
-                where.args(),
-                ShowsColumns.DEFAULT_ORDER + " LIMIT 1");
+            case SHOW_RELATED_CALLBACK:
+                ShowsRelatedSelection whereRelated = new ShowsRelatedSelection();
+                whereRelated.showTraktId(traktId);
+                return new CursorLoader(this,
+                        ShowsRelatedColumns.CONTENT_URI,
+                        ShowsRelatedColumns.FULL_PROJECTION,
+                        whereRelated.sel(),
+                        whereRelated.args(),
+                        ShowsRelatedColumns.DEFAULT_ORDER + " LIMIT 5");
+        }
+        return null;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null){
-            ShowsCursor cursor = new ShowsCursor(data);
-            show = ShowsProvider.get(cursor);
+            switch (loader.getId()){
+                case SHOW_CALLBACK:
+                    ShowsCursor cursor = new ShowsCursor(data);
+                    show = ShowsProvider.get(cursor);
 
-            if(show != null) {
-                showContent();
-                setContent(show);
+                    if(show != null) {
+                        showContent();
+                        setContent(show);
+                    }
+                    break;
+                case SHOW_RELATED_CALLBACK:
+                    ShowsRelatedCursor cursorRelated = new ShowsRelatedCursor(data);
+                    List<HomeItem> relatedShows = ShowsRelatedProvider.getHomeItems(this, cursorRelated);
+                    if(relatedShows.size() > 0) {
+                        relatedContainer.setListener(this);
+                        relatedContainer.setItems(null, relatedShows);
+                    }
+                    break;
             }
         }
     }
@@ -177,6 +244,21 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         genre.setText(buildGenresString(show.getGenres()));
         description.setText(show.getOverview());
         status.setText(show.getStatus());
+        relatedTitle.setText(buildRelatedString(show));
+    }
+
+    private SpannableStringBuilder buildRelatedString(Show show) {
+        String titlesRelatedTo = getString(R.string.show_titles_related_to);
+
+        Typeface light = OakUtils.getStaticTypeFace(this, getString(R.string.font_roboto_light));
+        Typeface lightItalic = OakUtils.getStaticTypeFace(this, getString(R.string.font_roboto_light_italic));
+
+        String fullText = titlesRelatedTo + " " + show.getTitle();
+        SpannableStringBuilder ss = new SpannableStringBuilder(fullText);
+        ss.setSpan(new CustomTypefaceSpan("", light), 0, titlesRelatedTo.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+        ss.setSpan(new CustomTypefaceSpan("", lightItalic), titlesRelatedTo.length(), fullText.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+
+        return ss;
     }
 
     @Override

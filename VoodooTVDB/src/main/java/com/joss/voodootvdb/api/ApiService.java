@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
-import com.joss.voodootvdb.api.models.*;
 import com.joss.voodootvdb.api.models.Error;
 import com.joss.voodootvdb.api.models.Login.UserModel;
 import com.joss.voodootvdb.utils.GGson;
@@ -34,8 +33,9 @@ public class ApiService extends IntentService {
 
     public static final String REQUEST_TYPE = "api_request_type";
     public static final int REQUEST_LOGIN = 1;
-    public static final int REQUEST_POPULAR_SHOWS = 2;
-    public static final int REQUEST_SHOW = 3;
+    public static final int REQUEST_SHOW = 2;
+    public static final int REQUEST_SHOWS_POPULAR = 3;
+    public static final int REQUEST_SHOWS_RELATED = 4;
 
     public static final String ARG_ID = "id";
     public static final String ARGS_USER = "user";
@@ -106,12 +106,18 @@ public class ApiService extends IntentService {
                     broadcastLoginSuccess(type);
                     break;
 
-                case REQUEST_POPULAR_SHOWS:
-                    Db.updatePopularShows(this, service.getPopularShows(intent.getStringExtra(EXTENDED)));
+                case REQUEST_SHOWS_POPULAR:
+                    Db.updatePopularShows(this, service.getShowsPopular(intent.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_SHOW:
                     Db.updateShow(this, service.getShow(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    break;
+
+                case REQUEST_SHOWS_RELATED:
+                    Db.updateShowsRelated(this,
+                            intent.getIntExtra(ARG_ID, 0),
+                            service.getShowsRelated(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
                     break;
             }
         } catch(RetrofitError e){

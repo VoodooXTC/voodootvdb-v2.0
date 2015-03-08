@@ -152,11 +152,15 @@
 
                 <View style="@style/Divider.Grey" />
 
-                l<oak.widget.TextViewWithFont
-                style="@style/MatchWidthWrapHeight"
-                android:text="Titles Related to Big Trouble in Little China"
-                android:padding="@dimen/normal"
-                />
+                <oak.widget.TextViewWithFont
+                    android:id="@+id/show_related_title"
+                    style="@style/Show.Related.Title"
+                    tools:text="Titles Related to Big Trouble in Little China"
+                    />
+
+                <com.joss.voodootvdb.views.VoodooHorizontalScrollView
+                    android:id="@+id/show_related_container"
+                    style="@style/MatchWidthWrapHeight" />
 
             </LinearLayout>
 

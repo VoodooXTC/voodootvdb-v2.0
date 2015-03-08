@@ -3,6 +3,7 @@ package com.joss.voodootvdb.views;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -26,9 +27,9 @@ import butterknife.InjectView;
  * Time: 5:53 PM
  */
 @SuppressLint("ViewConstructor")
-public class HomeHorizontalScrollView extends LinearLayout {
+public class VoodooHorizontalScrollView extends LinearLayout {
 
-    public static final String TAG = HomeHorizontalScrollView.class.getSimpleName();
+    public static final String TAG = VoodooHorizontalScrollView.class.getSimpleName();
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_FEATURE = 1;
 
@@ -42,8 +43,25 @@ public class HomeHorizontalScrollView extends LinearLayout {
     List<HomeItem> items;
     HomeClickListener listener;
 
-    public HomeHorizontalScrollView(Context context, int type, HomeClickListener listener) {
+    public VoodooHorizontalScrollView(Context context){
+        this(context, null);
+    }
+
+    public VoodooHorizontalScrollView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public VoodooHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, TYPE_NORMAL, null);
+    }
+
+    public VoodooHorizontalScrollView(Context context, int type, HomeClickListener listener) {
         super(context);
+        init(context, type, listener);
+    }
+
+    public void init(Context context, int type, HomeClickListener listener){
         this.type = type;
         this.context = context;
         this.items = new ArrayList<>();
@@ -57,9 +75,16 @@ public class HomeHorizontalScrollView extends LinearLayout {
         ButterKnife.inject(this);
     }
 
+    public void setListener(HomeClickListener homeClickListener){
+        this.listener = homeClickListener;
+    }
+
     public void setItems(String sectionTitle, List<HomeItem> items){
         if(!isObjectsEqual(this.items, items)){
-            this.sectionTitle.setText(sectionTitle);
+
+            this.sectionTitle.setVisibility(sectionTitle == null ? GONE : VISIBLE);
+            this.sectionTitle.setText(sectionTitle == null ? "" : sectionTitle);
+
             this.container.removeAllViews();
             this.items = items;
             addViews();

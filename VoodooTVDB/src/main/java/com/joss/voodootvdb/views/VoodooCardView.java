@@ -68,13 +68,15 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
         this.listener = homeClickListener;
         this.show = show;
         this.title.setText(show.getTitle());
-        Picasso.with(context)
-                .load(show.getImages().getPoster().getFull())
-                .fit()
-                .centerCrop()
-                .placeholder(R.drawable.placeholder_vertical)
-                .error(R.drawable.placeholder_vertical)
-                .into(image);
+
+        if(!show.getImages().getPoster().getFull().isEmpty())
+            Picasso.with(context)
+                    .load(show.getImages().getPoster().getFull())
+                    .fit()
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_vertical)
+                    .error(R.drawable.placeholder_vertical)
+                    .into(image);
     }
 
     public void animateIn(int position){

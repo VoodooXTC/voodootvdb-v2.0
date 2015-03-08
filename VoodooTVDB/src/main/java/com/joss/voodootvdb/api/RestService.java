@@ -26,7 +26,10 @@ public interface RestService {
     @GET("/shows/{id}")
     Show getShow(@Path("id") int id, @Query(EXTENDED) String extended);
 
+    @GET("/shows/{id}/related")
+    List<Show> getShowsRelated(@Path("id") int id, @Query(EXTENDED) String extended);
+
     @GET("/shows/popular")
-    List<Show> getPopularShows(@Query(EXTENDED) String extended);
+    List<Show> getShowsPopular(@Query(EXTENDED) String extended);
 
 }
