@@ -8,6 +8,7 @@ import java.util.List;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -21,6 +22,9 @@ public interface RestService {
 
     @POST("/auth/login")
     UserModel login(@Body UserModel userModel);
+
+    @GET("/shows/{id}")
+    Show getShow(@Path("id") int id, @Query(EXTENDED) String extended);
 
     @GET("/shows/popular")
     List<Show> getPopularShows(@Query(EXTENDED) String extended);

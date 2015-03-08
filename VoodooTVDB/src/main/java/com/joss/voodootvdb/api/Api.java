@@ -31,4 +31,17 @@ public class Api {
         intent.putExtra(ApiService.ARG_EXTENDED, extendedValues);
         context.startService(intent);
     }
+
+    public static void getShow(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOW);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+
+        String extendedValues = "";
+        for(String ex : extended){
+            extendedValues += ex + ",";
+        }
+        intent.putExtra(ApiService.ARG_EXTENDED, extendedValues);
+        context.startService(intent);
+    }
 }

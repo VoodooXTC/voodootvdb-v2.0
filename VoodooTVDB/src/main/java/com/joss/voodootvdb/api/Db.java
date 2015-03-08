@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.model.ShowsModel;
+import com.joss.voodootvdb.provider.shows.ShowsColumns;
+import com.joss.voodootvdb.provider.shows.ShowsContentValues;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularContentValues;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
@@ -23,4 +26,8 @@ public class Db {
         context.getContentResolver().bulkInsert(ShowsPopularColumns.CONTENT_URI, showsPopularCV);
     }
 
+    public static void updateShow(Context context, Show show) {
+        ContentValues showCV = ShowsContentValues.getSingleContentValue(new ShowsModel(show));
+        context.getContentResolver().insert(ShowsColumns.CONTENT_URI, showCV);
+    }
 }

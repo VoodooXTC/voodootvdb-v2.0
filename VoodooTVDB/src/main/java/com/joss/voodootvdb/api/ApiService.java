@@ -35,7 +35,9 @@ public class ApiService extends IntentService {
     public static final String REQUEST_TYPE = "api_request_type";
     public static final int REQUEST_LOGIN = 1;
     public static final int REQUEST_POPULAR_SHOWS = 2;
+    public static final int REQUEST_SHOW = 3;
 
+    public static final String ARG_ID = "id";
     public static final String ARGS_USER = "user";
     public static final String ARG_EXTENDED = "extended";
 
@@ -106,6 +108,10 @@ public class ApiService extends IntentService {
 
                 case REQUEST_POPULAR_SHOWS:
                     Db.updatePopularShows(this, service.getPopularShows(intent.getStringExtra(EXTENDED)));
+                    break;
+
+                case REQUEST_SHOW:
+                    Db.updateShow(this, service.getShow(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
                     break;
             }
         } catch(RetrofitError e){

@@ -15,13 +15,19 @@
     <string name="login_powered_by_trakt">Powered By Trakt.tv</string>
     <string name="login_trakt_icon">trakt_icon</string>
     <string name="login_button">Login</string>
-    <string name="error_generic_network">Please check your network connection.</string>
     <string name="login_success">Success</string>
+
+    <string name="error_generic_network">Please check your network connection.</string>
     <string name="error_icon">Error Icon</string>
     <string name="error_generic_retry">An error occurred. Tap here to retry.</string>
+
     <string name="feature_image">Feature Image</string>
+
     <string name="card_more">card more</string>
     <string name="card_image">card image</string>
+
+    <string name="show">Show</string>
     <string name="show_parallax_image">show parallax image</string>
+    <string name="show_starring">Starring:</string>
 
 </resources>

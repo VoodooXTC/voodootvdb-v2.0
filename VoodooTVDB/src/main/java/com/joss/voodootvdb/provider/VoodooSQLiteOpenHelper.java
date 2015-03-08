@@ -11,6 +11,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.joss.voodootvdb.BuildConfig;
+import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 
 public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
@@ -20,6 +21,22 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // @formatter:off
+    private static final String SQL_CREATE_TABLE_SHOWS = "CREATE TABLE IF NOT EXISTS "
+            + ShowsColumns.TABLE_NAME + " ( "
+            + ShowsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ShowsColumns.TITLE + " TEXT, "
+            + ShowsColumns.TRAKT_ID + " INTEGER, "
+            + ShowsColumns.IMDB_ID + " TEXT, "
+            + ShowsColumns.FIRST_AIRED + " TEXT, "
+            + ShowsColumns.COUNTRY + " TEXT, "
+            + ShowsColumns.STATUS + " TEXT, "
+            + ShowsColumns.RATING + " REAL, "
+            + ShowsColumns.UPDATED_AT + " TEXT, "
+            + ShowsColumns.LANGUAGE + " TEXT, "
+            + ShowsColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
     private static final String SQL_CREATE_TABLE_SHOWS_POPULAR = "CREATE TABLE IF NOT EXISTS "
             + ShowsPopularColumns.TABLE_NAME + " ( "
             + ShowsPopularColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -77,6 +94,7 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
+        db.execSQL(SQL_CREATE_TABLE_SHOWS);
         db.execSQL(SQL_CREATE_TABLE_SHOWS_POPULAR);
     }
 

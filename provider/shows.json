@@ -1,0 +1,51 @@
+{
+	"fields": [
+	    {
+            "name" : "title",
+            "type" : "String"
+        },
+		{
+			"name" : "trakt_id",
+			"type" : "Integer"
+		},
+        {
+            "name" : "imdb_id",
+            "type" : "String"
+        },
+        {
+            "name" : "first_aired",
+            "type" : "String"
+        },
+        {
+            "name" : "country",
+            "type" : "String"
+        },
+        {
+            "name" : "status",
+            "type" : "String"
+        },
+        {
+            "name" : "rating",
+            "type" : "Double"
+        },
+        {
+            "name" : "updated_at",
+            "type" : "String"
+        },
+        {
+            "name" : "language",
+            "type" : "String"
+        },
+        {
+            "name" : "json",
+            "type" : "String"
+        }
+	],
+
+    "constraints" : [
+        {
+            "name" : "unique_trakt_id",
+            "definition" : "unique (trakt_id) on conflict replace"
+        }
+    ]
+}
