@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.joss.voodootvdb.interfaces.HomeClickListener;
-import com.joss.voodootvdb.interfaces.HomeItem;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 import com.joss.voodootvdb.views.VoodooHorizontalScrollView;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class HomeAdapter extends BaseAdapter {
     public static final String TAG = HomeAdapter.class.getSimpleName();
 
     Context context;
-    List<List<HomeItem>> items;
+    List<List<VoodooItem>> items;
     HomeClickListener homeClickListener;
 
     public HomeAdapter(Context context, HomeClickListener listener){
@@ -56,7 +56,7 @@ public class HomeAdapter extends BaseAdapter {
         return VoodooHorizontalScrollView.TYPE_FEATURE + 1;
     }
 
-    public void setContent(List<List<HomeItem>> items){
+    public void setContent(List<List<VoodooItem>> items){
         this.items = items;
         notifyDataSetChanged();
     }

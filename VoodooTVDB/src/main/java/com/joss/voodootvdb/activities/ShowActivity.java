@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -23,13 +22,19 @@ import android.widget.TextView;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.api.models.People.Cast;
+import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.HomeClickListener;
-import com.joss.voodootvdb.interfaces.HomeItem;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsCursor;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
 import com.joss.voodootvdb.provider.shows.ShowsSelection;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleColumns;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleCursor;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleProvider;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleSelection;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedColumns;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedCursor;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedProvider;
@@ -60,6 +65,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     private static final int SHOW_CALLBACK = 32145;
     private static final int SHOW_RELATED_CALLBACK = 32146;
+    private static final int SHOW_PEOPLE_CALLBACK = 32147;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -85,6 +91,8 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     TextView relatedTitle;
     @InjectView(R.id.show_related_container)
     VoodooHorizontalScrollView relatedContainer;
+    @InjectView(R.id.show_people_container)
+    VoodooHorizontalScrollView peopleContainer;
     @InjectView(R.id.show_loading)
     LoadingView loadingView;
     @InjectView(R.id.show_error)
@@ -108,6 +116,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
         getLoaderManager().initLoader(SHOW_CALLBACK, getIntent().getExtras(), this);
         getLoaderManager().initLoader(SHOW_RELATED_CALLBACK, getIntent().getExtras(), this);
+        getLoaderManager().initLoader(SHOW_PEOPLE_CALLBACK, getIntent().getExtras(), this);
 
         Api.getShow(this,
                 getIntent().getIntExtra(ID, 0),
@@ -115,6 +124,11 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                 ApiService.EXT_IMAGES,
                 ApiService.EXT_METADATA);
         Api.getShowRelated(this,
+                getIntent().getIntExtra(ID, 0),
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
+        Api.getShowPeople(this,
                 getIntent().getIntExtra(ID, 0),
                 ApiService.EXT_FULL,
                 ApiService.EXT_IMAGES,
@@ -168,6 +182,11 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     }
 
+    @Override
+    public void onCastClicked(Cast cast) {
+        Utils.toast(this, "Cast Clicked: " + cast.getCharacter());
+    }
+
     private class ApiReceiver extends BroadcastReceiver {
 
         @Override
@@ -185,7 +204,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        int traktId = getIntent().getIntExtra(ID, 0);
+        int traktId = args.getInt(ID, 0);
         switch (id){
             case SHOW_CALLBACK:
                 ShowsSelection where = new ShowsSelection();
@@ -206,6 +225,16 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                         whereRelated.sel(),
                         whereRelated.args(),
                         ShowsRelatedColumns.DEFAULT_ORDER + " LIMIT 5");
+
+            case SHOW_PEOPLE_CALLBACK:
+                ShowsPeopleSelection wherePeople = new ShowsPeopleSelection();
+                wherePeople.traktId(traktId);
+                return new CursorLoader(this,
+                        ShowsPeopleColumns.CONTENT_URI,
+                        ShowsPeopleColumns.FULL_PROJECTION,
+                        wherePeople.sel(),
+                        wherePeople.args(),
+                        ShowsPeopleColumns.DEFAULT_ORDER + " LIMIT 1");
         }
         return null;
     }
@@ -225,10 +254,19 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                     break;
                 case SHOW_RELATED_CALLBACK:
                     ShowsRelatedCursor cursorRelated = new ShowsRelatedCursor(data);
-                    List<HomeItem> relatedShows = ShowsRelatedProvider.getHomeItems(this, cursorRelated);
+                    List<VoodooItem> relatedShows = ShowsRelatedProvider.getVoodooItems(this, cursorRelated);
                     if(relatedShows.size() > 0) {
                         relatedContainer.setListener(this);
                         relatedContainer.setItems(null, relatedShows);
+                    }
+                    break;
+
+                case SHOW_PEOPLE_CALLBACK:
+                    ShowsPeopleCursor cursorPeople = new ShowsPeopleCursor(data);
+                    List<VoodooItem> cast = ShowsPeopleProvider.getVoodooItems(getIntent().getIntExtra(ID, 0), "Actors", cursorPeople);
+                    if(cast.size() > 0) {
+                        peopleContainer.setListener(this);
+                        peopleContainer.setItems("Actors", cast);
                     }
                     break;
             }

@@ -1,5 +1,6 @@
 package com.joss.voodootvdb.interfaces;
 
+import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
 
 /**
@@ -14,5 +15,7 @@ public interface HomeClickListener {
     public void onShowMenuClicked(Show show);
 
     public void onTrailerClicked(String url);
+
+    public void onCastClicked(Cast cast);
 
 }

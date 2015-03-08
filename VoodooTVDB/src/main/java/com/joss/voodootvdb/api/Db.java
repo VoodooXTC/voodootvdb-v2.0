@@ -3,11 +3,15 @@ package com.joss.voodootvdb.api;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.model.ShowsModel;
+import com.joss.voodootvdb.model.ShowsPeopleModel;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsContentValues;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleColumns;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleContentValues;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularContentValues;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
@@ -53,5 +57,10 @@ public class Db {
         context.getContentResolver().delete(ShowsRelatedColumns.CONTENT_URI, where.sel(), where.args());
         ContentValues[] showsRelatedCV = ShowsRelatedContentValues.getContentValues(ShowsRelatedProvider.get(traktId, shows));
         context.getContentResolver().bulkInsert(ShowsRelatedColumns.CONTENT_URI, showsRelatedCV);
+    }
+
+    public static void updateShowsPeople(Context context, int traktId, People showsPeople) {
+        ContentValues showsPeopleCV = ShowsPeopleContentValues.getSingleContentValue(new ShowsPeopleModel(traktId, showsPeople));
+        context.getContentResolver().insert(ShowsPeopleColumns.CONTENT_URI, showsPeopleCV);
     }
 }

@@ -5,7 +5,7 @@ package com.joss.voodootvdb.interfaces;
  * Date: 3/6/15
  * Time: 12:49 PM
  */
-public interface HomeItem {
+public interface VoodooItem {
 
     public int getType();
 

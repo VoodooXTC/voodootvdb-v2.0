@@ -17,6 +17,7 @@ import android.util.Log;
 
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedColumns;
 
@@ -35,11 +36,14 @@ public class VoodooProvider extends ContentProvider {
     private static final int URI_TYPE_SHOWS = 0;
     private static final int URI_TYPE_SHOWS_ID = 1;
 
-    private static final int URI_TYPE_SHOWS_POPULAR = 2;
-    private static final int URI_TYPE_SHOWS_POPULAR_ID = 3;
+    private static final int URI_TYPE_SHOWS_PEOPLE = 2;
+    private static final int URI_TYPE_SHOWS_PEOPLE_ID = 3;
 
-    private static final int URI_TYPE_SHOWS_RELATED = 4;
-    private static final int URI_TYPE_SHOWS_RELATED_ID = 5;
+    private static final int URI_TYPE_SHOWS_POPULAR = 4;
+    private static final int URI_TYPE_SHOWS_POPULAR_ID = 5;
+
+    private static final int URI_TYPE_SHOWS_RELATED = 6;
+    private static final int URI_TYPE_SHOWS_RELATED_ID = 7;
 
 
 
@@ -48,6 +52,8 @@ public class VoodooProvider extends ContentProvider {
     static {
         URI_MATCHER.addURI(AUTHORITY, ShowsColumns.TABLE_NAME, URI_TYPE_SHOWS);
         URI_MATCHER.addURI(AUTHORITY, ShowsColumns.TABLE_NAME + "/#", URI_TYPE_SHOWS_ID);
+        URI_MATCHER.addURI(AUTHORITY, ShowsPeopleColumns.TABLE_NAME, URI_TYPE_SHOWS_PEOPLE);
+        URI_MATCHER.addURI(AUTHORITY, ShowsPeopleColumns.TABLE_NAME + "/#", URI_TYPE_SHOWS_PEOPLE_ID);
         URI_MATCHER.addURI(AUTHORITY, ShowsPopularColumns.TABLE_NAME, URI_TYPE_SHOWS_POPULAR);
         URI_MATCHER.addURI(AUTHORITY, ShowsPopularColumns.TABLE_NAME + "/#", URI_TYPE_SHOWS_POPULAR_ID);
         URI_MATCHER.addURI(AUTHORITY, ShowsRelatedColumns.TABLE_NAME, URI_TYPE_SHOWS_RELATED);
@@ -70,6 +76,11 @@ public class VoodooProvider extends ContentProvider {
                 return TYPE_CURSOR_DIR + ShowsColumns.TABLE_NAME;
             case URI_TYPE_SHOWS_ID:
                 return TYPE_CURSOR_ITEM + ShowsColumns.TABLE_NAME;
+
+            case URI_TYPE_SHOWS_PEOPLE:
+                return TYPE_CURSOR_DIR + ShowsPeopleColumns.TABLE_NAME;
+            case URI_TYPE_SHOWS_PEOPLE_ID:
+                return TYPE_CURSOR_ITEM + ShowsPeopleColumns.TABLE_NAME;
 
             case URI_TYPE_SHOWS_POPULAR:
                 return TYPE_CURSOR_DIR + ShowsPopularColumns.TABLE_NAME;
@@ -201,6 +212,12 @@ public class VoodooProvider extends ContentProvider {
                 res.orderBy = ShowsColumns.DEFAULT_ORDER;
                 break;
 
+            case URI_TYPE_SHOWS_PEOPLE:
+            case URI_TYPE_SHOWS_PEOPLE_ID:
+                res.table = ShowsPeopleColumns.TABLE_NAME;
+                res.orderBy = ShowsPeopleColumns.DEFAULT_ORDER;
+                break;
+
             case URI_TYPE_SHOWS_POPULAR:
             case URI_TYPE_SHOWS_POPULAR_ID:
                 res.table = ShowsPopularColumns.TABLE_NAME;
@@ -219,6 +236,7 @@ public class VoodooProvider extends ContentProvider {
 
         switch (matchedId) {
             case URI_TYPE_SHOWS_ID:
+            case URI_TYPE_SHOWS_PEOPLE_ID:
             case URI_TYPE_SHOWS_POPULAR_ID:
             case URI_TYPE_SHOWS_RELATED_ID:
                 id = uri.getLastPathSegment();

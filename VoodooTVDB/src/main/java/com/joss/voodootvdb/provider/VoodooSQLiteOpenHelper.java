@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
+import com.joss.voodootvdb.provider.shows_people.ShowsPeopleColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedColumns;
 
@@ -35,6 +36,14 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
             + ShowsColumns.UPDATED_AT + " TEXT, "
             + ShowsColumns.LANGUAGE + " TEXT, "
             + ShowsColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
+    private static final String SQL_CREATE_TABLE_SHOWS_PEOPLE = "CREATE TABLE IF NOT EXISTS "
+            + ShowsPeopleColumns.TABLE_NAME + " ( "
+            + ShowsPeopleColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ShowsPeopleColumns.TRAKT_ID + " INTEGER, "
+            + ShowsPeopleColumns.JSON + " TEXT "
             + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
             + " );";
 
@@ -93,6 +102,7 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
         db.execSQL(SQL_CREATE_TABLE_SHOWS);
+        db.execSQL(SQL_CREATE_TABLE_SHOWS_PEOPLE);
         db.execSQL(SQL_CREATE_TABLE_SHOWS_POPULAR);
         db.execSQL(SQL_CREATE_TABLE_SHOWS_RELATED);
     }

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.HomeClickListener;
 import com.squareup.picasso.Picasso;
@@ -26,6 +27,9 @@ import butterknife.InjectView;
  */
 public class VoodooCardView extends LinearLayout implements View.OnClickListener {
 
+    private static final int TYPE_SHOW = 0;
+    private static final int TYPE_CAST = 1;
+
     @InjectView(R.id.card_view)
     CardView cardView;
     @InjectView(R.id.card_image)
@@ -38,6 +42,9 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
     HomeClickListener listener;
     Context context;
     Show show;
+    Cast cast;
+
+    int type;
 
     public VoodooCardView(Context context) {
         this(context, null);
@@ -65,6 +72,7 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
     }
 
     public void setContent(Show show, HomeClickListener homeClickListener) {
+        this.type = TYPE_SHOW;
         this.listener = homeClickListener;
         this.show = show;
         this.title.setText(show.getTitle());
@@ -72,6 +80,23 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
         if(!show.getImages().getPoster().getFull().isEmpty())
             Picasso.with(context)
                     .load(show.getImages().getPoster().getFull())
+                    .fit()
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_vertical)
+                    .error(R.drawable.placeholder_vertical)
+                    .into(image);
+    }
+
+    public void setContent(Cast cast, HomeClickListener homeClickListener) {
+        this.type = TYPE_CAST;
+        this.listener = homeClickListener;
+        this.cast = cast;
+        this.title.setText(cast.getCharacter());
+        this.menu.setVisibility(GONE);
+
+        if(!cast.getPerson().getImages().getHeadshot().getFull().isEmpty())
+            Picasso.with(context)
+                    .load(cast.getPerson().getImages().getHeadshot().getFull())
                     .fit()
                     .centerCrop()
                     .placeholder(R.drawable.placeholder_vertical)
@@ -115,14 +140,32 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.card_view:
-                if(listener != null)
-                    listener.onShowClicked(show);
+                if(listener != null){
+                    switch (type){
+                        case TYPE_SHOW:
+                            listener.onShowClicked(show);
+                            break;
+
+                        case TYPE_CAST:
+                            listener.onCastClicked(cast);
+                            break;
+                    }
+                }
                 break;
 
             case R.id.card_menu:
-                if(listener != null)
-                    listener.onShowMenuClicked(show);
+                if(listener != null){
+                    switch (type){
+                        case TYPE_SHOW:
+                            listener.onShowMenuClicked(show);
+                            break;
+
+                        case TYPE_CAST:
+                            break;
+                    }
+                }
                 break;
         }
     }
+
 }

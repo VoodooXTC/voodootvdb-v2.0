@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.api;
 
 import com.joss.voodootvdb.api.models.Login.UserModel;
+import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.Show.Show;
 
 import java.util.List;
@@ -29,7 +30,9 @@ public interface RestService {
     @GET("/shows/{id}/related")
     List<Show> getShowsRelated(@Path("id") int id, @Query(EXTENDED) String extended);
 
+    @GET("/shows/{id}/people")
+    People getShowsPeople(@Path("id") int id, @Query(EXTENDED) String extended);
+
     @GET("/shows/popular")
     List<Show> getShowsPopular(@Query(EXTENDED) String extended);
-
 }

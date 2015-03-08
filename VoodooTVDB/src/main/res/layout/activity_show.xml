@@ -162,6 +162,10 @@
                     android:id="@+id/show_related_container"
                     style="@style/MatchWidthWrapHeight" />
 
+                <com.joss.voodootvdb.views.VoodooHorizontalScrollView
+                    android:id="@+id/show_people_container"
+                    style="@style/MatchWidthWrapHeight" />
+
             </LinearLayout>
 
         </LinearLayout>

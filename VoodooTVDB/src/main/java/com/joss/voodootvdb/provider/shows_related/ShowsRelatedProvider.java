@@ -3,7 +3,7 @@ package com.joss.voodootvdb.provider.shows_related;
 import android.content.Context;
 
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeItem;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 import com.joss.voodootvdb.model.ShowsRelatedModel;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
 
@@ -38,8 +38,8 @@ public class ShowsRelatedProvider {
         return items;
     }
 
-    public static List<HomeItem> getHomeItems(Context context, ShowsRelatedCursor cursor) {
-        List<HomeItem> items = new ArrayList<>();
+    public static List<VoodooItem> getVoodooItems(Context context, ShowsRelatedCursor cursor) {
+        List<VoodooItem> items = new ArrayList<>();
         if(cursor.moveToFirst()){
             while(!cursor.isAfterLast()){
                 Show show = ShowsProvider.get(context, cursor.getRelatedTraktId());

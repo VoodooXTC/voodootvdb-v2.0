@@ -1,9 +1,7 @@
 package com.joss.voodootvdb.provider.shows_popular;
 
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeItem;
 import com.joss.voodootvdb.model.ShowsPopularModel;
-import com.joss.voodootvdb.utils.GGson;
 
 import java.util.ArrayList;
 import java.util.List;

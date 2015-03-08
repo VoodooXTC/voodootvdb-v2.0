@@ -11,9 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.People.Cast;
+import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.HomeClickListener;
-import com.joss.voodootvdb.interfaces.HomeItem;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class VoodooHorizontalScrollView extends LinearLayout {
 
     Context context;
     int type;
-    List<HomeItem> items;
+    List<VoodooItem> items;
     HomeClickListener listener;
 
     public VoodooHorizontalScrollView(Context context){
@@ -79,7 +81,7 @@ public class VoodooHorizontalScrollView extends LinearLayout {
         this.listener = homeClickListener;
     }
 
-    public void setItems(String sectionTitle, List<HomeItem> items){
+    public void setItems(String sectionTitle, List<VoodooItem> items){
         if(!isObjectsEqual(this.items, items)){
 
             this.sectionTitle.setVisibility(sectionTitle == null ? GONE : VISIBLE);
@@ -103,8 +105,11 @@ public class VoodooHorizontalScrollView extends LinearLayout {
 
             }else if(type == TYPE_NORMAL){
                 VoodooCardView cardView = new VoodooCardView(context);
-                if(o instanceof Show)
+                if(o instanceof Show) {
                     cardView.setContent((Show) o, listener);
+                }else if(o instanceof Cast){
+                    cardView.setContent((Cast) o, listener);
+                }
 
                 container.addView(cardView);
 
@@ -113,7 +118,7 @@ public class VoodooHorizontalScrollView extends LinearLayout {
         }
     }
 
-    private boolean isObjectsEqual(List<HomeItem> items1, List<HomeItem> items2) {
+    private boolean isObjectsEqual(List<VoodooItem> items1, List<VoodooItem> items2) {
         // Check same size
         if(items1.size() != items2.size())
             return false;
@@ -129,6 +134,12 @@ public class VoodooHorizontalScrollView extends LinearLayout {
                 Show s2 = (Show) items2.get(i);
 
                 if(!s1.getIds().getTrakt().equals(s2.getIds().getTrakt()))
+                    return false;
+            }else if(items1.get(i) instanceof Cast){
+                Cast c1 = (Cast) items1.get(i);
+                Cast c2 = (Cast) items2.get(i);
+
+                if(c1.getTraktId() != c2.getTraktId())
                     return false;
             }
             // TODO else if(o instaceof OTHER_STUFF){

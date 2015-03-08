@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.joss.voodootvdb.interfaces.HomeItem;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 
-public class Show implements HomeItem{
+public class Show implements VoodooItem {
 
     @Expose
     private String title;

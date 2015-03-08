@@ -15,9 +15,10 @@ import com.joss.voodootvdb.activities.ShowActivity;
 import com.joss.voodootvdb.adapters.HomeAdapter;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.HomeClickListener;
-import com.joss.voodootvdb.interfaces.HomeItem;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularCursor;
@@ -104,13 +105,14 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null){
             ShowsPopularCursor cursor = new ShowsPopularCursor(data);
-            List<HomeItem> shows = ShowsProvider.getHomeItems(getActivity(), cursor,
+            List<VoodooItem> shows = ShowsProvider.getHomeItems(getActivity(), cursor,
                     VoodooHorizontalScrollView.TYPE_FEATURE,
                     "Featured");
+            // TODO Think of good title names
 
             if(shows.size() > 0) {
                 showContent();
-                List<List<HomeItem>> items = new ArrayList<>();
+                List<List<VoodooItem>> items = new ArrayList<>();
                 items.add(shows);
                 items.add(ShowsProvider.getHomeItems(getActivity(), cursor, VoodooHorizontalScrollView.TYPE_NORMAL, "Recommended"));
                 items.add(ShowsProvider.getHomeItems(getActivity(), cursor, VoodooHorizontalScrollView.TYPE_NORMAL, "Action/Adventure"));
@@ -143,5 +145,10 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
     public void onTrailerClicked(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
+    }
+
+    @Override
+    public void onCastClicked(Cast cast) {
+
     }
 }

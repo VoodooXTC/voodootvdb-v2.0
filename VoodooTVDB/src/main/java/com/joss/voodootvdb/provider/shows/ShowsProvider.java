@@ -3,9 +3,8 @@ package com.joss.voodootvdb.provider.shows;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.joss.voodootvdb.activities.LoginActivity;
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeItem;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 import com.joss.voodootvdb.model.ShowsModel;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularCursor;
 import com.joss.voodootvdb.utils.GGson;
@@ -54,8 +53,8 @@ public class ShowsProvider {
         return show;
     }
 
-    public static List<HomeItem> getHomeItems(Context context, ShowsPopularCursor cursor, int type, String sectionTitle) {
-        List<HomeItem> items = new ArrayList<>();
+    public static List<VoodooItem> getHomeItems(Context context, ShowsPopularCursor cursor, int type, String sectionTitle) {
+        List<VoodooItem> items = new ArrayList<>();
         if(cursor.moveToFirst()){
             while (!cursor.isAfterLast()){
 
