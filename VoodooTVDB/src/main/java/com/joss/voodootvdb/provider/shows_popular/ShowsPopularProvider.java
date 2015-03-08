@@ -22,36 +22,4 @@ public class ShowsPopularProvider {
         }
         return items;
     }
-
-    public static List<Show> get(ShowsPopularCursor cursor) {
-        List<Show> items = new ArrayList<>();
-        if(cursor.moveToFirst()){
-            while (!cursor.isAfterLast()){
-                items.add(GGson.fromJson(cursor.getJson(), Show.class));
-                cursor.moveToNext();
-            }
-        }
-        return items;
-    }
-
-    public static Show getFirst(ShowsPopularCursor cursor) {
-        return cursor.moveToFirst() ? GGson.fromJson(cursor.getJson(), Show.class) : new Show();
-    }
-
-    public static List<HomeItem> getHomeItems(ShowsPopularCursor cursor, int type, String sectionTitle) {
-        List<HomeItem> items = new ArrayList<>();
-        if(cursor.moveToFirst()){
-            while (!cursor.isAfterLast()){
-
-                Show show = GGson.fromJson(cursor.getJson(), Show.class);
-                show.setType(type);
-                show.setSectionTitle(sectionTitle);
-
-                items.add(show);
-
-                cursor.moveToNext();
-            }
-        }
-        return items;
-    }
 }

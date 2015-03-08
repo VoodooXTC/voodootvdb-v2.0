@@ -52,151 +52,33 @@ public class ShowsPopularSelection extends AbstractSelection<ShowsPopularSelecti
         return this;
     }
 
-    public ShowsPopularSelection title(String... value) {
-        addEquals(ShowsPopularColumns.TITLE, value);
+    public ShowsPopularSelection showTraktId(Integer... value) {
+        addEquals(ShowsPopularColumns.SHOW_TRAKT_ID, value);
         return this;
     }
     
-    public ShowsPopularSelection titleNot(String... value) {
-        addNotEquals(ShowsPopularColumns.TITLE, value);
+    public ShowsPopularSelection showTraktIdNot(Integer... value) {
+        addNotEquals(ShowsPopularColumns.SHOW_TRAKT_ID, value);
         return this;
     }
 
-
-    public ShowsPopularSelection traktId(Integer... value) {
-        addEquals(ShowsPopularColumns.TRAKT_ID, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection traktIdNot(Integer... value) {
-        addNotEquals(ShowsPopularColumns.TRAKT_ID, value);
+    public ShowsPopularSelection showTraktIdGt(int value) {
+        addGreaterThan(ShowsPopularColumns.SHOW_TRAKT_ID, value);
         return this;
     }
 
-    public ShowsPopularSelection traktIdGt(int value) {
-        addGreaterThan(ShowsPopularColumns.TRAKT_ID, value);
+    public ShowsPopularSelection showTraktIdGtEq(int value) {
+        addGreaterThanOrEquals(ShowsPopularColumns.SHOW_TRAKT_ID, value);
         return this;
     }
 
-    public ShowsPopularSelection traktIdGtEq(int value) {
-        addGreaterThanOrEquals(ShowsPopularColumns.TRAKT_ID, value);
+    public ShowsPopularSelection showTraktIdLt(int value) {
+        addLessThan(ShowsPopularColumns.SHOW_TRAKT_ID, value);
         return this;
     }
 
-    public ShowsPopularSelection traktIdLt(int value) {
-        addLessThan(ShowsPopularColumns.TRAKT_ID, value);
+    public ShowsPopularSelection showTraktIdLtEq(int value) {
+        addLessThanOrEquals(ShowsPopularColumns.SHOW_TRAKT_ID, value);
         return this;
     }
-
-    public ShowsPopularSelection traktIdLtEq(int value) {
-        addLessThanOrEquals(ShowsPopularColumns.TRAKT_ID, value);
-        return this;
-    }
-
-    public ShowsPopularSelection imdbId(String... value) {
-        addEquals(ShowsPopularColumns.IMDB_ID, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection imdbIdNot(String... value) {
-        addNotEquals(ShowsPopularColumns.IMDB_ID, value);
-        return this;
-    }
-
-
-    public ShowsPopularSelection firstAired(String... value) {
-        addEquals(ShowsPopularColumns.FIRST_AIRED, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection firstAiredNot(String... value) {
-        addNotEquals(ShowsPopularColumns.FIRST_AIRED, value);
-        return this;
-    }
-
-
-    public ShowsPopularSelection country(String... value) {
-        addEquals(ShowsPopularColumns.COUNTRY, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection countryNot(String... value) {
-        addNotEquals(ShowsPopularColumns.COUNTRY, value);
-        return this;
-    }
-
-
-    public ShowsPopularSelection status(String... value) {
-        addEquals(ShowsPopularColumns.STATUS, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection statusNot(String... value) {
-        addNotEquals(ShowsPopularColumns.STATUS, value);
-        return this;
-    }
-
-
-    public ShowsPopularSelection rating(Double... value) {
-        addEquals(ShowsPopularColumns.RATING, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection ratingNot(Double... value) {
-        addNotEquals(ShowsPopularColumns.RATING, value);
-        return this;
-    }
-
-    public ShowsPopularSelection ratingGt(double value) {
-        addGreaterThan(ShowsPopularColumns.RATING, value);
-        return this;
-    }
-
-    public ShowsPopularSelection ratingGtEq(double value) {
-        addGreaterThanOrEquals(ShowsPopularColumns.RATING, value);
-        return this;
-    }
-
-    public ShowsPopularSelection ratingLt(double value) {
-        addLessThan(ShowsPopularColumns.RATING, value);
-        return this;
-    }
-
-    public ShowsPopularSelection ratingLtEq(double value) {
-        addLessThanOrEquals(ShowsPopularColumns.RATING, value);
-        return this;
-    }
-
-    public ShowsPopularSelection updatedAt(String... value) {
-        addEquals(ShowsPopularColumns.UPDATED_AT, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection updatedAtNot(String... value) {
-        addNotEquals(ShowsPopularColumns.UPDATED_AT, value);
-        return this;
-    }
-
-
-    public ShowsPopularSelection language(String... value) {
-        addEquals(ShowsPopularColumns.LANGUAGE, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection languageNot(String... value) {
-        addNotEquals(ShowsPopularColumns.LANGUAGE, value);
-        return this;
-    }
-
-
-    public ShowsPopularSelection json(String... value) {
-        addEquals(ShowsPopularColumns.JSON, value);
-        return this;
-    }
-    
-    public ShowsPopularSelection jsonNot(String... value) {
-        addNotEquals(ShowsPopularColumns.JSON, value);
-        return this;
-    }
-
 }

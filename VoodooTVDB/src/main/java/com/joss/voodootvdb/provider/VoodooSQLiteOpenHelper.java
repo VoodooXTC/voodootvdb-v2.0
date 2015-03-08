@@ -41,23 +41,13 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_TABLE_SHOWS_POPULAR = "CREATE TABLE IF NOT EXISTS "
             + ShowsPopularColumns.TABLE_NAME + " ( "
             + ShowsPopularColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + ShowsPopularColumns.TITLE + " TEXT, "
-            + ShowsPopularColumns.TRAKT_ID + " INTEGER, "
-            + ShowsPopularColumns.IMDB_ID + " TEXT, "
-            + ShowsPopularColumns.FIRST_AIRED + " TEXT, "
-            + ShowsPopularColumns.COUNTRY + " TEXT, "
-            + ShowsPopularColumns.STATUS + " TEXT, "
-            + ShowsPopularColumns.RATING + " REAL, "
-            + ShowsPopularColumns.UPDATED_AT + " TEXT, "
-            + ShowsPopularColumns.LANGUAGE + " TEXT, "
-            + ShowsPopularColumns.JSON + " TEXT "
-            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
+            + ShowsPopularColumns.SHOW_TRAKT_ID + " INTEGER "
             + " );";
 
     private static final String SQL_CREATE_TABLE_SHOWS_RELATED = "CREATE TABLE IF NOT EXISTS "
             + ShowsRelatedColumns.TABLE_NAME + " ( "
             + ShowsRelatedColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + ShowsRelatedColumns.SHOW_TRAKT_ID + " TEXT, "
+            + ShowsRelatedColumns.SHOW_TRAKT_ID + " INTEGER, "
             + ShowsRelatedColumns.RELATED_TRAKT_ID + " INTEGER "
             + " );";
 

@@ -29,112 +29,13 @@ public class ShowsPopularContentValues extends AbstractContentValues {
         return contentResolver.update(uri(), values(), where == null ? null : where.sel(), where == null ? null : where.args());
     }
 
-    public ShowsPopularContentValues putTitle(String value) {
-        mContentValues.put(ShowsPopularColumns.TITLE, value);
+    public ShowsPopularContentValues putShowTraktId(Integer value) {
+        mContentValues.put(ShowsPopularColumns.SHOW_TRAKT_ID, value);
         return this;
     }
 
-    public ShowsPopularContentValues putTitleNull() {
-        mContentValues.putNull(ShowsPopularColumns.TITLE);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putTraktId(Integer value) {
-        mContentValues.put(ShowsPopularColumns.TRAKT_ID, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putTraktIdNull() {
-        mContentValues.putNull(ShowsPopularColumns.TRAKT_ID);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putImdbId(String value) {
-        mContentValues.put(ShowsPopularColumns.IMDB_ID, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putImdbIdNull() {
-        mContentValues.putNull(ShowsPopularColumns.IMDB_ID);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putFirstAired(String value) {
-        mContentValues.put(ShowsPopularColumns.FIRST_AIRED, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putFirstAiredNull() {
-        mContentValues.putNull(ShowsPopularColumns.FIRST_AIRED);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putCountry(String value) {
-        mContentValues.put(ShowsPopularColumns.COUNTRY, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putCountryNull() {
-        mContentValues.putNull(ShowsPopularColumns.COUNTRY);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putStatus(String value) {
-        mContentValues.put(ShowsPopularColumns.STATUS, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putStatusNull() {
-        mContentValues.putNull(ShowsPopularColumns.STATUS);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putRating(Double value) {
-        mContentValues.put(ShowsPopularColumns.RATING, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putRatingNull() {
-        mContentValues.putNull(ShowsPopularColumns.RATING);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putUpdatedAt(String value) {
-        mContentValues.put(ShowsPopularColumns.UPDATED_AT, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putUpdatedAtNull() {
-        mContentValues.putNull(ShowsPopularColumns.UPDATED_AT);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putLanguage(String value) {
-        mContentValues.put(ShowsPopularColumns.LANGUAGE, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putLanguageNull() {
-        mContentValues.putNull(ShowsPopularColumns.LANGUAGE);
-        return this;
-    }
-
-
-    public ShowsPopularContentValues putJson(String value) {
-        mContentValues.put(ShowsPopularColumns.JSON, value);
-        return this;
-    }
-
-    public ShowsPopularContentValues putJsonNull() {
-        mContentValues.putNull(ShowsPopularColumns.JSON);
+    public ShowsPopularContentValues putShowTraktIdNull() {
+        mContentValues.putNull(ShowsPopularColumns.SHOW_TRAKT_ID);
         return this;
     }
 
@@ -149,16 +50,7 @@ public class ShowsPopularContentValues extends AbstractContentValues {
 
     public static ContentValues getSingleContentValue(ShowsPopularModel item){
         ShowsPopularContentValues values = new ShowsPopularContentValues();
-        values.putTitle(item.title);
-        values.putTraktId(item.traktId);
-        values.putImdbId(item.imdbId);
-        values.putFirstAired(item.firstAired);
-        values.putCountry(item.country);
-        values.putStatus(item.status);
-        values.putRating(item.rating);
-        values.putUpdatedAt(item.updatedAt);
-        values.putLanguage(item.language);
-        values.putJson(item.json);
+        values.putShowTraktId(item.showTraktId);
         return values.values();
     }
 }

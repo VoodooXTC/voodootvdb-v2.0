@@ -106,12 +106,12 @@ public class ApiService extends IntentService {
                     broadcastLoginSuccess(type);
                     break;
 
-                case REQUEST_SHOWS_POPULAR:
-                    Db.updatePopularShows(this, service.getShowsPopular(intent.getStringExtra(EXTENDED)));
-                    break;
-
                 case REQUEST_SHOW:
                     Db.updateShow(this, service.getShow(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    break;
+
+                case REQUEST_SHOWS_POPULAR:
+                    Db.updatePopularShows(this, service.getShowsPopular(intent.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_SHOWS_RELATED:

@@ -11,6 +11,7 @@ import com.joss.voodootvdb.provider.shows.ShowsProvider;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularContentValues;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
+import com.joss.voodootvdb.provider.shows_popular.ShowsPopularSelection;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedColumns;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedContentValues;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedProvider;
@@ -25,15 +26,20 @@ import java.util.List;
  */
 public class Db {
 
-    public static void updatePopularShows(Context context, List<Show> shows){
-        context.getContentResolver().delete(ShowsPopularColumns.CONTENT_URI, null, null);
-        ContentValues[] showsPopularCV = ShowsPopularContentValues.getContentValues(ShowsPopularProvider.get(shows));
-        context.getContentResolver().bulkInsert(ShowsPopularColumns.CONTENT_URI, showsPopularCV);
-    }
-
     public static void updateShow(Context context, Show show) {
         ContentValues showCV = ShowsContentValues.getSingleContentValue(new ShowsModel(show));
         context.getContentResolver().insert(ShowsColumns.CONTENT_URI, showCV);
+    }
+
+    public static void updatePopularShows(Context context, List<Show> shows){
+        // Update Show Content
+        ContentValues[] showsCV = ShowsContentValues.getContentValues(ShowsProvider.get(shows));
+        context.getContentResolver().bulkInsert(ShowsColumns.CONTENT_URI, showsCV);
+
+        // Update Popular Shows
+        context.getContentResolver().delete(ShowsPopularColumns.CONTENT_URI, null, null);
+        ContentValues[] showsPopularCV = ShowsPopularContentValues.getContentValues(ShowsPopularProvider.get(shows));
+        context.getContentResolver().bulkInsert(ShowsPopularColumns.CONTENT_URI, showsPopularCV);
     }
 
     public static void updateShowsRelated(Context context, int traktId, List<Show> shows) {

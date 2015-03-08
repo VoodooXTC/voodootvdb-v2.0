@@ -18,6 +18,7 @@ import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.fragments.LoginFragment;
 import com.joss.voodootvdb.interfaces.LoginListener;
+import com.joss.voodootvdb.provider.shows.ShowsProvider;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularCursor;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
@@ -101,7 +102,7 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null){
             ShowsPopularCursor cursor = new ShowsPopularCursor(data);
-            List<Show> shows = ShowsPopularProvider.get(cursor);
+            List<Show> shows = ShowsProvider.get(this, cursor);
             for(Show show : shows){
                 String image = show.getImages().getPoster().getFull();
                 if(!image.isEmpty()){

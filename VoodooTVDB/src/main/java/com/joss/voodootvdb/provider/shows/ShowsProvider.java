@@ -3,8 +3,11 @@ package com.joss.voodootvdb.provider.shows;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.joss.voodootvdb.activities.LoginActivity;
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.interfaces.HomeItem;
 import com.joss.voodootvdb.model.ShowsModel;
+import com.joss.voodootvdb.provider.shows_popular.ShowsPopularCursor;
 import com.joss.voodootvdb.utils.GGson;
 
 import java.util.ArrayList;
@@ -49,5 +52,34 @@ public class ShowsProvider {
         showsCursor.close();
 
         return show;
+    }
+
+    public static List<HomeItem> getHomeItems(Context context, ShowsPopularCursor cursor, int type, String sectionTitle) {
+        List<HomeItem> items = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            while (!cursor.isAfterLast()){
+
+                Show show = get(context, cursor.getShowTraktId());
+                show.setType(type);
+                show.setSectionTitle(sectionTitle);
+
+                items.add(show);
+
+                cursor.moveToNext();
+            }
+        }
+        return items;
+    }
+
+    public static List<Show> get(Context context, ShowsPopularCursor cursor) {
+        List<Show> items = new ArrayList<>();
+        if(cursor.moveToFirst()){
+            while (!cursor.isAfterLast()){
+                Show show = get(context, cursor.getShowTraktId());
+                items.add(show);
+                cursor.moveToNext();
+            }
+        }
+        return items;
     }
 }
