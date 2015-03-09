@@ -1,92 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_container"
     style="@style/Match"
-    tools:background="@color/black">
+    android:fillViewport="true">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/login_card_view"
-        style="@style/VoodooCard"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/normal">
+    <RelativeLayout
+        android:id="@+id/login_container"
+        style="@style/Match"
+        tools:background="@color/black">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/login_card_view"
+            style="@style/VoodooCard"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/normal">
+
+            <LinearLayout
+                style="@style/MatchWidthWrapHeight"
+                android:orientation="vertical"
+                android:padding="@dimen/normal"
+                android:gravity="center">
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/login_username"
+                    style="@style/VoodooEditText"
+                    android:hint="@string/login_username_hint"
+                    android:nextFocusDown="@+id/login_password"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    />
+
+                <com.iangclifton.android.floatlabel.FloatLabel
+                    android:id="@+id/login_password"
+                    style="@style/VoodooEditText"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:hint="@string/login_password_hint"
+                    />
+
+                <com.dd.CircularProgressButton
+                    android:id="@+id/login_button"
+                    style="@style/VoodooButtonRound"
+                    app:cpb_textComplete="Success"
+                    app:cpb_textError="Error"
+                    app:cpb_cornerRadius="48dp"
+                    app:cpb_textIdle="Login"
+                    />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <ImageView
+            android:id="@+id/login_icon_launcher"
+            style="@style/Wrap"
+            android:src="@drawable/ic_launcher"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/login_card_view"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="-40dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
+            android:elevation="6dp"
+            />
 
         <LinearLayout
-            style="@style/MatchWidthWrapHeight"
-            android:orientation="vertical"
-            android:padding="@dimen/normal"
-            android:gravity="center">
+            style="@style/Wrap"
+            android:background="@color/black_10_percent_transparency"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical"
+            android:padding="@dimen/tiny"
+            android:layout_marginBottom="@dimen/navigation_bar_height"
+            >
 
-            <com.iangclifton.android.floatlabel.FloatLabel
-                android:id="@+id/login_username"
-                style="@style/VoodooEditText"
-                android:hint="@string/login_username_hint"
-                android:nextFocusDown="@+id/login_password"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
+            <ImageView
+                android:layout_width="@dimen/largest"
+                android:layout_height="@dimen/largest"
+                android:src="@drawable/ic_trakt"
+                android:contentDescription="@string/login_trakt_icon"
                 />
 
-            <com.iangclifton.android.floatlabel.FloatLabel
-                android:id="@+id/login_password"
-                style="@style/VoodooEditText"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:hint="@string/login_password_hint"
-                />
-
-            <com.dd.CircularProgressButton
-                android:id="@+id/login_button"
-                style="@style/VoodooButtonRound"
-                app:cpb_textComplete="Success"
-                app:cpb_textError="Error"
-                app:cpb_cornerRadius="48dp"
-                app:cpb_textIdle="Login"
+            <oak.widget.TextViewWithFont
+                style="@style/Wrap"
+                android:text="@string/login_powered_by_trakt"
+                android:textColor="@color/white"
+                android:paddingStart="@dimen/tiny"
+                android:paddingEnd="@dimen/tiny"
                 />
 
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
-
-    <ImageView
-        android:id="@+id/login_icon_launcher"
-        style="@style/Wrap"
-        android:src="@drawable/ic_launcher"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/login_card_view"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="-40dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginLeft="0dp"
-        android:elevation="6dp"
-        />
-
-    <LinearLayout
-        style="@style/Wrap"
-        android:background="@color/black_10_percent_transparency"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_vertical"
-        android:padding="@dimen/tiny"
-        android:layout_marginBottom="@dimen/navigation_bar_height"
-        >
-
-        <ImageView
-            android:layout_width="@dimen/largest"
-            android:layout_height="@dimen/largest"
-            android:src="@drawable/ic_trakt"
-            android:contentDescription="@string/login_trakt_icon"
-            />
-
-        <oak.widget.TextViewWithFont
-            style="@style/Wrap"
-            android:text="@string/login_powered_by_trakt"
-            android:textColor="@color/white"
-            android:paddingStart="@dimen/tiny"
-            android:paddingEnd="@dimen/tiny"
-            />
-
-    </LinearLayout>
-    
-</RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

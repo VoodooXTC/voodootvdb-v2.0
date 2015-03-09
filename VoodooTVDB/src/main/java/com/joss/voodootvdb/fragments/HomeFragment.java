@@ -14,6 +14,7 @@ import com.joss.voodootvdb.activities.ShowActivity;
 import com.joss.voodootvdb.adapters.HomeAdapter;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.VoodooClickListener;
@@ -135,6 +136,11 @@ public class HomeFragment extends BaseListFragment implements
     }
 
     @Override
+    public void onMovieMenuClicked(Movie movie) {
+
+    }
+
+    @Override
     public void onTrailerClicked(String url) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
@@ -142,6 +148,11 @@ public class HomeFragment extends BaseListFragment implements
 
     @Override
     public void onCastClicked(Cast cast) {
+
+    }
+
+    @Override
+    public void onMovieClicked(Movie movie){
 
     }
 }

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.VoodooClickListener;
@@ -109,6 +110,9 @@ public class VoodooHorizontalScrollView extends LinearLayout {
                 }else if(o instanceof Cast){
                     Cast c = (Cast) o;
                     cardView.setContent(c, listener);
+                }else if(o instanceof Movie){
+                    Movie m = (Movie) o;
+                    cardView.setContent(m, listener);
                 }
 
                 container.addView(cardView);

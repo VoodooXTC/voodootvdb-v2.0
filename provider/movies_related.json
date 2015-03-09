@@ -1,0 +1,12 @@
+{
+	"fields": [
+	    {
+            "name" : "movie_trakt_id",
+            "type" : "Integer"
+        },
+		{
+			"name" : "related_trakt_id",
+			"type" : "Integer"
+		}
+	]
+}

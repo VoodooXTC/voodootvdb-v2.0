@@ -2,6 +2,7 @@ package com.joss.voodootvdb.views;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.AttributeSet;
@@ -67,7 +68,7 @@ public class PersonHeaderView extends LinearLayout {
         born.setText(buildBornString(person));
         died.setText(buildDeathString(person));
         died.setVisibility(person.getDeath().isEmpty() ? GONE : VISIBLE);
-        bio.setText(person.getBiography());
+        bio.setText(Html.fromHtml(person.getBiography()));
 
         if(!person.getImages().getHeadshot().getFull().isEmpty())
             Picasso.with(context)

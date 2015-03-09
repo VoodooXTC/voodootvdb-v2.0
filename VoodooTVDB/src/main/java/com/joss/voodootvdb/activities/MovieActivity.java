@@ -28,6 +28,18 @@ import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.joss.voodootvdb.interfaces.VoodooItem;
+import com.joss.voodootvdb.provider.movies.MoviesColumns;
+import com.joss.voodootvdb.provider.movies.MoviesCursor;
+import com.joss.voodootvdb.provider.movies.MoviesProvider;
+import com.joss.voodootvdb.provider.movies.MoviesSelection;
+import com.joss.voodootvdb.provider.movies_people.MoviesPeopleColumns;
+import com.joss.voodootvdb.provider.movies_people.MoviesPeopleCursor;
+import com.joss.voodootvdb.provider.movies_people.MoviesPeopleProvider;
+import com.joss.voodootvdb.provider.movies_people.MoviesPeopleSelection;
+import com.joss.voodootvdb.provider.movies_related.MoviesRelatedColumns;
+import com.joss.voodootvdb.provider.movies_related.MoviesRelatedCursor;
+import com.joss.voodootvdb.provider.movies_related.MoviesRelatedProvider;
+import com.joss.voodootvdb.provider.movies_related.MoviesRelatedSelection;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsCursor;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
@@ -41,6 +53,7 @@ import com.joss.voodootvdb.provider.shows_related.ShowsRelatedCursor;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedProvider;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedSelection;
 import com.joss.voodootvdb.utils.CustomTypefaceSpan;
+import com.joss.voodootvdb.utils.DateFormatter;
 import com.joss.voodootvdb.utils.Utils;
 import com.joss.voodootvdb.views.ErrorView;
 import com.joss.voodootvdb.views.LoadingView;
@@ -60,76 +73,74 @@ import oak.util.OakUtils;
  * Date: 3/4/15
  * Time: 10:01 AM
  */
-public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-        View.OnClickListener, VoodooClickListener {
+public class MovieActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, VoodooClickListener {
 
-    public static final String TAG = ShowActivity.class.getSimpleName();
+    public static final String TAG = MovieActivity.class.getSimpleName();
     public static final String ID = "id";
 
-    private static final int SHOW_CALLBACK = 32145;
-    private static final int SHOW_RELATED_CALLBACK = 32146;
-    private static final int SHOW_PEOPLE_CALLBACK = 32147;
+    private static final int MOVIE_CALLBACK = 87656;
+    private static final int MOVIES_RELATED_CALLBACK = 87657;
+    private static final int MOVIES_PEOPLE_CALLBACK = 87658;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
-    @InjectView(R.id.show_image)
+    @InjectView(R.id.movie_image)
     ImageView image;
-    @InjectView(R.id.show_play_button)
+    @InjectView(R.id.movie_play_button)
     FloatingActionButton playButton;
-    @InjectView(R.id.show_title)
+    @InjectView(R.id.movie_title)
     TextView title;
-    @InjectView(R.id.show_rating)
+    @InjectView(R.id.movie_rating)
     RatingBar ratingBar;
-    @InjectView(R.id.show_info)
+    @InjectView(R.id.movie_info)
     TextView info;
-    @InjectView(R.id.show_genre)
+    @InjectView(R.id.movie_genre)
     TextView genre;
-    @InjectView(R.id.show_description)
+    @InjectView(R.id.movie_description)
     TextView description;
-    @InjectView(R.id.show_status)
-    TextView status;
-    @InjectView(R.id.show_related_title)
+    @InjectView(R.id.movie_status)
+    TextView released;
+    @InjectView(R.id.movie_related_title)
     TextView relatedTitle;
-    @InjectView(R.id.show_related_container)
+    @InjectView(R.id.movie_related_container)
     VoodooHorizontalScrollView relatedContainer;
-    @InjectView(R.id.show_people_container)
+    @InjectView(R.id.movie_people_container)
     VoodooHorizontalScrollView peopleContainer;
-    @InjectView(R.id.show_loading)
+    @InjectView(R.id.movie_loading)
     LoadingView loadingView;
-    @InjectView(R.id.show_error)
+    @InjectView(R.id.movie_error)
     ErrorView errorView;
 
     LocalBroadcastManager broadcastManager;
     ApiReceiver apiReceiver;
-    Show show;
+    Movie movie;
 
-    public static void startActivity(Context c, Show show) {
-        Intent i = new Intent(c, ShowActivity.class);
-        i.putExtra(ID, show.getId());
+    public static void startActivity(Context c, Movie movie) {
+        Intent i = new Intent(c, MovieActivity.class);
+        i.putExtra(ID, movie.getId());
         c.startActivity(i);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show);
+        setContentView(R.layout.activity_movie);
         ButterKnife.inject(this);
 
         setupToolbar(toolbar);
-        setToolbarTitle(getString(R.string.show));
+        setToolbarTitle(getString(R.string.movie));
 
         playButton.setOnClickListener(this);
         errorView.setOnClickListener(this);
         showLoading();
 
-        getLoaderManager().initLoader(SHOW_CALLBACK, getIntent().getExtras(), this);
-        getLoaderManager().initLoader(SHOW_RELATED_CALLBACK, getIntent().getExtras(), this);
-        getLoaderManager().initLoader(SHOW_PEOPLE_CALLBACK, getIntent().getExtras(), this);
+        getLoaderManager().initLoader(MOVIE_CALLBACK, getIntent().getExtras(), this);
+        getLoaderManager().initLoader(MOVIES_RELATED_CALLBACK, getIntent().getExtras(), this);
+        getLoaderManager().initLoader(MOVIES_PEOPLE_CALLBACK, getIntent().getExtras(), this);
 
-        Api.getShow(this, getIntent().getIntExtra(ID, 0));
-        Api.getShowRelated(this, getIntent().getIntExtra(ID, 0));
-        Api.getShowPeople(this, getIntent().getIntExtra(ID, 0));
-        // TODO add progress: Seasons and Episodes
+        Api.getMovie(this, getIntent().getIntExtra(ID, 0));
+        Api.getMoviesRelated(this, getIntent().getIntExtra(ID, 0));
+        Api.getMoviesPeople(this, getIntent().getIntExtra(ID, 0));
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
         apiReceiver = new ApiReceiver();
@@ -150,33 +161,29 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.show_error:
+            case R.id.movie_error:
                 showLoading();
                 Api.getShow(this, getIntent().getIntExtra(ID, 0));
                 break;
-
-            case R.id.show_play_button:
-                onTrailerClicked(show.getTrailer());
+            case R.id.movie_play_button:
+                onTrailerClicked(movie.getTrailer());
                 break;
         }
     }
 
     @Override
     public void onShowClicked(Show show) {
-        Intent intent = new Intent(this, ShowActivity.class);
-        intent.putExtra(ShowActivity.ID, show.getIds().getTrakt());
-        startActivity(intent);
+
     }
 
     @Override
     public void onShowMenuClicked(Show show) {
-        // TODO maybe move this into the actual view??
-        Utils.toast(this, show.getTitle() + " : Show Menu Clicked");
     }
 
     @Override
     public void onMovieMenuClicked(Movie movie) {
-
+        // TODO maybe move this into the actual view??
+        Utils.toast(this, movie.getTitle() + " : Movie Menu Clicked");
     }
 
     @Override
@@ -192,7 +199,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public void onMovieClicked(Movie movie) {
-
+        // TODO
     }
 
     private class ApiReceiver extends BroadcastReceiver {
@@ -203,9 +210,9 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
             int requestType = intent.getIntExtra(ApiService.REQUEST_TYPE, -1);
             int status = intent.getIntExtra(ApiService.RESULT_STATUS, ApiService.RESULT_ERROR);
 
-            if(requestType == ApiService.REQUEST_SHOW
+            if(requestType == ApiService.REQUEST_MOVIE
                     && status == ApiService.RESULT_ERROR
-                    && show == null)
+                    && movie == null)
                 showError();
         }
     }
@@ -214,35 +221,35 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         int traktId = args.getInt(ID, 0);
         switch (id){
-            case SHOW_CALLBACK:
-                ShowsSelection where = new ShowsSelection();
+            case MOVIE_CALLBACK:
+                MoviesSelection where = new MoviesSelection();
                 where.traktId(traktId);
                 return new CursorLoader(this,
-                        ShowsColumns.CONTENT_URI,
-                        ShowsColumns.FULL_PROJECTION,
+                        MoviesColumns.CONTENT_URI,
+                        MoviesColumns.FULL_PROJECTION,
                         where.sel(),
                         where.args(),
-                        ShowsColumns.DEFAULT_ORDER + " LIMIT 1");
+                        MoviesColumns.DEFAULT_ORDER + " LIMIT 1");
 
-            case SHOW_RELATED_CALLBACK:
-                ShowsRelatedSelection whereRelated = new ShowsRelatedSelection();
-                whereRelated.showTraktId(traktId);
+            case MOVIES_RELATED_CALLBACK:
+                MoviesRelatedSelection whereRelated = new MoviesRelatedSelection();
+                whereRelated.movieTraktId(traktId);
                 return new CursorLoader(this,
-                        ShowsRelatedColumns.CONTENT_URI,
-                        ShowsRelatedColumns.FULL_PROJECTION,
+                        MoviesRelatedColumns.CONTENT_URI,
+                        MoviesRelatedColumns.FULL_PROJECTION,
                         whereRelated.sel(),
                         whereRelated.args(),
-                        ShowsRelatedColumns.DEFAULT_ORDER + " LIMIT 5");
+                        MoviesRelatedColumns.DEFAULT_ORDER + " LIMIT 5");
 
-            case SHOW_PEOPLE_CALLBACK:
-                ShowsPeopleSelection wherePeople = new ShowsPeopleSelection();
+            case MOVIES_PEOPLE_CALLBACK:
+                MoviesPeopleSelection wherePeople = new MoviesPeopleSelection();
                 wherePeople.traktId(traktId);
                 return new CursorLoader(this,
-                        ShowsPeopleColumns.CONTENT_URI,
-                        ShowsPeopleColumns.FULL_PROJECTION,
+                        MoviesPeopleColumns.CONTENT_URI,
+                        MoviesPeopleColumns.FULL_PROJECTION,
                         wherePeople.sel(),
                         wherePeople.args(),
-                        ShowsPeopleColumns.DEFAULT_ORDER + " LIMIT 1");
+                        MoviesPeopleColumns.DEFAULT_ORDER + " LIMIT 1");
         }
         return null;
     }
@@ -251,27 +258,27 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null){
             switch (loader.getId()){
-                case SHOW_CALLBACK:
-                    ShowsCursor cursor = new ShowsCursor(data);
-                    show = ShowsProvider.get(cursor);
+                case MOVIE_CALLBACK:
+                    MoviesCursor cursor = new MoviesCursor(data);
+                    movie = MoviesProvider.get(cursor);
 
-                    if(show != null) {
+                    if(movie != null) {
                         showContent();
-                        setContent(show);
+                        setContent(movie);
                     }
                     break;
-                case SHOW_RELATED_CALLBACK:
-                    ShowsRelatedCursor cursorRelated = new ShowsRelatedCursor(data);
-                    List<VoodooItem> relatedShows = ShowsRelatedProvider.getVoodooItems(this, cursorRelated);
-                    if(relatedShows.size() > 0) {
+                case MOVIES_RELATED_CALLBACK:
+                    MoviesRelatedCursor cursorRelated = new MoviesRelatedCursor(data);
+                    List<VoodooItem> relatedMovies = MoviesRelatedProvider.getVoodooItems(this, VoodooCardView.TYPE_MOVIE, cursorRelated);
+                    if(relatedMovies.size() > 0) {
                         relatedContainer.setListener(this);
-                        relatedContainer.setItems(null, relatedShows);
+                        relatedContainer.setItems(null, relatedMovies);
                     }
                     break;
 
-                case SHOW_PEOPLE_CALLBACK:
-                    ShowsPeopleCursor cursorPeople = new ShowsPeopleCursor(data);
-                    List<VoodooItem> cast = ShowsPeopleProvider.getVoodooItems(VoodooCardView.TYPE_CAST, getString(R.string.staring), cursorPeople);
+                case MOVIES_PEOPLE_CALLBACK:
+                    MoviesPeopleCursor cursorPeople = new MoviesPeopleCursor(data);
+                    List<VoodooItem> cast = MoviesPeopleProvider.getVoodooItems(VoodooCardView.TYPE_CAST, getString(R.string.staring), cursorPeople);
                     if(cast.size() > 0) {
                         peopleContainer.setListener(this);
                         peopleContainer.setItems(getString(R.string.staring), cast);
@@ -281,28 +288,28 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         }
     }
 
-    private void setContent(Show show) {
-        String url = show.getImages().getFanart().getFull();
+    private void setContent(Movie movie) {
+        String url = movie.getImages().getFanart().getFull();
         if(!url.isEmpty()){
             Picasso.with(this).load(url).fit().centerCrop().into(image);
         }
-        playButton.setVisibility(!show.getTrailer().isEmpty() ? View.VISIBLE : View.GONE);
-        title.setText(show.getTitle());
-        ratingBar.setRating((float) (show.getRating() / 2));
-        info.setText(show.getYear() + " " + show.getCertification() + " " + show.getRuntime() + " Mins");
-        genre.setText(buildGenresString(show.getGenres()));
-        description.setText(show.getOverview());
-        status.setText(show.getStatus());
-        relatedTitle.setText(buildRelatedString(show));
+        playButton.setVisibility(!movie.getTrailer().isEmpty() ? View.VISIBLE : View.GONE);
+        title.setText(movie.getTitle());
+        ratingBar.setRating((float) (movie.getRating() / 2));
+        info.setText(movie.getYear() + " " + movie.getCertification() + " " + movie.getRuntime() + " Mins");
+        genre.setText(buildGenresString(movie.getGenres()));
+        description.setText(movie.getOverview());
+        released.setText(DateFormatter.format(movie.getReleased()));
+        relatedTitle.setText(buildRelatedString(movie));
     }
 
-    private SpannableStringBuilder buildRelatedString(Show show) {
+    private SpannableStringBuilder buildRelatedString(Movie movie) {
         String titlesRelatedTo = getString(R.string.show_titles_related_to);
 
         Typeface light = OakUtils.getStaticTypeFace(this, getString(R.string.font_roboto_light));
         Typeface lightItalic = OakUtils.getStaticTypeFace(this, getString(R.string.font_roboto_light_italic));
 
-        String fullText = titlesRelatedTo + " " + show.getTitle();
+        String fullText = titlesRelatedTo + " " + movie.getTitle();
         SpannableStringBuilder ss = new SpannableStringBuilder(fullText);
         ss.setSpan(new CustomTypefaceSpan("", light), 0, titlesRelatedTo.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         ss.setSpan(new CustomTypefaceSpan("", lightItalic), titlesRelatedTo.length(), fullText.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);

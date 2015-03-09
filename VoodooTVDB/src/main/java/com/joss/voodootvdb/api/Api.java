@@ -119,4 +119,49 @@ public class Api {
         intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
         context.startService(intent);
     }
+
+    public static void getMovie(Context context, int traktId){
+        getMovie(context, traktId,
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
+    }
+
+    public static void getMovie(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_MOVIE);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
+    public static void getMoviesRelated(Context context, int traktId){
+        getMoviesRelated(context, traktId,
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
+    }
+
+    public static void getMoviesRelated(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_MOVIES_RELATED);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
+    public static void getMoviesPeople(Context context, int traktId){
+        getMoviesPeople(context, traktId,
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
+    }
+
+    public static void getMoviesPeople(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_MOVIES_PEOPLE);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
 }

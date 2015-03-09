@@ -13,7 +13,6 @@
     <com.nirhart.parallaxscroll.views.ParallaxScrollView
         style="@style/Match"
         app:parallax_factor="1.9"
-        tools:context=".MainActivity"
         android:fillViewport="true"
         android:layout_below="@id/toolbar"
         >
@@ -27,15 +26,15 @@
                 style="@style/MatchWidthWrapHeight">
 
                 <ImageView
-                    android:id="@+id/show_image"
+                    android:id="@+id/movie_image"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:contentDescription="@string/show_parallax_image"
+                    android:contentDescription="@string/movie_parallax_image"
                     tools:background="@color/black_10_percent_transparency"
                     />
 
                 <com.melnykov.fab.FloatingActionButton
-                    android:id="@+id/show_play_button"
+                    android:id="@+id/movie_play_button"
                     style="@style/FloatingButton"
                     android:layout_centerInParent="true"
                     android:src="@drawable/ic_play"
@@ -44,7 +43,7 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/show_content"
+                android:id="@+id/movie_content"
                 style="@style/Match"
                 android:orientation="vertical"
                 android:layout_weight="1"
@@ -52,7 +51,7 @@
                 >
 
                 <oak.widget.TextViewWithFont
-                    android:id="@+id/show_title"
+                    android:id="@+id/movie_title"
                     style="@style/Show.Title"
                     tools:text="Big Trouble in Little China"
                     />
@@ -66,7 +65,7 @@
                     >
 
                     <RatingBar
-                        android:id="@+id/show_rating"
+                        android:id="@+id/movie_rating"
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -81,23 +80,23 @@
                         />
 
                     <oak.widget.TextViewWithFont
-                        android:id="@+id/show_info"
+                        android:id="@+id/movie_info"
                         style="@style/Show.SubTitle"
                         tools:text="1986 PG-13 99 Mins"
                         android:gravity="center"
-                        android:layout_toEndOf="@+id/show_rating"
+                        android:layout_toEndOf="@+id/movie_rating"
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="@dimen/normal"
                         />
 
                     <oak.widget.TextViewWithFont
-                        android:id="@+id/show_genre"
+                        android:id="@+id/movie_genre"
                         style="@style/Show.SubTitle"
                         tools:text="Action|Comedy"
                         android:gravity="center|end"
                         android:layout_alignParentEnd="true"
                         android:layout_centerInParent="true"
-                        android:layout_toEndOf="@+id/show_info"
+                        android:layout_toEndOf="@+id/movie_info"
                         />
 
                 </RelativeLayout>
@@ -105,7 +104,7 @@
                 <View style="@style/Divider.Grey"/>
 
                 <oak.widget.TextViewWithFont
-                    android:id="@+id/show_description"
+                    android:id="@+id/movie_description"
                     style="@style/Show.Content"
                     tools:text="An All-American trucker gets dragged into a centries-old mystical battle in Chinatown."
                     />
@@ -121,7 +120,7 @@
                         >
 
                         <oak.widget.TextViewWithFont
-                            android:id="@+id/show_status"
+                            android:id="@+id/movie_status"
                             style="@style/VoodooCard.Button.Text"
                             tools:text="Ended"
                             />
@@ -133,17 +132,17 @@
                 <View style="@style/Divider.Grey" />
 
                 <oak.widget.TextViewWithFont
-                    android:id="@+id/show_related_title"
+                    android:id="@+id/movie_related_title"
                     style="@style/Show.Related.Title"
                     tools:text="Titles Related to Big Trouble in Little China"
                     />
 
                 <com.joss.voodootvdb.views.VoodooHorizontalScrollView
-                    android:id="@+id/show_related_container"
+                    android:id="@+id/movie_related_container"
                     style="@style/MatchWidthWrapHeight" />
 
                 <com.joss.voodootvdb.views.VoodooHorizontalScrollView
-                    android:id="@+id/show_people_container"
+                    android:id="@+id/movie_people_container"
                     style="@style/MatchWidthWrapHeight" />
 
             </LinearLayout>
@@ -153,13 +152,13 @@
     </com.nirhart.parallaxscroll.views.ParallaxScrollView>
 
     <com.joss.voodootvdb.views.LoadingView
-        android:id="@+id/show_loading"
+        android:id="@+id/movie_loading"
         style="@style/Match"
         android:visibility="gone"
         />
 
     <com.joss.voodootvdb.views.ErrorView
-        android:id="@+id/show_error"
+        android:id="@+id/movie_error"
         style="@style/Match"
         android:visibility="gone"
         />

@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.api;
 
 import com.joss.voodootvdb.api.models.Login.UserModel;
+import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
 import com.joss.voodootvdb.api.models.Show.Show;
@@ -45,4 +46,13 @@ public interface RestService {
 
     @GET("/people/{id}/movies")
     People getPersonMovies(@Path("id") int id, @Query(EXTENDED) String extended);
+
+    @GET("/movies/{id}")
+    Movie getMovie(@Path("id") int id, @Query(EXTENDED) String extended);
+
+    @GET("/movies/{id}/related")
+    List<Movie> getMoviesRelated(@Path("id") int id, @Query(EXTENDED) String extended);
+
+    @GET("/movies/{id}/people")
+    People getMoviesPeople(@Path("id") int id, @Query(EXTENDED) String extended);
 }

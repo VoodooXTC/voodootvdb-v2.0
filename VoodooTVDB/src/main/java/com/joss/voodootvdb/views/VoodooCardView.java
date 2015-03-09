@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.VoodooClickListener;
@@ -31,6 +32,7 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
     public static final int TYPE_CAST = 1;
     public static final int TYPE_CAST_SHOW = 2;
     public static final int TYPE_CAST_MOVIE = 3;
+    public static final int TYPE_MOVIE = 4;
 
     @InjectView(R.id.card_view)
     CardView cardView;
@@ -43,8 +45,10 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
 
     VoodooClickListener listener;
     Context context;
+
     Show show;
     Cast cast;
+    Movie movie;
 
     int type;
 
@@ -119,6 +123,23 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
                     .into(image);
     }
 
+    public void setContent(Movie m, VoodooClickListener listener) {
+        this.type = m.getType();
+        this.listener = listener;
+        this.movie = m;
+        this.title.setText(m.getTitle());
+
+        String url = m.getImages().getPoster().getFull();
+        if(!url.isEmpty())
+            Picasso.with(context)
+                    .load(url)
+                    .fit()
+                    .centerCrop()
+                    .placeholder(R.drawable.placeholder_vertical)
+                    .error(R.drawable.placeholder_vertical)
+                    .into(image);
+    }
+
     public void animateIn(int position){
         // Initial Position
         title.setAlpha(0);
@@ -139,7 +160,7 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
                 title.setVisibility(VISIBLE);
                 title.animate().alpha(1).setDuration(300).start();
 
-                if(type == TYPE_SHOW){
+                if(type == TYPE_SHOW || type == TYPE_MOVIE){
                     menu.setVisibility(VISIBLE);
                     menu.animate().alpha(1).setDuration(300).start();
                 }
@@ -170,6 +191,10 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
                         case TYPE_CAST_SHOW:
                             listener.onShowClicked(cast.getShow());
                             break;
+
+                        case TYPE_CAST_MOVIE:
+                            listener.onMovieClicked(cast.getMovie());
+                            break;
                     }
                 }
                 break;
@@ -181,12 +206,12 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
                             listener.onShowMenuClicked(show);
                             break;
 
-                        case TYPE_CAST:
+                        case TYPE_MOVIE:
+                            listener.onMovieMenuClicked(movie);
                             break;
                     }
                 }
                 break;
         }
     }
-
 }

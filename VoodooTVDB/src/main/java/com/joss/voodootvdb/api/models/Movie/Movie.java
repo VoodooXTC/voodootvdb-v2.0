@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.joss.voodootvdb.api.models.Show.Ids;
 import com.joss.voodootvdb.api.models.Show.Images;
+import com.joss.voodootvdb.interfaces.VoodooItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * Date: 3/8/2015
  * Time: 3:20 PM
  */
-public class Movie {
+public class Movie implements VoodooItem {
 
     @Expose
     private String title;
@@ -51,6 +52,33 @@ public class Movie {
     private String certification;
     @Expose
     private Images images;
+
+    private int type;
+    private String sectionTitle;
+
+    @Override
+    public int getType() {
+        return type;
+    }
+
+    @Override
+    public int getId() {
+        return getIds().getTrakt();
+    }
+
+    @Override
+    public String getSectionTitle() {
+        return sectionTitle == null ? "" : sectionTitle;
+    }
+
+    public void setType(int type){
+        this.type = type;
+    }
+
+    public void setSectionTitle(String title){
+        this.sectionTitle = title;
+    }
+
 
     public String getTitle(){
         return title == null ? "" : title;
@@ -119,4 +147,5 @@ public class Movie {
     public Images getImages(){
         return images == null ? new Images() : images;
     }
+
 }

@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.View;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.activities.MovieActivity;
+import com.joss.voodootvdb.activities.ShowActivity;
 import com.joss.voodootvdb.adapters.PersonAdapter;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
@@ -47,6 +51,7 @@ public class PersonFragment extends BaseListFragment implements
 
     public static final String TAG = PersonFragment.class.getSimpleName();
     private static final String TRAKT_ID = "trakt_id";
+
     private static final int PERSON_CALLBACK = 76489;
     private static final int PERSON_SHOWS_CALLBACK = 76490;
     private static final int PERSON_MOVIES_CALLBACK = 76491;
@@ -119,11 +124,16 @@ public class PersonFragment extends BaseListFragment implements
 
     @Override
     public void onShowClicked(Show show) {
-
+        ShowActivity.startActivity(getActivity(), show);
     }
 
     @Override
     public void onShowMenuClicked(Show show) {
+
+    }
+
+    @Override
+    public void onMovieMenuClicked(Movie movie) {
 
     }
 
@@ -135,6 +145,11 @@ public class PersonFragment extends BaseListFragment implements
     @Override
     public void onCastClicked(Cast cast) {
 
+    }
+
+    @Override
+    public void onMovieClicked(Movie movie) {
+        MovieActivity.startActivity(getActivity(), movie);
     }
 
     @Override

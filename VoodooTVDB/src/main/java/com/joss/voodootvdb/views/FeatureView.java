@@ -79,7 +79,7 @@ public class FeatureView extends LinearLayout implements View.OnClickListener {
         if(!show.getTrailer().isEmpty()){
             floatingActionButton.setVisibility(VISIBLE);
             floatingActionButton.animate().scaleX(0).scaleY(0).setDuration(0).start();
-            floatingActionButton.animate().scaleX(1).scaleY(1).setDuration(800).start();
+            floatingActionButton.animate().scaleX(1).scaleY(1).setDuration(500).start();
         }
     }
 
