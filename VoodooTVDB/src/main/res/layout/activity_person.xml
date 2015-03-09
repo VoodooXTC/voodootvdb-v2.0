@@ -1,0 +1,17 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Match">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        style="@style/MatchWidthWrapHeight"
+        />
+
+    <FrameLayout
+        android:id="@+id/content_container"
+        android:layout_below="@+id/toolbar"
+        style="@style/Match"
+        />
+
+</RelativeLayout>

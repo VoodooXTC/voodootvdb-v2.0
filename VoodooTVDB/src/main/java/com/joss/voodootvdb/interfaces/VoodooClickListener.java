@@ -8,7 +8,7 @@ import com.joss.voodootvdb.api.models.Show.Show;
  * Date: 3/6/15
  * Time: 1:30 PM
  */
-public interface HomeClickListener {
+public interface VoodooClickListener {
 
     public void onShowClicked(Show show);
 

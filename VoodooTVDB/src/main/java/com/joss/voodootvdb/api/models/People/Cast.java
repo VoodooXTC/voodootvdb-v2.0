@@ -2,6 +2,7 @@
 package com.joss.voodootvdb.api.models.People;
 
 import com.google.gson.annotations.Expose;
+import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.VoodooItem;
 
@@ -13,9 +14,9 @@ public class Cast implements VoodooItem {
     private Person person;
     @Expose
     private Show show;
-    // TODO Add movie object
+    @Expose
+    private Movie movie;
 
-    private int traktId;
     private int type;
     private String sectionTitle;
 
@@ -26,7 +27,7 @@ public class Cast implements VoodooItem {
 
     @Override
     public int getId() {
-        return traktId;
+        return getPerson().getIds().getTrakt();
     }
 
     @Override
@@ -36,14 +37,6 @@ public class Cast implements VoodooItem {
 
     public void setType(int type){
         this.type = type;
-    }
-
-    public int getTraktId(){
-        return traktId;
-    }
-
-    public void setTraktId(int traktId){
-        this.traktId = traktId;
     }
 
     public void setSectionTitle(String title){
@@ -86,4 +79,19 @@ public class Cast implements VoodooItem {
         this.person = person;
     }
 
+    public Show getShow() {
+        return show == null ? new Show() : show;
+    }
+
+    public void setShow(Show show) {
+        this.show = show;
+    }
+
+    public Movie getMovie() {
+        return movie == null ? new Movie() : movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
 }

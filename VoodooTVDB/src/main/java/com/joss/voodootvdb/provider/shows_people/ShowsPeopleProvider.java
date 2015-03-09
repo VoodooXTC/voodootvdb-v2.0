@@ -21,13 +21,13 @@ public class ShowsPeopleProvider {
         return null;
     }
 
-    public static List<VoodooItem> getVoodooItems(int traktId, String sectionTitle, ShowsPeopleCursor cursorPeople) {
+    public static List<VoodooItem> getVoodooItems(int type, String sectionTitle, ShowsPeopleCursor cursorPeople) {
         List<VoodooItem> items = new ArrayList<>();
         if(cursorPeople.moveToFirst()){
             People people = GGson.fromJson(cursorPeople.getJson(), People.class);
             if(people != null && people.getCast().size() > 0){
                 for(Cast cast : people.getCast()){
-                    cast.setTraktId(traktId);
+                    cast.setType(type);
                     cast.setSectionTitle(sectionTitle);
                     items.add(cast);
                 }

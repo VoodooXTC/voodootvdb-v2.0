@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +33,7 @@ public class FeatureView extends LinearLayout implements View.OnClickListener {
 
     Context context;
     Show show;
-    HomeClickListener listener;
+    VoodooClickListener listener;
 
     public FeatureView(Context context) {
         this(context, null);
@@ -57,7 +57,7 @@ public class FeatureView extends LinearLayout implements View.OnClickListener {
         ButterKnife.inject(this);
     }
 
-    public void setContent(Show show, HomeClickListener listener){
+    public void setContent(Show show, VoodooClickListener listener){
         this.listener = listener;
         this.show = show;
         this.title.setText(show.getTitle());

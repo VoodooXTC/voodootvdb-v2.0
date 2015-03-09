@@ -70,7 +70,7 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
             ft.commit();
 
             getLoaderManager().initLoader(POPULAR_SHOWS_CALLBACK, null, this);
-            Api.getPopularShows(this, ApiService.EXT_IMAGES, ApiService.EXT_FULL);
+            Api.getPopularShows(this);
         }else{
             launchMainActivity();
         }

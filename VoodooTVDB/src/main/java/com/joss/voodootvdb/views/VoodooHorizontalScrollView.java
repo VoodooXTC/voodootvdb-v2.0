@@ -12,9 +12,8 @@ import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.People.Cast;
-import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.joss.voodootvdb.interfaces.VoodooItem;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class VoodooHorizontalScrollView extends LinearLayout {
     Context context;
     int type;
     List<VoodooItem> items;
-    HomeClickListener listener;
+    VoodooClickListener listener;
 
     public VoodooHorizontalScrollView(Context context){
         this(context, null);
@@ -58,16 +57,16 @@ public class VoodooHorizontalScrollView extends LinearLayout {
         init(context, TYPE_NORMAL, null);
     }
 
-    public VoodooHorizontalScrollView(Context context, int type, HomeClickListener listener) {
+    public VoodooHorizontalScrollView(Context context, int type, VoodooClickListener listener) {
         super(context);
         init(context, type, listener);
     }
 
-    public void init(Context context, int type, HomeClickListener listener){
-        this.type = type;
+    public void init(Context context, int type, VoodooClickListener listener){
         this.context = context;
-        this.items = new ArrayList<>();
+        this.type = type;
         this.listener = listener;
+        this.items = new ArrayList<>();
 
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         setLayoutParams(params);
@@ -77,8 +76,8 @@ public class VoodooHorizontalScrollView extends LinearLayout {
         ButterKnife.inject(this);
     }
 
-    public void setListener(HomeClickListener homeClickListener){
-        this.listener = homeClickListener;
+    public void setListener(VoodooClickListener voodooClickListener){
+        this.listener = voodooClickListener;
     }
 
     public void setItems(String sectionTitle, List<VoodooItem> items){
@@ -108,7 +107,8 @@ public class VoodooHorizontalScrollView extends LinearLayout {
                 if(o instanceof Show) {
                     cardView.setContent((Show) o, listener);
                 }else if(o instanceof Cast){
-                    cardView.setContent((Cast) o, listener);
+                    Cast c = (Cast) o;
+                    cardView.setContent(c, listener);
                 }
 
                 container.addView(cardView);
@@ -139,7 +139,7 @@ public class VoodooHorizontalScrollView extends LinearLayout {
                 Cast c1 = (Cast) items1.get(i);
                 Cast c2 = (Cast) items2.get(i);
 
-                if(c1.getTraktId() != c2.getTraktId())
+                if(c1.getId() != c2.getId())
                     return false;
             }
             // TODO else if(o instaceof OTHER_STUFF){

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -27,8 +27,10 @@ import butterknife.InjectView;
  */
 public class VoodooCardView extends LinearLayout implements View.OnClickListener {
 
-    private static final int TYPE_SHOW = 0;
-    private static final int TYPE_CAST = 1;
+    public static final int TYPE_SHOW = 0;
+    public static final int TYPE_CAST = 1;
+    public static final int TYPE_CAST_SHOW = 2;
+    public static final int TYPE_CAST_MOVIE = 3;
 
     @InjectView(R.id.card_view)
     CardView cardView;
@@ -39,7 +41,7 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
     @InjectView(R.id.card_title)
     TextView title;
 
-    HomeClickListener listener;
+    VoodooClickListener listener;
     Context context;
     Show show;
     Cast cast;
@@ -71,9 +73,9 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
         menu.setOnClickListener(this);
     }
 
-    public void setContent(Show show, HomeClickListener homeClickListener) {
+    public void setContent(Show show, VoodooClickListener voodooClickListener) {
         this.type = TYPE_SHOW;
-        this.listener = homeClickListener;
+        this.listener = voodooClickListener;
         this.show = show;
         this.title.setText(show.getTitle());
 
@@ -87,16 +89,29 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
                     .into(image);
     }
 
-    public void setContent(Cast cast, HomeClickListener homeClickListener) {
-        this.type = TYPE_CAST;
-        this.listener = homeClickListener;
+    public void setContent(Cast cast, VoodooClickListener voodooClickListener) {
+        this.type = cast.getType();
+        this.listener = voodooClickListener;
         this.cast = cast;
         this.title.setText(cast.getCharacter());
-        this.menu.setVisibility(GONE);
 
-        if(!cast.getPerson().getImages().getHeadshot().getFull().isEmpty())
+        String url = "";
+        switch (this.type){
+            case TYPE_CAST:
+                url = cast.getPerson().getImages().getHeadshot().getFull();
+                break;
+
+            case TYPE_CAST_SHOW:
+                url = cast.getShow().getImages().getPoster().getFull();
+                break;
+
+            case TYPE_CAST_MOVIE:
+                url = cast.getMovie().getImages().getPoster().getFull();
+                break;
+        }
+        if(!url.isEmpty())
             Picasso.with(context)
-                    .load(cast.getPerson().getImages().getHeadshot().getFull())
+                    .load(url)
                     .fit()
                     .centerCrop()
                     .placeholder(R.drawable.placeholder_vertical)
@@ -122,10 +137,12 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
             @Override
             public void onAnimationEnd(Animation animation) {
                 title.setVisibility(VISIBLE);
-                menu.setVisibility(VISIBLE);
-
                 title.animate().alpha(1).setDuration(300).start();
-                menu.animate().alpha(1).setDuration(300).start();
+
+                if(type == TYPE_SHOW){
+                    menu.setVisibility(VISIBLE);
+                    menu.animate().alpha(1).setDuration(300).start();
+                }
             }
 
             @Override
@@ -148,6 +165,10 @@ public class VoodooCardView extends LinearLayout implements View.OnClickListener
 
                         case TYPE_CAST:
                             listener.onCastClicked(cast);
+                            break;
+
+                        case TYPE_CAST_SHOW:
+                            listener.onShowClicked(cast.getShow());
                             break;
                     }
                 }

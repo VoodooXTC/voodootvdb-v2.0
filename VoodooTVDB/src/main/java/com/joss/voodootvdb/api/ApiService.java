@@ -37,6 +37,9 @@ public class ApiService extends IntentService {
     public static final int REQUEST_SHOWS_POPULAR = 3;
     public static final int REQUEST_SHOWS_RELATED = 4;
     public static final int REQUEST_SHOWS_PEOPLE = 5;
+    public static final int REQUEST_PERSON = 6;
+    public static final int REQUEST_PERSON_SHOWS = 7;
+    public static final int REQUEST_PERSON_MOVIES = 8;
 
     public static final String ARG_ID = "id";
     public static final String ARGS_USER = "user";
@@ -123,6 +126,18 @@ public class ApiService extends IntentService {
 
                 case REQUEST_SHOWS_PEOPLE:
                     Db.updateShowsPeople(this, intent.getIntExtra(ARG_ID, 0), service.getShowsPeople(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    break;
+
+                case REQUEST_PERSON:
+                    Db.updatePerson(this, service.getPerson(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    break;
+
+                case REQUEST_PERSON_SHOWS:
+                    Db.updatePersonShows(this, intent.getIntExtra(ARG_ID, 0), service.getPersonShows(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    break;
+
+                case REQUEST_PERSON_MOVIES:
+                    Db.updatePersonMovies(this, intent.getIntExtra(ARG_ID, 0), service.getPersonMovies(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
                     break;
             }
         } catch(RetrofitError e){

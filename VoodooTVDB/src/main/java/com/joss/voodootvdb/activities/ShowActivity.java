@@ -23,9 +23,8 @@ import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.models.People.Cast;
-import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.joss.voodootvdb.interfaces.VoodooItem;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsCursor;
@@ -43,6 +42,7 @@ import com.joss.voodootvdb.utils.CustomTypefaceSpan;
 import com.joss.voodootvdb.utils.Utils;
 import com.joss.voodootvdb.views.ErrorView;
 import com.joss.voodootvdb.views.LoadingView;
+import com.joss.voodootvdb.views.VoodooCardView;
 import com.joss.voodootvdb.views.VoodooHorizontalScrollView;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -58,7 +58,7 @@ import oak.util.OakUtils;
  * Date: 3/4/15
  * Time: 10:01 AM
  */
-public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, HomeClickListener {
+public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, VoodooClickListener {
 
     public static final String TAG = ShowActivity.class.getSimpleName();
     public static final String ID = "id";
@@ -118,21 +118,10 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         getLoaderManager().initLoader(SHOW_RELATED_CALLBACK, getIntent().getExtras(), this);
         getLoaderManager().initLoader(SHOW_PEOPLE_CALLBACK, getIntent().getExtras(), this);
 
-        Api.getShow(this,
-                getIntent().getIntExtra(ID, 0),
-                ApiService.EXT_FULL,
-                ApiService.EXT_IMAGES,
-                ApiService.EXT_METADATA);
-        Api.getShowRelated(this,
-                getIntent().getIntExtra(ID, 0),
-                ApiService.EXT_FULL,
-                ApiService.EXT_IMAGES,
-                ApiService.EXT_METADATA);
-        Api.getShowPeople(this,
-                getIntent().getIntExtra(ID, 0),
-                ApiService.EXT_FULL,
-                ApiService.EXT_IMAGES,
-                ApiService.EXT_METADATA);
+        Api.getShow(this, getIntent().getIntExtra(ID, 0));
+        Api.getShowRelated(this, getIntent().getIntExtra(ID, 0));
+        Api.getShowPeople(this, getIntent().getIntExtra(ID, 0));
+        // TODO add progress: Seasons and Episodes
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
         apiReceiver = new ApiReceiver();
@@ -155,11 +144,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         switch (v.getId()){
             case R.id.show_error:
                 showLoading();
-                Api.getShow(this,
-                        getIntent().getIntExtra(ID, 0),
-                        ApiService.EXT_FULL,
-                        ApiService.EXT_IMAGES,
-                        ApiService.EXT_METADATA);
+                Api.getShow(this, getIntent().getIntExtra(ID, 0));
                 break;
         }
     }
@@ -184,7 +169,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public void onCastClicked(Cast cast) {
-        Utils.toast(this, "Cast Clicked: " + cast.getCharacter());
+        PersonActivity.startActivity(this, cast.getId());
     }
 
     private class ApiReceiver extends BroadcastReceiver {
@@ -263,7 +248,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
                 case SHOW_PEOPLE_CALLBACK:
                     ShowsPeopleCursor cursorPeople = new ShowsPeopleCursor(data);
-                    List<VoodooItem> cast = ShowsPeopleProvider.getVoodooItems(getIntent().getIntExtra(ID, 0), "Actors", cursorPeople);
+                    List<VoodooItem> cast = ShowsPeopleProvider.getVoodooItems(VoodooCardView.TYPE_CAST, "Actors", cursorPeople);
                     if(cast.size() > 0) {
                         peopleContainer.setListener(this);
                         peopleContainer.setItems("Actors", cast);

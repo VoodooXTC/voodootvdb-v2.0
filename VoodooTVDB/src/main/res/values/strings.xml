@@ -32,4 +32,10 @@
     <string name="show_starring">Starring:</string>
     <string name="show_titles_related_to">Titles Related to</string>
 
+    <string name="person">Person</string>
+    <string name="person_born">Born:</string>
+    <string name="person_died">Died:</string>
+    <string name="person_roles_small_screen">Roles on Shows</string>
+    <string name="person_roles_big_screen">Roles on Movies</string>
+
 </resources>

@@ -1,0 +1,19 @@
+{
+	"fields": [
+		{
+			"name" : "trakt_id",
+			"type" : "Integer"
+		},
+        {
+            "name" : "json",
+            "type" : "String"
+        }
+	],
+
+    "constraints" : [
+        {
+            "name" : "unique_trakt_id",
+            "definition" : "unique (trakt_id) on conflict replace"
+        }
+    ]
+}

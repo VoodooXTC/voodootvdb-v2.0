@@ -14,19 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by: jossayjacobo
- * Date: 3/5/15
- * Time: 5:53 PM
+ * Created by Jossay
+ * Date: 3/8/2015
+ * Time: 5:20 PM
  */
-public class HomeAdapter extends BaseAdapter {
-
-    public static final String TAG = HomeAdapter.class.getSimpleName();
+public class PersonAdapter extends BaseAdapter {
 
     Context context;
     List<List<VoodooItem>> items;
     VoodooClickListener voodooClickListener;
 
-    public HomeAdapter(Context context, VoodooClickListener listener){
+    // TODO add types
+    int type;
+
+    public PersonAdapter(Context context, VoodooClickListener listener){
         this.context = context;
         this.items = new ArrayList<>();
         this.voodooClickListener = listener;
@@ -54,7 +55,7 @@ public class HomeAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount(){
-        return VoodooHorizontalScrollView.TYPE_FEATURE + 1;
+        return VoodooCardView.TYPE_CAST_MOVIE + 1;
     }
 
     public void setContent(List<List<VoodooItem>> items){
@@ -62,17 +63,29 @@ public class HomeAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public int add(List<VoodooItem> item){
+        if(items == null)
+            items = new ArrayList<>();
+
+        items.add(item);
+        notifyDataSetChanged();
+        return item.size() - 1;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        VoodooHorizontalScrollView voodooHorizontalScrollView =
-                convertView == null
-                    ? new VoodooHorizontalScrollView(context,
-                        items.get(position).get(0).getType(),
-                        voodooClickListener)
-                    : (VoodooHorizontalScrollView) convertView;
+        VoodooHorizontalScrollView hScrollView = convertView == null
+                ? new VoodooHorizontalScrollView(context,
+                    VoodooHorizontalScrollView.TYPE_NORMAL,
+                    voodooClickListener)
+                : (VoodooHorizontalScrollView) convertView;
 
-        voodooHorizontalScrollView.setItems(items.get(position).get(0).getSectionTitle(), items.get(position));
+        hScrollView.setItems(items.get(position).get(0).getSectionTitle(), items.get(position));
+        return hScrollView;
+    }
 
-        return voodooHorizontalScrollView;
+    public void remove(int position) {
+        items.remove(position);
+        notifyDataSetChanged();
     }
 }

@@ -1,9 +1,5 @@
 {
 	"fields": [
-	    {
-            "name" : "name",
-            "type" : "String"
-        },
 		{
 			"name" : "trakt_id",
 			"type" : "Integer"

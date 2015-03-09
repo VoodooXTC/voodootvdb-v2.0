@@ -8,7 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.View;
-import android.widget.AdapterView;
 
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.activities.ShowActivity;
@@ -17,7 +16,7 @@ import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Show.Show;
-import com.joss.voodootvdb.interfaces.HomeClickListener;
+import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.joss.voodootvdb.interfaces.VoodooItem;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
@@ -35,8 +34,8 @@ import java.util.List;
  * Date: 3/2/15
  * Time: 5:57 PM
  */
-public class HomeFragment extends BaseListFragment implements AdapterView.OnItemClickListener,
-        LoaderManager.LoaderCallbacks<Cursor>, HomeClickListener {
+public class HomeFragment extends BaseListFragment implements
+        LoaderManager.LoaderCallbacks<Cursor>, VoodooClickListener {
 
     public static final String TAG = HomeFragment.class.getSimpleName();
     private static final int POPULAR_SHOWS_CALLBACK = 456;
@@ -78,17 +77,11 @@ public class HomeFragment extends BaseListFragment implements AdapterView.OnItem
 
         adapter = new HomeAdapter(getActivity(), this);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
 
         getLoaderManager().initLoader(POPULAR_SHOWS_CALLBACK, null, this);
 
         showLoadingView();
-        Api.getPopularShows(getActivity(), ApiService.EXT_FULL, ApiService.EXT_IMAGES);
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Api.getPopularShows(getActivity());
     }
 
     @Override

@@ -11,6 +11,9 @@ import android.os.Build;
 import android.util.Log;
 
 import com.joss.voodootvdb.BuildConfig;
+import com.joss.voodootvdb.provider.person.PersonColumns;
+import com.joss.voodootvdb.provider.person_movies.PersonMoviesColumns;
+import com.joss.voodootvdb.provider.person_shows.PersonShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows_people.ShowsPeopleColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
@@ -23,6 +26,31 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // @formatter:off
+    private static final String SQL_CREATE_TABLE_PERSON = "CREATE TABLE IF NOT EXISTS "
+            + PersonColumns.TABLE_NAME + " ( "
+            + PersonColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + PersonColumns.NAME + " TEXT, "
+            + PersonColumns.TRAKT_ID + " INTEGER, "
+            + PersonColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
+    private static final String SQL_CREATE_TABLE_PERSON_MOVIES = "CREATE TABLE IF NOT EXISTS "
+            + PersonMoviesColumns.TABLE_NAME + " ( "
+            + PersonMoviesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + PersonMoviesColumns.TRAKT_ID + " INTEGER, "
+            + PersonMoviesColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
+    private static final String SQL_CREATE_TABLE_PERSON_SHOWS = "CREATE TABLE IF NOT EXISTS "
+            + PersonShowsColumns.TABLE_NAME + " ( "
+            + PersonShowsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + PersonShowsColumns.TRAKT_ID + " INTEGER, "
+            + PersonShowsColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
     private static final String SQL_CREATE_TABLE_SHOWS = "CREATE TABLE IF NOT EXISTS "
             + ShowsColumns.TABLE_NAME + " ( "
             + ShowsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -101,6 +129,9 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
+        db.execSQL(SQL_CREATE_TABLE_PERSON);
+        db.execSQL(SQL_CREATE_TABLE_PERSON_MOVIES);
+        db.execSQL(SQL_CREATE_TABLE_PERSON_SHOWS);
         db.execSQL(SQL_CREATE_TABLE_SHOWS);
         db.execSQL(SQL_CREATE_TABLE_SHOWS_PEOPLE);
         db.execSQL(SQL_CREATE_TABLE_SHOWS_POPULAR);

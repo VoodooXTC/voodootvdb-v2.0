@@ -4,9 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import com.joss.voodootvdb.api.models.People.People;
+import com.joss.voodootvdb.api.models.People.Person;
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.model.PersonModel;
+import com.joss.voodootvdb.model.PersonMoviesModel;
+import com.joss.voodootvdb.model.PersonShowsModel;
 import com.joss.voodootvdb.model.ShowsModel;
 import com.joss.voodootvdb.model.ShowsPeopleModel;
+import com.joss.voodootvdb.provider.person.PersonColumns;
+import com.joss.voodootvdb.provider.person.PersonContentValues;
+import com.joss.voodootvdb.provider.person_movies.PersonMoviesColumns;
+import com.joss.voodootvdb.provider.person_movies.PersonMoviesContentValues;
+import com.joss.voodootvdb.provider.person_shows.PersonShowsColumns;
+import com.joss.voodootvdb.provider.person_shows.PersonShowsContentValues;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsContentValues;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
@@ -15,7 +25,6 @@ import com.joss.voodootvdb.provider.shows_people.ShowsPeopleContentValues;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularContentValues;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
-import com.joss.voodootvdb.provider.shows_popular.ShowsPopularSelection;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedColumns;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedContentValues;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedProvider;
@@ -62,5 +71,20 @@ public class Db {
     public static void updateShowsPeople(Context context, int traktId, People showsPeople) {
         ContentValues showsPeopleCV = ShowsPeopleContentValues.getSingleContentValue(new ShowsPeopleModel(traktId, showsPeople));
         context.getContentResolver().insert(ShowsPeopleColumns.CONTENT_URI, showsPeopleCV);
+    }
+
+    public static void updatePerson(Context context, Person person) {
+        ContentValues personCV = PersonContentValues.getSingleContentValue(new PersonModel(person));
+        context.getContentResolver().insert(PersonColumns.CONTENT_URI, personCV);
+    }
+
+    public static void updatePersonShows(Context context, int traktId, People personShows) {
+        ContentValues personShowsCV = PersonShowsContentValues.getSingleContentValue(new PersonShowsModel(traktId, personShows));
+        context.getContentResolver().insert(PersonShowsColumns.CONTENT_URI, personShowsCV);
+    }
+
+    public static void updatePersonMovies(Context context, int traktId, People personMovies){
+        ContentValues personMoviesCV = PersonMoviesContentValues.getSingleContentValue(new PersonMoviesModel(traktId, personMovies));
+        context.getContentResolver().insert(PersonMoviesColumns.CONTENT_URI, personMoviesCV);
     }
 }

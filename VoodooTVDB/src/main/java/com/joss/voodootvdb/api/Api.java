@@ -13,6 +13,14 @@ import com.joss.voodootvdb.utils.GGson;
  */
 public class Api {
 
+    private static String buildExtendedValues(String[] extended) {
+        String extendedValues = "";
+        for(String ex : extended){
+            extendedValues += ex + ",";
+        }
+        return extendedValues;
+    }
+
     public static void login(Context context, String username, String password){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_LOGIN);
@@ -20,54 +28,95 @@ public class Api {
         context.startService(intent);
     }
 
+    public static void getPopularShows(Context context){
+        getPopularShows(context, ApiService.EXT_IMAGES, ApiService.EXT_FULL);
+    }
+
     public static void getPopularShows(Context context, String... extended){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOWS_POPULAR);
-
-        String extendedValues = "";
-        for(String ex : extended){
-            extendedValues += ex + ",";
-        }
-        intent.putExtra(ApiService.ARG_EXTENDED, extendedValues);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
         context.startService(intent);
+    }
+
+    public static void getShow(Context context, int traktId){
+        getShow(context, traktId,
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
     }
 
     public static void getShow(Context context, int traktId, String... extended){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOW);
         intent.putExtra(ApiService.ARG_ID, traktId);
-
-        String extendedValues = "";
-        for(String ex : extended){
-            extendedValues += ex + ",";
-        }
-        intent.putExtra(ApiService.ARG_EXTENDED, extendedValues);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
         context.startService(intent);
+    }
+
+    public static void getShowRelated(Context context, int traktId){
+        getShowRelated(context, traktId,
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
     }
 
     public static void getShowRelated(Context context, int traktId, String... extended){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOWS_RELATED);
         intent.putExtra(ApiService.ARG_ID, traktId);
-
-        String extendedValues = "";
-        for(String ex : extended){
-            extendedValues += ex + ",";
-        }
-        intent.putExtra(ApiService.ARG_EXTENDED, extendedValues);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
         context.startService(intent);
+    }
+
+    public static void getShowPeople(Context context, int traktId){
+        getShowPeople(context, traktId,
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES,
+                ApiService.EXT_METADATA);
     }
 
     public static void getShowPeople(Context context, int traktId, String... extended){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SHOWS_PEOPLE);
         intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
 
-        String extendedValues = "";
-        for(String ex : extended){
-            extendedValues += ex + ",";
-        }
-        intent.putExtra(ApiService.ARG_EXTENDED, extendedValues);
+    public static void getPerson(Context context, int traktId){
+        getPerson(context, traktId, ApiService.EXT_IMAGES, ApiService.EXT_FULL);
+    }
+
+    public static void getPerson(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_PERSON);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
+    public static void getPersonMovies(Context context, int traktId){
+        getPersonMovies(context, traktId, ApiService.EXT_IMAGES, ApiService.EXT_FULL);
+    }
+
+    public static void getPersonMovies(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_PERSON_MOVIES);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
+    public static void getPersonShows(Context context, int traktId){
+        getPersonShows(context, traktId, ApiService.EXT_IMAGES, ApiService.EXT_FULL);
+    }
+
+    public static void getPersonShows(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_PERSON_SHOWS);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
         context.startService(intent);
     }
 }
