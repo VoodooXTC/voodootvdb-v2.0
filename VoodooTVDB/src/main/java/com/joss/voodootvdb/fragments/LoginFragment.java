@@ -12,9 +12,7 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
@@ -22,13 +20,14 @@ import android.widget.RelativeLayout;
 
 import com.dd.CircularProgressButton;
 import com.iangclifton.android.floatlabel.FloatLabel;
+import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.interfaces.LoginListener;
 import com.joss.voodootvdb.utils.Utils;
 
-import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
@@ -39,7 +38,6 @@ import butterknife.InjectView;
 public class LoginFragment extends BaseFragment implements TextWatcher, View.OnKeyListener, View.OnClickListener {
 
     public static final String TAG = LoginFragment.class.getSimpleName();
-
     public static final String ALLOW_CANCEL = "allow_cancel";
 
     @InjectView(R.id.login_container)
@@ -48,8 +46,6 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
     CardView cardView;
     @InjectView(R.id.login_username)
     FloatLabel username;
-    @InjectView(R.id.login_password)
-    FloatLabel password;
     @InjectView(R.id.login_button)
     CircularProgressButton loginButton;
     @InjectView(R.id.login_icon_launcher)
@@ -57,7 +53,6 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
 
     LocalBroadcastManager broadcastManager;
     ApiReceiver apiReceiver;
-    boolean loginInProgress;
     LoginListener listener;
     boolean allowCancel;
     boolean animatedIn = false;
@@ -93,9 +88,6 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
         apiReceiver = new ApiReceiver();
 
         username.getEditText().addTextChangedListener(this);
-        password.getEditText().addTextChangedListener(this);
-
-        password.getEditText().setOnKeyListener(this);
 
         container.setOnClickListener(this);
         loginButton.setOnClickListener(this);
@@ -107,6 +99,109 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
                 animateViewsIn();
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        resetLoginButtonState();
+        broadcastManager.registerReceiver(apiReceiver, new IntentFilter(ApiService.BROADCAST));
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        broadcastManager.unregisterReceiver(apiReceiver);
+    }
+
+    private void attemptToGetTraktAccessToken() {
+        setButtonInProgress();
+        Utils.hideSoftKeyboard(getActivity(), loginButton);
+        String u = username.getEditText().getText().toString();
+        listener.onOAuthRequest(u);
+    }
+
+    public void attempToLogin(){
+        setButtonInProgress();
+
+        AccessTokenRequest accessTokenRequest = DataStore.getAccessTokenRequest(getActivity());
+        Api.login(getActivity(), accessTokenRequest);
+    }
+
+    private class ApiReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            int api_type = intent.getIntExtra(ApiService.REQUEST_TYPE, -1);
+            int status = intent.getExtras().getInt(ApiService.RESULT_STATUS);
+
+            switch (api_type){
+                case ApiService.REQUEST_LOGIN_ACCESS_TOKEN:
+                    switch (status){
+                        case ApiService.RESULT_SUCCESS:
+                            setButtonSuccessState();
+                            Utils.toast(getActivity(), getString(R.string.login_success));
+                            listener.onLoginSuccess();
+                            break;
+                        case ApiService.RESULT_ERROR:
+                            setButtonErrorState();
+                            Utils.toast(getActivity(), intent.getStringExtra(ApiService.RESULT_MESSAGE));
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+
+            case R.id.login_button:
+                attemptToGetTraktAccessToken();
+                break;
+
+            default:
+                if(allowCancel)
+                    listener.onCancel();
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        resetLoginButtonState();
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_ENTER:
+                attemptToGetTraktAccessToken();
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof LoginListener){
+            listener = (LoginListener) activity;
+        }else{
+            throw new IllegalStateException(activity.getClass().getSimpleName()
+                    + " must implement LoginListener");
+        }
     }
 
     private void animateViewsIn() {
@@ -173,128 +268,21 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
                 .start();
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        resetLoginButtonState();
-        broadcastManager.registerReceiver(apiReceiver, new IntentFilter(ApiService.BROADCAST));
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        resetLoginButtonState();
-        broadcastManager.unregisterReceiver(apiReceiver);
-    }
-
-    private class ApiReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            int api_type = intent.getIntExtra(ApiService.REQUEST_TYPE, -1);
-            int status = intent.getExtras().getInt(ApiService.RESULT_STATUS);
-
-            switch (api_type){
-                case ApiService.REQUEST_LOGIN:
-
-                    switch (status){
-                        case ApiService.RESULT_SUCCESS:
-                            setButtonSuccessState();
-                            Utils.toast(getActivity(), getString(R.string.login_success));
-                            listener.onLoginSuccess();
-                            break;
-                        case ApiService.RESULT_ERROR:
-                            setButtonErrorState();
-                            Utils.toast(getActivity(), intent.getStringExtra(ApiService.RESULT_MESSAGE));
-                            break;
-                        default:
-
-                    }
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-
-            case R.id.login_button:
-                attemptLogin();
-                break;
-
-            default:
-                if(allowCancel)
-                    listener.onCancel();
-        }
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        resetLoginButtonState();
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-
-    }
-
-    @Override
-    public boolean onKey(View v, int keyCode, KeyEvent event) {
-        switch (keyCode){
-            case KeyEvent.KEYCODE_ENTER:
-                attemptLogin();
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof LoginListener){
-            listener = (LoginListener) activity;
-        }else{
-            throw new IllegalStateException(activity.getClass().getSimpleName()
-                    + " must implement LoginListener");
-        }
-    }
-
-    private void attemptLogin() {
-        if(!loginInProgress){
-            String u = username.getEditText().getText().toString();
-            String p = password.getEditText().getText().toString();
-            Api.login(getActivity(), u, p);
-            setButtonInProgress();
-            Utils.hideSoftKeyboard(getActivity(), loginButton);
-        }
-    }
-
     private void resetLoginButtonState() {
-        loginInProgress = false;
         loginButton.setProgress(CircularProgressButton.IDLE_STATE_PROGRESS);
     }
 
     private void setButtonInProgress(){
-        loginInProgress = true;
         loginButton.setIndeterminateProgressMode(true);
         loginButton.setProgress(CircularProgressButton.INDETERMINATE_STATE_PROGRESS);
     }
 
     private void setButtonErrorState(){
-        loginInProgress = false;
         loginButton.setIndeterminateProgressMode(true);
         loginButton.setProgress(CircularProgressButton.ERROR_STATE_PROGRESS);
     }
 
     private void setButtonSuccessState(){
-        loginInProgress = false;
         loginButton.setIndeterminateProgressMode(true);
         loginButton.setProgress(CircularProgressButton.SUCCESS_STATE_PROGRESS);
     }

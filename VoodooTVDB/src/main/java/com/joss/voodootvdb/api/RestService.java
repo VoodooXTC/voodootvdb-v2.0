@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.api;
 
-import com.joss.voodootvdb.api.models.Login.UserModel;
+import com.joss.voodootvdb.api.models.Login.AccessToken;
+import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
@@ -23,8 +24,8 @@ public interface RestService {
 
     public static final String EXTENDED = "extended";
 
-    @POST("/auth/login")
-    UserModel login(@Body UserModel userModel);
+    @POST("/oauth/token")
+    AccessToken login(@Body AccessTokenRequest token);
 
     @GET("/shows/{id}")
     Show getShow(@Path("id") int id, @Query(EXTENDED) String extended);

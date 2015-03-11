@@ -3,7 +3,7 @@ package com.joss.voodootvdb.api;
 import android.content.Context;
 import android.content.Intent;
 
-import com.joss.voodootvdb.api.models.Login.UserModel;
+import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.utils.GGson;
 
 /**
@@ -21,10 +21,10 @@ public class Api {
         return extendedValues;
     }
 
-    public static void login(Context context, String username, String password){
+    public static void login(Context context, AccessTokenRequest accessTokenRequest){
         Intent intent = new Intent(context, ApiService.class);
-        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_LOGIN);
-        intent.putExtra(ApiService.ARGS_USER, GGson.toJson(new UserModel(username, password)));
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_LOGIN_ACCESS_TOKEN);
+        intent.putExtra(ApiService.ARG_ACCESS_TOKEN, GGson.toJson(accessTokenRequest));
         context.startService(intent);
     }
 

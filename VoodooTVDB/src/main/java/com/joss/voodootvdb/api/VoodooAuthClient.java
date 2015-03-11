@@ -4,7 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.joss.voodootvdb.DataStore;
-import com.joss.voodootvdb.api.models.Login.UserModel;
+import com.joss.voodootvdb.api.models.Login.AccessToken;
+import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,21 +39,21 @@ public class VoodooAuthClient extends OkClient {
         if (response.getStatus() == 401) {
 
             // Try to refresh the User Token
-            UserModel userModel = DataStore.getUser(context);
+            AccessToken accessToken = DataStore.getAccessToken(context);
 
-            if(userModel != null){
-                UserModel newUserModel = null;
+            if(accessToken != null){
+                AccessToken newAccessToken= null;
                 try {
-                     newUserModel = ApiService.getApi(context).login(userModel);
+                    newAccessToken = ApiService.getApi(context).login(new AccessTokenRequest(accessToken.refresh_token));
 
                 }catch (RetrofitError error){
                     Log.d(TAG, error.toString());
                 }
 
-                if (newUserModel != null && newUserModel.token != null) {
+                if (newAccessToken != null && newAccessToken.access_token != null) {
 
-                    DataStore.persistUser(context, newUserModel);
-                    Request newRequest = updateTokenInRequest(request, newUserModel.token);
+                    DataStore.persistAccessToken(context, newAccessToken);
+                    Request newRequest = updateTokenInRequest(request, newAccessToken.access_token);
 
                     return super.execute(newRequest);
 
@@ -72,9 +73,9 @@ public class VoodooAuthClient extends OkClient {
         List<Header> headers = request.getHeaders();
         for(int i = 0; i < headers.size(); i++){
             Header h = headers.get(i);
-            if(h.getName().equals(VoodooRequestInterceptor.HEADER_TRAKT_USER_TOKEN)){
+            if(h.getName().equals(VoodooRequestInterceptor.HEADER_AUTHORIZATION)){
                 headers.remove(i);
-                headers.add(new Header(VoodooRequestInterceptor.HEADER_TRAKT_USER_TOKEN, token));
+                headers.add(new Header(VoodooRequestInterceptor.HEADER_AUTHORIZATION, token));
                 break;
             }
         }

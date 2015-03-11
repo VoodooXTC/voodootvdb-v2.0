@@ -7,6 +7,8 @@ package com.joss.voodootvdb.interfaces;
  */
 public interface LoginListener {
 
+    public void onOAuthRequest(String username);
+
     public void onLoginSuccess();
 
     public void onCancel();

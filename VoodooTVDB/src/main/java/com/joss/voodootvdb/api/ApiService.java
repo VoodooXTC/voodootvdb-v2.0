@@ -11,7 +11,8 @@ import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.Error;
-import com.joss.voodootvdb.api.models.Login.UserModel;
+import com.joss.voodootvdb.api.models.Login.AccessToken;
+import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.utils.GGson;
 
 import retrofit.RestAdapter;
@@ -25,6 +26,8 @@ import retrofit.converter.GsonConverter;
  */
 public class ApiService extends IntentService {
 
+    public static final String TAG = ApiService.class.getSimpleName();
+
     private static RestService service;
     private LocalBroadcastManager broadcastManager;
 
@@ -32,7 +35,7 @@ public class ApiService extends IntentService {
     public static final String SERVICE = "voodoo_api_service";
 
     public static final String REQUEST_TYPE = "api_request_type";
-    public static final int REQUEST_LOGIN = 1;
+    public static final int REQUEST_LOGIN_ACCESS_TOKEN = 1;
     public static final int REQUEST_SHOW = 2;
     public static final int REQUEST_SHOWS_POPULAR = 3;
     public static final int REQUEST_SHOWS_RELATED = 4;
@@ -47,6 +50,7 @@ public class ApiService extends IntentService {
     public static final String ARG_ID = "id";
     public static final String ARGS_USER = "user";
     public static final String ARG_EXTENDED = "extended";
+    public static final String ARG_ACCESS_TOKEN = "access_token";
 
     public static final String RESULT_MESSAGE = "message";
     public static final String RESULT_STATUS = "result_status";
@@ -103,13 +107,11 @@ public class ApiService extends IntentService {
 
         try{
             switch (type){
-                case REQUEST_LOGIN:
-                    UserModel loginUser = GGson.fromJson(intent.getStringExtra(ARGS_USER), UserModel.class);
-                    UserModel user = service.login(loginUser);
+                case REQUEST_LOGIN_ACCESS_TOKEN:
+                    AccessTokenRequest accessTokenRequest = GGson.fromJson(intent.getStringExtra(ARG_ACCESS_TOKEN), AccessTokenRequest.class);
+                    AccessToken accessToken = service.login(accessTokenRequest);
 
-                    loginUser.token = user.token;
-                    DataStore.persistUser(this, loginUser);
-
+                    DataStore.persistAccessToken(this, accessToken);
                     broadcastLoginSuccess(type);
                     break;
 

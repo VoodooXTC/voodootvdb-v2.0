@@ -1,6 +1,8 @@
 package com.joss.voodootvdb.activities;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -11,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
@@ -42,6 +45,7 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 
     public static final String TAG = LoginActivity.class.getSimpleName();
     private static final int POPULAR_SHOWS_CALLBACK = 234;
+    private static final int LOGIN_CODE = 567;
 
     @InjectView(R.id.login_bg_image)
     ImageView backgroundImage;
@@ -60,7 +64,7 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         super.onCreate(savedInstanceState);
 
-        if(DataStore.getUser(this) == null){
+        if(DataStore.getAccessToken(this) == null){
             setContentView(R.layout.activity_login);
             ButterKnife.inject(this);
 
@@ -88,7 +92,7 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
                 startActivity(intent);
                 finish();
             }
-        }, 1000);
+        }, 500);
     }
 
     @Override
@@ -134,8 +138,24 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
     }
 
     @Override
+    public void onOAuthRequest(String username) {
+        startActivityForResult(LoginWebViewActivity.getIntent(this, username), LOGIN_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LOGIN_CODE) {
+            if (resultCode == RESULT_OK) {
+                loginFragment.attempToLogin();
+            } else if(resultCode == RESULT_CANCELED){
+                Utils.toast(this, "An error occurred authenticating with Trakt.tv please try again");
+            }
+        }
+    }
+
+    @Override
     public void onLoginSuccess() {
-        launchMainActivity();
+        loginFragment.animateViewOut();
     }
 
     @Override
@@ -144,6 +164,6 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
 
     @Override
     public void onAnimateOutFinished() {
-
+        launchMainActivity();
     }
 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Match"
+    android:orientation="vertical"
+    android:background="@color/transparency_70">
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/login_card_view"
+        style="@style/VoodooCard"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/normal"
+        >
+
+        <RelativeLayout
+            style="@style/Match">
+
+            <WebView
+                android:id="@+id/login_webview"
+                style="@style/Match"
+                />
+
+            <com.joss.voodootvdb.views.ErrorView
+                android:id="@+id/login_error"
+                style="@style/Match"
+                android:visibility="gone"/>
+
+            <com.joss.voodootvdb.views.LoadingView
+                android:id="@+id/login_loading"
+                style="@style/Match"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

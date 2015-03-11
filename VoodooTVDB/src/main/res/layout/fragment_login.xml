@@ -32,14 +32,6 @@
                     android:inputType="textEmailAddress"
                     />
 
-                <com.iangclifton.android.floatlabel.FloatLabel
-                    android:id="@+id/login_password"
-                    style="@style/VoodooEditText"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPassword"
-                    android:hint="@string/login_password_hint"
-                    />
-
                 <com.dd.CircularProgressButton
                     android:id="@+id/login_button"
                     style="@style/VoodooButtonRound"
