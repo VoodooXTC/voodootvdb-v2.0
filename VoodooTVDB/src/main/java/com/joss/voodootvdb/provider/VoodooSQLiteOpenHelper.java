@@ -11,12 +11,14 @@ import android.os.Build;
 import android.util.Log;
 
 import com.joss.voodootvdb.BuildConfig;
+import com.joss.voodootvdb.provider.episodes.EpisodesColumns;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
 import com.joss.voodootvdb.provider.movies_people.MoviesPeopleColumns;
 import com.joss.voodootvdb.provider.movies_related.MoviesRelatedColumns;
 import com.joss.voodootvdb.provider.person.PersonColumns;
 import com.joss.voodootvdb.provider.person_movies.PersonMoviesColumns;
 import com.joss.voodootvdb.provider.person_shows.PersonShowsColumns;
+import com.joss.voodootvdb.provider.seasons.SeasonsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows_people.ShowsPeopleColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
@@ -29,6 +31,19 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // @formatter:off
+    private static final String SQL_CREATE_TABLE_EPISODES = "CREATE TABLE IF NOT EXISTS "
+            + EpisodesColumns.TABLE_NAME + " ( "
+            + EpisodesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + EpisodesColumns.SHOW_TRAKT_ID + " INTEGER, "
+            + EpisodesColumns.EPISODE_TRAKT_ID + " INTEGER, "
+            + EpisodesColumns.SEASON + " INTEGER, "
+            + EpisodesColumns.NUMBER + " INTEGER, "
+            + EpisodesColumns.FIRST_AIRED + " TEXT, "
+            + EpisodesColumns.UPDATED_AT + " TEXT, "
+            + EpisodesColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (EPISODE_TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
     private static final String SQL_CREATE_TABLE_MOVIES = "CREATE TABLE IF NOT EXISTS "
             + MoviesColumns.TABLE_NAME + " ( "
             + MoviesColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -82,6 +97,16 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
             + PersonShowsColumns.TRAKT_ID + " INTEGER, "
             + PersonShowsColumns.JSON + " TEXT "
             + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
+    private static final String SQL_CREATE_TABLE_SEASONS = "CREATE TABLE IF NOT EXISTS "
+            + SeasonsColumns.TABLE_NAME + " ( "
+            + SeasonsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + SeasonsColumns.SHOW_TRAKT_ID + " INTEGER, "
+            + SeasonsColumns.SEASON_TRAKT_ID + " INTEGER, "
+            + SeasonsColumns.NUMBER + " INTEGER, "
+            + SeasonsColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (SEASON_TRAKT_ID) ON CONFLICT REPLACE"
             + " );";
 
     private static final String SQL_CREATE_TABLE_SHOWS = "CREATE TABLE IF NOT EXISTS "
@@ -162,12 +187,14 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
+        db.execSQL(SQL_CREATE_TABLE_EPISODES);
         db.execSQL(SQL_CREATE_TABLE_MOVIES);
         db.execSQL(SQL_CREATE_TABLE_MOVIES_PEOPLE);
         db.execSQL(SQL_CREATE_TABLE_MOVIES_RELATED);
         db.execSQL(SQL_CREATE_TABLE_PERSON);
         db.execSQL(SQL_CREATE_TABLE_PERSON_MOVIES);
         db.execSQL(SQL_CREATE_TABLE_PERSON_SHOWS);
+        db.execSQL(SQL_CREATE_TABLE_SEASONS);
         db.execSQL(SQL_CREATE_TABLE_SHOWS);
         db.execSQL(SQL_CREATE_TABLE_SHOWS_PEOPLE);
         db.execSQL(SQL_CREATE_TABLE_SHOWS_POPULAR);

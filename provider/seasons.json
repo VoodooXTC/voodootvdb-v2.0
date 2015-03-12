@@ -1,0 +1,27 @@
+{
+	"fields": [
+		{
+            "name" : "show_trakt_id",
+            "type" : "Integer"
+        },
+		{
+			"name" : "season_trakt_id",
+			"type" : "Integer"
+		},
+        {
+            "name" : "number",
+            "type" : "Integer"
+        },
+        {
+            "name" : "json",
+            "type" : "String"
+        }
+	],
+
+    "constraints" : [
+        {
+            "name" : "unique_trakt_id",
+            "definition" : "unique (season_trakt_id) on conflict replace"
+        }
+    ]
+}

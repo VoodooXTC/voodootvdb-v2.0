@@ -1,10 +1,12 @@
 package com.joss.voodootvdb.api;
 
+import com.joss.voodootvdb.api.models.Episode.Episode;
 import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
+import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
 
 import java.util.List;
@@ -56,4 +58,10 @@ public interface RestService {
 
     @GET("/movies/{id}/people")
     People getMoviesPeople(@Path("id") int id, @Query(EXTENDED) String extended);
+
+    @GET("/shows/{id}/seasons")
+    List<Season> getSeasons(@Path("id") int showTraktId, @Query(EXTENDED) String extended);
+
+    @GET("/shows/{id}/seasons/{number}")
+    List<Episode> getEpisodes(@Path("id") int showTraktId, @Path("number") int seasonNumber);
 }

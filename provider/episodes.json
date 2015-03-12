@@ -1,0 +1,39 @@
+{
+	"fields": [
+		{
+            "name" : "show_trakt_id",
+            "type" : "Integer"
+        },
+		{
+			"name" : "episode_trakt_id",
+			"type" : "Integer"
+		},
+        {
+            "name" : "season",
+            "type" : "Integer"
+        },
+        {
+            "name" : "number",
+            "type" : "Integer"
+        },
+        {
+            "name" : "first_aired",
+            "type" : "String"
+        },
+        {
+            "name" : "updated_at",
+            "type" : "String"
+        },
+        {
+            "name" : "json",
+            "type" : "String"
+        }
+	],
+
+    "constraints" : [
+        {
+            "name" : "unique_trakt_id",
+            "definition" : "unique (episode_trakt_id) on conflict replace"
+        }
+    ]
+}

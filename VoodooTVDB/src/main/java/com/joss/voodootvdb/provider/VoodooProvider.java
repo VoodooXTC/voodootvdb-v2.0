@@ -16,12 +16,14 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.joss.voodootvdb.BuildConfig;
+import com.joss.voodootvdb.provider.episodes.EpisodesColumns;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
 import com.joss.voodootvdb.provider.movies_people.MoviesPeopleColumns;
 import com.joss.voodootvdb.provider.movies_related.MoviesRelatedColumns;
 import com.joss.voodootvdb.provider.person.PersonColumns;
 import com.joss.voodootvdb.provider.person_movies.PersonMoviesColumns;
 import com.joss.voodootvdb.provider.person_shows.PersonShowsColumns;
+import com.joss.voodootvdb.provider.seasons.SeasonsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows_people.ShowsPeopleColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
@@ -39,41 +41,49 @@ public class VoodooProvider extends ContentProvider {
     public static final String QUERY_NOTIFY = "QUERY_NOTIFY";
     public static final String QUERY_GROUP_BY = "QUERY_GROUP_BY";
 
-    private static final int URI_TYPE_MOVIES = 0;
-    private static final int URI_TYPE_MOVIES_ID = 1;
+    private static final int URI_TYPE_EPISODES = 0;
+    private static final int URI_TYPE_EPISODES_ID = 1;
 
-    private static final int URI_TYPE_MOVIES_PEOPLE = 2;
-    private static final int URI_TYPE_MOVIES_PEOPLE_ID = 3;
+    private static final int URI_TYPE_MOVIES = 2;
+    private static final int URI_TYPE_MOVIES_ID = 3;
 
-    private static final int URI_TYPE_MOVIES_RELATED = 4;
-    private static final int URI_TYPE_MOVIES_RELATED_ID = 5;
+    private static final int URI_TYPE_MOVIES_PEOPLE = 4;
+    private static final int URI_TYPE_MOVIES_PEOPLE_ID = 5;
 
-    private static final int URI_TYPE_PERSON = 6;
-    private static final int URI_TYPE_PERSON_ID = 7;
+    private static final int URI_TYPE_MOVIES_RELATED = 6;
+    private static final int URI_TYPE_MOVIES_RELATED_ID = 7;
 
-    private static final int URI_TYPE_PERSON_MOVIES = 8;
-    private static final int URI_TYPE_PERSON_MOVIES_ID = 9;
+    private static final int URI_TYPE_PERSON = 8;
+    private static final int URI_TYPE_PERSON_ID = 9;
 
-    private static final int URI_TYPE_PERSON_SHOWS = 10;
-    private static final int URI_TYPE_PERSON_SHOWS_ID = 11;
+    private static final int URI_TYPE_PERSON_MOVIES = 10;
+    private static final int URI_TYPE_PERSON_MOVIES_ID = 11;
 
-    private static final int URI_TYPE_SHOWS = 12;
-    private static final int URI_TYPE_SHOWS_ID = 13;
+    private static final int URI_TYPE_PERSON_SHOWS = 12;
+    private static final int URI_TYPE_PERSON_SHOWS_ID = 13;
 
-    private static final int URI_TYPE_SHOWS_PEOPLE = 14;
-    private static final int URI_TYPE_SHOWS_PEOPLE_ID = 15;
+    private static final int URI_TYPE_SEASONS = 14;
+    private static final int URI_TYPE_SEASONS_ID = 15;
 
-    private static final int URI_TYPE_SHOWS_POPULAR = 16;
-    private static final int URI_TYPE_SHOWS_POPULAR_ID = 17;
+    private static final int URI_TYPE_SHOWS = 16;
+    private static final int URI_TYPE_SHOWS_ID = 17;
 
-    private static final int URI_TYPE_SHOWS_RELATED = 18;
-    private static final int URI_TYPE_SHOWS_RELATED_ID = 19;
+    private static final int URI_TYPE_SHOWS_PEOPLE = 18;
+    private static final int URI_TYPE_SHOWS_PEOPLE_ID = 19;
+
+    private static final int URI_TYPE_SHOWS_POPULAR = 20;
+    private static final int URI_TYPE_SHOWS_POPULAR_ID = 21;
+
+    private static final int URI_TYPE_SHOWS_RELATED = 22;
+    private static final int URI_TYPE_SHOWS_RELATED_ID = 23;
 
 
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
+        URI_MATCHER.addURI(AUTHORITY, EpisodesColumns.TABLE_NAME, URI_TYPE_EPISODES);
+        URI_MATCHER.addURI(AUTHORITY, EpisodesColumns.TABLE_NAME + "/#", URI_TYPE_EPISODES_ID);
         URI_MATCHER.addURI(AUTHORITY, MoviesColumns.TABLE_NAME, URI_TYPE_MOVIES);
         URI_MATCHER.addURI(AUTHORITY, MoviesColumns.TABLE_NAME + "/#", URI_TYPE_MOVIES_ID);
         URI_MATCHER.addURI(AUTHORITY, MoviesPeopleColumns.TABLE_NAME, URI_TYPE_MOVIES_PEOPLE);
@@ -86,6 +96,8 @@ public class VoodooProvider extends ContentProvider {
         URI_MATCHER.addURI(AUTHORITY, PersonMoviesColumns.TABLE_NAME + "/#", URI_TYPE_PERSON_MOVIES_ID);
         URI_MATCHER.addURI(AUTHORITY, PersonShowsColumns.TABLE_NAME, URI_TYPE_PERSON_SHOWS);
         URI_MATCHER.addURI(AUTHORITY, PersonShowsColumns.TABLE_NAME + "/#", URI_TYPE_PERSON_SHOWS_ID);
+        URI_MATCHER.addURI(AUTHORITY, SeasonsColumns.TABLE_NAME, URI_TYPE_SEASONS);
+        URI_MATCHER.addURI(AUTHORITY, SeasonsColumns.TABLE_NAME + "/#", URI_TYPE_SEASONS_ID);
         URI_MATCHER.addURI(AUTHORITY, ShowsColumns.TABLE_NAME, URI_TYPE_SHOWS);
         URI_MATCHER.addURI(AUTHORITY, ShowsColumns.TABLE_NAME + "/#", URI_TYPE_SHOWS_ID);
         URI_MATCHER.addURI(AUTHORITY, ShowsPeopleColumns.TABLE_NAME, URI_TYPE_SHOWS_PEOPLE);
@@ -108,6 +120,11 @@ public class VoodooProvider extends ContentProvider {
     public String getType(Uri uri) {
         final int match = URI_MATCHER.match(uri);
         switch (match) {
+            case URI_TYPE_EPISODES:
+                return TYPE_CURSOR_DIR + EpisodesColumns.TABLE_NAME;
+            case URI_TYPE_EPISODES_ID:
+                return TYPE_CURSOR_ITEM + EpisodesColumns.TABLE_NAME;
+
             case URI_TYPE_MOVIES:
                 return TYPE_CURSOR_DIR + MoviesColumns.TABLE_NAME;
             case URI_TYPE_MOVIES_ID:
@@ -137,6 +154,11 @@ public class VoodooProvider extends ContentProvider {
                 return TYPE_CURSOR_DIR + PersonShowsColumns.TABLE_NAME;
             case URI_TYPE_PERSON_SHOWS_ID:
                 return TYPE_CURSOR_ITEM + PersonShowsColumns.TABLE_NAME;
+
+            case URI_TYPE_SEASONS:
+                return TYPE_CURSOR_DIR + SeasonsColumns.TABLE_NAME;
+            case URI_TYPE_SEASONS_ID:
+                return TYPE_CURSOR_ITEM + SeasonsColumns.TABLE_NAME;
 
             case URI_TYPE_SHOWS:
                 return TYPE_CURSOR_DIR + ShowsColumns.TABLE_NAME;
@@ -272,6 +294,12 @@ public class VoodooProvider extends ContentProvider {
         String id = null;
         int matchedId = URI_MATCHER.match(uri);
         switch (matchedId) {
+            case URI_TYPE_EPISODES:
+            case URI_TYPE_EPISODES_ID:
+                res.table = EpisodesColumns.TABLE_NAME;
+                res.orderBy = EpisodesColumns.DEFAULT_ORDER;
+                break;
+
             case URI_TYPE_MOVIES:
             case URI_TYPE_MOVIES_ID:
                 res.table = MoviesColumns.TABLE_NAME;
@@ -308,6 +336,12 @@ public class VoodooProvider extends ContentProvider {
                 res.orderBy = PersonShowsColumns.DEFAULT_ORDER;
                 break;
 
+            case URI_TYPE_SEASONS:
+            case URI_TYPE_SEASONS_ID:
+                res.table = SeasonsColumns.TABLE_NAME;
+                res.orderBy = SeasonsColumns.DEFAULT_ORDER;
+                break;
+
             case URI_TYPE_SHOWS:
             case URI_TYPE_SHOWS_ID:
                 res.table = ShowsColumns.TABLE_NAME;
@@ -337,12 +371,14 @@ public class VoodooProvider extends ContentProvider {
         }
 
         switch (matchedId) {
+            case URI_TYPE_EPISODES_ID:
             case URI_TYPE_MOVIES_ID:
             case URI_TYPE_MOVIES_PEOPLE_ID:
             case URI_TYPE_MOVIES_RELATED_ID:
             case URI_TYPE_PERSON_ID:
             case URI_TYPE_PERSON_MOVIES_ID:
             case URI_TYPE_PERSON_SHOWS_ID:
+            case URI_TYPE_SEASONS_ID:
             case URI_TYPE_SHOWS_ID:
             case URI_TYPE_SHOWS_PEOPLE_ID:
             case URI_TYPE_SHOWS_POPULAR_ID:

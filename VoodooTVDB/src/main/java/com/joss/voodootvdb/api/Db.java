@@ -124,4 +124,9 @@ public class Db {
         ContentValues[] moviesRelatedCV = MoviesRelatedContentValues.getContentValues(MoviesRelatedProvider.get(traktId, moviesRelated));
         context.getContentResolver().bulkInsert(MoviesRelatedColumns.CONTENT_URI, moviesRelatedCV);
     }
+
+    public static void updateSeasonRelated(Context context, int showTrakId){
+        // TODO
+        ContentValues[] seasonCV;
+    }
 }
