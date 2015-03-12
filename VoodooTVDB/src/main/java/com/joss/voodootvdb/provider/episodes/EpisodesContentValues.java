@@ -106,7 +106,7 @@ public class EpisodesContentValues extends AbstractContentValues {
     }
 
 
-    public static ContentValues[] getContentValues(EpisodesModel... items){
+    public static ContentValues[] getContentValues(List<EpisodesModel> items){
         List<ContentValues> values = new ArrayList<ContentValues>();
         for(EpisodesModel item : items){
             values.add(getSingleContentValue(item));

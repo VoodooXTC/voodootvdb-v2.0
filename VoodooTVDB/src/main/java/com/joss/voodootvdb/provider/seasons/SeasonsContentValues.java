@@ -73,7 +73,7 @@ public class SeasonsContentValues extends AbstractContentValues {
     }
 
 
-    public static ContentValues[] getContentValues(SeasonsModel... items){
+    public static ContentValues[] getContentValues(List<SeasonsModel> items){
         List<ContentValues> values = new ArrayList<ContentValues>();
         for(SeasonsModel item : items){
             values.add(getSingleContentValue(item));

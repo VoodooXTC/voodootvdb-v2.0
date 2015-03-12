@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -25,9 +26,14 @@ import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.Cast;
+import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.joss.voodootvdb.interfaces.VoodooItem;
+import com.joss.voodootvdb.provider.seasons.SeasonsColumns;
+import com.joss.voodootvdb.provider.seasons.SeasonsCursor;
+import com.joss.voodootvdb.provider.seasons.SeasonsProvider;
+import com.joss.voodootvdb.provider.seasons.SeasonsSelection;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsCursor;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
@@ -69,6 +75,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     private static final int SHOW_CALLBACK = 32145;
     private static final int SHOW_RELATED_CALLBACK = 32146;
     private static final int SHOW_PEOPLE_CALLBACK = 32147;
+    private static final int SHOW_SEASONS_CALLBACK = 32148;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -125,11 +132,13 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         getLoaderManager().initLoader(SHOW_CALLBACK, getIntent().getExtras(), this);
         getLoaderManager().initLoader(SHOW_RELATED_CALLBACK, getIntent().getExtras(), this);
         getLoaderManager().initLoader(SHOW_PEOPLE_CALLBACK, getIntent().getExtras(), this);
+        getLoaderManager().initLoader(SHOW_SEASONS_CALLBACK, getIntent().getExtras(), this);
 
-        Api.getShow(this, getIntent().getIntExtra(ID, 0));
-        Api.getShowRelated(this, getIntent().getIntExtra(ID, 0));
-        Api.getShowPeople(this, getIntent().getIntExtra(ID, 0));
-        // TODO add progress: Seasons and Episodes
+        int traktId = getIntent().getIntExtra(ID, 0);
+        Api.getShow(this, traktId);
+        Api.getShowRelated(this, traktId);
+        Api.getShowPeople(this, traktId);
+        Api.getSeasons(this, traktId);
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
         apiReceiver = new ApiReceiver();
@@ -243,6 +252,16 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                         wherePeople.sel(),
                         wherePeople.args(),
                         ShowsPeopleColumns.DEFAULT_ORDER + " LIMIT 1");
+
+            case SHOW_SEASONS_CALLBACK:
+                SeasonsSelection whereSeason = new SeasonsSelection();
+                whereSeason.showTraktId(traktId);
+                return new CursorLoader(this,
+                        SeasonsColumns.CONTENT_URI,
+                        SeasonsColumns.FULL_PROJECTION,
+                        whereSeason.sel(),
+                        whereSeason.args(),
+                        SeasonsColumns.NUMBER + " ASC");
         }
         return null;
     }
@@ -275,6 +294,15 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                     if(cast.size() > 0) {
                         peopleContainer.setListener(this);
                         peopleContainer.setItems(getString(R.string.staring), cast);
+                    }
+                    break;
+
+                case SHOW_SEASONS_CALLBACK:
+                    SeasonsCursor seasonsCursor = new SeasonsCursor(data);
+                    List<Season> seasons = SeasonsProvider.get(seasonsCursor);
+                    // TODO add an list item per season
+                    for(Season s : seasons){
+                        Log.e(TAG, "Season Number: " + s.getNumber() + " Episode Count: " + s.getEpisode_count());
                     }
                     break;
             }

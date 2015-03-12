@@ -3,9 +3,11 @@ package com.joss.voodootvdb.api;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.joss.voodootvdb.api.models.Episode.Episode;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
+import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.model.MoviesModel;
 import com.joss.voodootvdb.model.MoviesPeopleModel;
@@ -14,6 +16,9 @@ import com.joss.voodootvdb.model.PersonMoviesModel;
 import com.joss.voodootvdb.model.PersonShowsModel;
 import com.joss.voodootvdb.model.ShowsModel;
 import com.joss.voodootvdb.model.ShowsPeopleModel;
+import com.joss.voodootvdb.provider.episodes.EpisodesColumns;
+import com.joss.voodootvdb.provider.episodes.EpisodesContentValues;
+import com.joss.voodootvdb.provider.episodes.EpisodesProvider;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
 import com.joss.voodootvdb.provider.movies.MoviesContentValues;
 import com.joss.voodootvdb.provider.movies.MoviesProvider;
@@ -29,6 +34,9 @@ import com.joss.voodootvdb.provider.person_movies.PersonMoviesColumns;
 import com.joss.voodootvdb.provider.person_movies.PersonMoviesContentValues;
 import com.joss.voodootvdb.provider.person_shows.PersonShowsColumns;
 import com.joss.voodootvdb.provider.person_shows.PersonShowsContentValues;
+import com.joss.voodootvdb.provider.seasons.SeasonsColumns;
+import com.joss.voodootvdb.provider.seasons.SeasonsContentValues;
+import com.joss.voodootvdb.provider.seasons.SeasonsProvider;
 import com.joss.voodootvdb.provider.shows.ShowsColumns;
 import com.joss.voodootvdb.provider.shows.ShowsContentValues;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
@@ -125,8 +133,13 @@ public class Db {
         context.getContentResolver().bulkInsert(MoviesRelatedColumns.CONTENT_URI, moviesRelatedCV);
     }
 
-    public static void updateSeasonRelated(Context context, int showTrakId){
-        // TODO
-        ContentValues[] seasonCV;
+    public static void updateSeasons(Context context, int showTrakId, List<Season> seasons){
+        ContentValues[] seasonCV = SeasonsContentValues.getContentValues(SeasonsProvider.get(showTrakId, seasons));
+        context.getContentResolver().bulkInsert(SeasonsColumns.CONTENT_URI, seasonCV);
+    }
+
+    public static void updateEpisodes(Context context, int showTraktId, List<Episode> episodes) {
+        ContentValues[] episodesCV = EpisodesContentValues.getContentValues(EpisodesProvider.get(showTraktId, episodes));
+        context.getContentResolver().bulkInsert(EpisodesColumns.CONTENT_URI, episodesCV);
     }
 }

@@ -50,9 +50,9 @@ public class ApiService extends IntentService {
     public static final int REQUEST_EPISODES = 13;
 
     public static final String ARG_ID = "id";
-    public static final String ARGS_USER = "user";
     public static final String ARG_EXTENDED = "extended";
     public static final String ARG_ACCESS_TOKEN = "access_token";
+    public static final String ARG_SEASON_NUMBER = "season_number";
 
     public static final String RESULT_MESSAGE = "message";
     public static final String RESULT_STATUS = "result_status";
@@ -112,7 +112,6 @@ public class ApiService extends IntentService {
                 case REQUEST_LOGIN_ACCESS_TOKEN:
                     AccessTokenRequest accessTokenRequest = GGson.fromJson(intent.getStringExtra(ARG_ACCESS_TOKEN), AccessTokenRequest.class);
                     AccessToken accessToken = service.login(accessTokenRequest);
-
                     DataStore.persistAccessToken(this, accessToken);
                     broadcastLoginSuccess(type);
                     break;
@@ -160,11 +159,11 @@ public class ApiService extends IntentService {
                     break;
 
                 case REQUEST_SEASONS:
-                    Db.
+                    Db.updateSeasons(this, intent.getIntExtra(ARG_ID, 0), service.getSeasons(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_EPISODES:
-
+                    Db.updateEpisodes(this, intent.getIntExtra(ARG_ID, 0), service.getEpisodes(intent.getIntExtra(ARG_ID, 0), intent.getIntExtra(ARG_SEASON_NUMBER, -1)));
                     break;
             }
         } catch(RetrofitError e){

@@ -164,4 +164,32 @@ public class Api {
         intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
         context.startService(intent);
     }
+
+    public static void getSeasons(Context context, int traktId){
+        getSeasons(context, traktId,
+                ApiService.EXT_FULL,
+                ApiService.EXT_IMAGES);
+    }
+
+    public static void getSeasons(Context context, int traktId, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SEASONS);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
+    public static void getEpisodes(Context context, int traktId, int seasonNumber){
+        getEpisodes(context, traktId, seasonNumber, ApiService.EXT_FULL, ApiService.EXT_IMAGES);
+    }
+
+    public static void getEpisodes(Context context, int traktId, int seasonNumber, String... extended){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_EPISODES);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        intent.putExtra(ApiService.ARG_SEASON_NUMBER, seasonNumber);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
 }
