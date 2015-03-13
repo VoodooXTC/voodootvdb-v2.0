@@ -192,4 +192,11 @@ public class Api {
         context.startService(intent);
     }
 
+    public static void getEpisodesWatched(Context context, int traktId){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_EPISODES_WATCHED);
+        intent.putExtra(ApiService.ARG_ID, traktId);
+        context.startService(intent);
+    }
+
 }

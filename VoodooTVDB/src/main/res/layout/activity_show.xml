@@ -130,6 +130,11 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/show_season_container"
+                    android:orientation="vertical"
+                    style="@style/MatchWidthWrapHeight" />
+
                 <View style="@style/Divider.Grey" />
 
                 <oak.widget.TextViewWithFont

@@ -37,8 +37,13 @@
     <string name="person_died">Died:</string>
     <string name="person_roles_small_screen">Roles on Shows</string>
     <string name="person_roles_big_screen">Roles on Movies</string>
+
     <string name="movie">Movie</string>
+    <string name="movie_parallax_image">move fan art</string>
+
     <string name="staring">Staring</string>
-    <string name="movie_parallax_image">move fanart</string>
+
+    <string name="season">"Season"</string>
+    <string name="season_extras">"Extras"</string>
 
 </resources>

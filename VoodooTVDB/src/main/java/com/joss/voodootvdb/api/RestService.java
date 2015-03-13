@@ -6,6 +6,7 @@ import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
+import com.joss.voodootvdb.api.models.Progress.Watched;
 import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -24,6 +26,7 @@ import retrofit.http.Query;
  */
 public interface RestService {
 
+    public static final String AUTHORIZATION = "Authorization";
     public static final String EXTENDED = "extended";
 
     @POST("/oauth/token")
@@ -64,4 +67,7 @@ public interface RestService {
 
     @GET("/shows/{id}/seasons/{number}")
     List<Episode> getEpisodes(@Path("id") int showTraktId, @Path("number") int seasonNumber);
+
+    @GET("/shows/{id}/progress/watched")
+    Watched getWatchedEpisodes(@Header(AUTHORIZATION) String authorization, @Path("id") int showTraktId);
 }

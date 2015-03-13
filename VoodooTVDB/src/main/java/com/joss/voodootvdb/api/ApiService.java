@@ -48,6 +48,7 @@ public class ApiService extends IntentService {
     public static final int REQUEST_MOVIES_PEOPLE = 11;
     public static final int REQUEST_SEASONS = 12;
     public static final int REQUEST_EPISODES = 13;
+    public static final int REQUEST_EPISODES_WATCHED = 14;
 
     public static final String ARG_ID = "id";
     public static final String ARG_EXTENDED = "extended";
@@ -164,6 +165,10 @@ public class ApiService extends IntentService {
 
                 case REQUEST_EPISODES:
                     Db.updateEpisodes(this, intent.getIntExtra(ARG_ID, 0), service.getEpisodes(intent.getIntExtra(ARG_ID, 0), intent.getIntExtra(ARG_SEASON_NUMBER, -1)));
+                    break;
+
+                case REQUEST_EPISODES_WATCHED:
+                    Db.updateWatchedEpisodes(this, intent.getIntExtra(ARG_ID, 0), service.getWatchedEpisodes(DataStore.getAuthorizationToken(this), intent.getIntExtra(ARG_ID, 0)));
                     break;
             }
         } catch(RetrofitError e){

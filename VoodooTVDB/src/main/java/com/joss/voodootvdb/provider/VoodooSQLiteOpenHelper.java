@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.provider.episodes.EpisodesColumns;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedColumns;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
 import com.joss.voodootvdb.provider.movies_people.MoviesPeopleColumns;
 import com.joss.voodootvdb.provider.movies_related.MoviesRelatedColumns;
@@ -42,6 +43,16 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
             + EpisodesColumns.UPDATED_AT + " TEXT, "
             + EpisodesColumns.JSON + " TEXT "
             + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (EPISODE_TRAKT_ID) ON CONFLICT REPLACE"
+            + " );";
+
+    private static final String SQL_CREATE_TABLE_EPISODES_WATCHED = "CREATE TABLE IF NOT EXISTS "
+            + EpisodesWatchedColumns.TABLE_NAME + " ( "
+            + EpisodesWatchedColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + EpisodesWatchedColumns.SHOW_TRAKT_ID + " INTEGER, "
+            + EpisodesWatchedColumns.SEASON + " INTEGER, "
+            + EpisodesWatchedColumns.NUMBER + " INTEGER, "
+            + EpisodesWatchedColumns.COMPLETED + " INTEGER "
+            + ", CONSTRAINT UNIQUE_SHOW_TRAKT_ID_SEASON_EPISODE_COMBINATION UNIQUE (SHOW_TRAKT_ID, SEASON, NUMBER) ON CONFLICT REPLACE"
             + " );";
 
     private static final String SQL_CREATE_TABLE_MOVIES = "CREATE TABLE IF NOT EXISTS "
@@ -188,6 +199,7 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
         db.execSQL(SQL_CREATE_TABLE_EPISODES);
+        db.execSQL(SQL_CREATE_TABLE_EPISODES_WATCHED);
         db.execSQL(SQL_CREATE_TABLE_MOVIES);
         db.execSQL(SQL_CREATE_TABLE_MOVIES_PEOPLE);
         db.execSQL(SQL_CREATE_TABLE_MOVIES_RELATED);

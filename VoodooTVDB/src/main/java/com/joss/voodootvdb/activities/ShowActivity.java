@@ -16,8 +16,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -28,8 +30,13 @@ import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.interfaces.SeasonListener;
 import com.joss.voodootvdb.interfaces.VoodooClickListener;
 import com.joss.voodootvdb.interfaces.VoodooItem;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedColumns;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedCursor;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedProvider;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedSelection;
 import com.joss.voodootvdb.provider.seasons.SeasonsColumns;
 import com.joss.voodootvdb.provider.seasons.SeasonsCursor;
 import com.joss.voodootvdb.provider.seasons.SeasonsProvider;
@@ -50,11 +57,13 @@ import com.joss.voodootvdb.utils.CustomTypefaceSpan;
 import com.joss.voodootvdb.utils.Utils;
 import com.joss.voodootvdb.views.ErrorView;
 import com.joss.voodootvdb.views.LoadingView;
+import com.joss.voodootvdb.views.SeasonProgressView;
 import com.joss.voodootvdb.views.VoodooCardView;
 import com.joss.voodootvdb.views.VoodooHorizontalScrollView;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -67,7 +76,7 @@ import oak.util.OakUtils;
  * Time: 10:01 AM
  */
 public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-        View.OnClickListener, VoodooClickListener {
+        View.OnClickListener, VoodooClickListener, SeasonListener {
 
     public static final String TAG = ShowActivity.class.getSimpleName();
     public static final String ID = "id";
@@ -76,6 +85,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     private static final int SHOW_RELATED_CALLBACK = 32146;
     private static final int SHOW_PEOPLE_CALLBACK = 32147;
     private static final int SHOW_SEASONS_CALLBACK = 32148;
+    private static final int SHOW_PROGRESS_CALLBACK = 32149;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -95,10 +105,12 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     TextView description;
     @InjectView(R.id.show_status)
     TextView status;
-    @InjectView(R.id.show_related_title)
-    TextView relatedTitle;
+    @InjectView(R.id.show_season_container)
+    LinearLayout seasonContainer;
     @InjectView(R.id.show_related_container)
     VoodooHorizontalScrollView relatedContainer;
+    @InjectView(R.id.show_related_title)
+    TextView relatedTitle;
     @InjectView(R.id.show_people_container)
     VoodooHorizontalScrollView peopleContainer;
     @InjectView(R.id.show_loading)
@@ -109,6 +121,8 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     LocalBroadcastManager broadcastManager;
     ApiReceiver apiReceiver;
     Show show;
+    List<Season> seasons;
+    SparseIntArray progress;
 
     public static void startActivity(Context c, Show show) {
         Intent i = new Intent(c, ShowActivity.class);
@@ -129,16 +143,21 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         errorView.setOnClickListener(this);
         showLoading();
 
+        seasons = new ArrayList<>();
+        progress = new SparseIntArray();
+
         getLoaderManager().initLoader(SHOW_CALLBACK, getIntent().getExtras(), this);
         getLoaderManager().initLoader(SHOW_RELATED_CALLBACK, getIntent().getExtras(), this);
         getLoaderManager().initLoader(SHOW_PEOPLE_CALLBACK, getIntent().getExtras(), this);
         getLoaderManager().initLoader(SHOW_SEASONS_CALLBACK, getIntent().getExtras(), this);
+        getLoaderManager().initLoader(SHOW_PROGRESS_CALLBACK, getIntent().getExtras(), this);
 
         int traktId = getIntent().getIntExtra(ID, 0);
         Api.getShow(this, traktId);
         Api.getShowRelated(this, traktId);
         Api.getShowPeople(this, traktId);
         Api.getSeasons(this, traktId);
+        Api.getEpisodesWatched(this, traktId);
 
         broadcastManager = LocalBroadcastManager.getInstance(this);
         apiReceiver = new ApiReceiver();
@@ -204,6 +223,11 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     }
 
+    @Override
+    public void onSeasonClicked(Season s) {
+        Log.e(TAG, "Season " + s.getNumber() + " Clicked");
+    }
+
     private class ApiReceiver extends BroadcastReceiver {
 
         @Override
@@ -262,6 +286,16 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                         whereSeason.sel(),
                         whereSeason.args(),
                         SeasonsColumns.NUMBER + " ASC");
+
+            case SHOW_PROGRESS_CALLBACK:
+                EpisodesWatchedSelection whereWatched = new EpisodesWatchedSelection();
+                whereWatched.showTraktId(traktId).and().completed(true);
+                return new CursorLoader(this,
+                        EpisodesWatchedColumns.CONTENT_URI,
+                        EpisodesWatchedColumns.FULL_PROJECTION,
+                        whereWatched.sel(),
+                        whereWatched.args(),
+                        EpisodesWatchedColumns.SEASON + " ASC, " + EpisodesWatchedColumns.NUMBER + " ASC");
         }
         return null;
     }
@@ -300,10 +334,15 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                 case SHOW_SEASONS_CALLBACK:
                     SeasonsCursor seasonsCursor = new SeasonsCursor(data);
                     List<Season> seasons = SeasonsProvider.get(seasonsCursor);
-                    // TODO add an list item per season
-                    for(Season s : seasons){
-                        Log.e(TAG, "Season Number: " + s.getNumber() + " Episode Count: " + s.getEpisode_count());
+                    if(!equalSeasons(this.seasons, seasons)){
+                        updateSeasons(seasons);
                     }
+                    break;
+
+                case SHOW_PROGRESS_CALLBACK:
+                    EpisodesWatchedCursor watchedCursor = new EpisodesWatchedCursor(data);
+                    SparseIntArray progress = EpisodesWatchedProvider.getProgress(watchedCursor);
+                    updateSeasonsProgress(progress);
                     break;
             }
         }
@@ -322,6 +361,41 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
         description.setText(show.getOverview());
         status.setText(show.getStatus());
         relatedTitle.setText(buildRelatedString(show));
+    }
+
+    private boolean equalSeasons(List<Season> currentSeasons, List<Season> newSeasons) {
+        if(currentSeasons.size() != newSeasons.size())
+            return false;
+
+        for(int i = 0; i < currentSeasons.size(); i++){
+            Season s1 = currentSeasons.get(i);
+            Season s2 = newSeasons.get(i);
+
+            if(!s1.getNumber().equals(s2.getNumber()) || !s1.getEpisodeCount().equals(s2.getEpisodeCount()))
+                return false;
+        }
+
+        return true;
+    }
+
+    private void updateSeasons(List<Season> newSeasons) {
+        this.seasons = newSeasons;
+        seasonContainer.removeAllViews();
+        for(Season s : seasons){
+            SeasonProgressView seasonProgressView = new SeasonProgressView(this);
+            seasonProgressView.setContent(s, this);
+            seasonProgressView.setProgress(progress, this);
+
+            seasonContainer.addView(seasonProgressView);
+        }
+    }
+
+    private void updateSeasonsProgress(SparseIntArray p) {
+        this.progress = p;
+        for(int i = 0; i < seasonContainer.getChildCount(); i++){
+            SeasonProgressView seasonProgressView = (SeasonProgressView) seasonContainer.getChildAt(i);
+            seasonProgressView.setProgress(p, this);
+        }
     }
 
     private SpannableStringBuilder buildRelatedString(Show show) {

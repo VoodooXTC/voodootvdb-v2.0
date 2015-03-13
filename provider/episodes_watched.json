@@ -1,0 +1,26 @@
+{
+	"fields": [
+		{
+            "name" : "show_trakt_id",
+            "type" : "Integer"
+        },
+        {
+            "name" : "season",
+            "type" : "Integer"
+        },
+        {
+            "name" : "number",
+            "type" : "Integer"
+        },
+        {
+            "name" : "completed",
+            "type" : "Boolean"
+        }
+	],
+    "constraints" : [
+        {
+            "name" : "unique_show_trakt_id_season_episode_combination",
+            "definition" : "unique (show_trakt_id, season, number) on conflict replace"
+        }
+    ]
+}

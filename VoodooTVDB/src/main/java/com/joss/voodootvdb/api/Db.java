@@ -7,6 +7,7 @@ import com.joss.voodootvdb.api.models.Episode.Episode;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
+import com.joss.voodootvdb.api.models.Progress.Watched;
 import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.model.MoviesModel;
@@ -19,6 +20,9 @@ import com.joss.voodootvdb.model.ShowsPeopleModel;
 import com.joss.voodootvdb.provider.episodes.EpisodesColumns;
 import com.joss.voodootvdb.provider.episodes.EpisodesContentValues;
 import com.joss.voodootvdb.provider.episodes.EpisodesProvider;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedColumns;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedContentValues;
+import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedProvider;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
 import com.joss.voodootvdb.provider.movies.MoviesContentValues;
 import com.joss.voodootvdb.provider.movies.MoviesProvider;
@@ -141,5 +145,10 @@ public class Db {
     public static void updateEpisodes(Context context, int showTraktId, List<Episode> episodes) {
         ContentValues[] episodesCV = EpisodesContentValues.getContentValues(EpisodesProvider.get(showTraktId, episodes));
         context.getContentResolver().bulkInsert(EpisodesColumns.CONTENT_URI, episodesCV);
+    }
+
+    public static void updateWatchedEpisodes(Context context, int showTraktId, Watched watched) {
+        ContentValues[] watchedEpisodesCV = EpisodesWatchedContentValues.getContentValues(EpisodesWatchedProvider.get(showTraktId, watched));
+        context.getContentResolver().bulkInsert(EpisodesWatchedColumns.CONTENT_URI, watchedEpisodesCV);
     }
 }

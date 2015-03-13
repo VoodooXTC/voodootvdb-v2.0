@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.api.models.Season;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.joss.voodootvdb.api.models.Show.Ids;
 import com.joss.voodootvdb.api.models.Show.Images;
 
@@ -19,9 +20,11 @@ public class Season {
     @Expose
     private Integer votes;
     @Expose
-    private Integer episode_count;
+    @SerializedName("episode_count")
+    private Integer episodeCount;
     @Expose
-    private Integer aired_episodes;
+    @SerializedName("aired_episodes")
+    private Integer airedEpisodes;
     @Expose
     private String overview;
     @Expose
@@ -59,20 +62,20 @@ public class Season {
         this.votes = votes;
     }
 
-    public Integer getEpisode_count() {
-        return episode_count == null ? 0 : episode_count;
+    public Integer getEpisodeCount() {
+        return episodeCount == null ? 0 : episodeCount;
     }
 
-    public void setEpisode_count(Integer episode_count) {
-        this.episode_count = episode_count;
+    public void setEpisodeCount(Integer episodeCount) {
+        this.episodeCount = episodeCount;
     }
 
-    public Integer getAired_episodes() {
-        return aired_episodes == null ? 0 : aired_episodes;
+    public Integer getAiredEpisodes() {
+        return airedEpisodes == null ? 0 : airedEpisodes;
     }
 
-    public void setAired_episodes(Integer aired_episodes) {
-        this.aired_episodes = aired_episodes;
+    public void setAiredEpisodes(Integer airedEpisodes) {
+        this.airedEpisodes = airedEpisodes;
     }
 
     public String getOverview() {
