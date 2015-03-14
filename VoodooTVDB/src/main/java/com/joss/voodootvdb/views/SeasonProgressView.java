@@ -3,8 +3,10 @@ package com.joss.voodootvdb.views;
 import android.content.Context;
 import android.util.Log;
 import android.util.SparseIntArray;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,12 +23,12 @@ import butterknife.InjectView;
  * Date: 3/13/15
  * Time: 2:49 PM
  */
-public class SeasonProgressView extends LinearLayout {
+public class SeasonProgressView extends LinearLayout implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
     public static final String TAG = SeasonProgressView.class.getSimpleName();
 
-    @InjectView(R.id.season_ripple_view)
-    RippleView rippleLayout;
+    @InjectView(R.id.season_container)
+    View seasonContainer;
     @InjectView(R.id.season_number)
     TextView seasonNumber;
     @InjectView(R.id.season_progress)
@@ -49,20 +51,8 @@ public class SeasonProgressView extends LinearLayout {
         ButterKnife.inject(this);
         season = new Season();
 
-        rippleLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(listener != null)
-                    listener.onSeasonClicked(season);
-            }
-        });
-
-        menu.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e(TAG, "Season " + season.getNumber() + " menu clicked");
-            }
-        });
+        seasonContainer.setOnClickListener(this);
+        menu.setOnClickListener(this);
     }
 
     public void setContent(Season s, SeasonListener l){
@@ -86,5 +76,31 @@ public class SeasonProgressView extends LinearLayout {
 
         progressBar.setMax(season.getEpisodeCount());
         progressBar.setProgress(p.get(season.getNumber()));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.season_container:
+                if(listener != null)
+                    listener.onSeasonClicked(season);
+                break;
+            case R.id.season_menu:
+                PopupMenu popupMenu = new PopupMenu(getContext(), menu);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_season, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(this);
+                popupMenu.show();
+                break;
+        }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_season_watched_all:
+                Log.e(TAG, "Watched All episodes on Season " + season.getNumber());
+                return true;
+        }
+        return false;
     }
 }
