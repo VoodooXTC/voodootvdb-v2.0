@@ -9,25 +9,40 @@
         layout="@layout/toolbar"
         />
 
-    <com.joss.voodootvdb.views.PagerSlidingTabStrip
-        android:id="@+id/viewpager_tabs"
-        android:background="@color/colorPrimary"
-        style="@style/MatchWidthWrapHeight"
-        app:pstsShouldExpand="true"
-        app:pstsTabSwitch="true"
-        app:pstsDeactivateTextColor="@color/white_ish"
-        app:pstsActivateTextColor="@color/white"
-        app:pstsIndicatorColor="@color/white"
-        app:pstsUnderlineHeight="0dp"
-        app:pstsIndicatorHeight="1.5dp"
-        app:pstsDividerColor="@color/transparent"
-        app:pstsTextAllCaps="true"
-        app:pstsTabPaddingLeftRight="@dimen/normal"
-        />
+    <RelativeLayout
+        style="@style/Match">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        style="@style/Match"
-        />
+        <com.joss.voodootvdb.views.PagerSlidingTabStrip
+            android:id="@+id/viewpager_tabs"
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            app:pstsShouldExpand="true"
+            app:pstsTabSwitch="true"
+            app:pstsDeactivateTextColor="@color/white_ish"
+            app:pstsActivateTextColor="@color/white"
+            app:pstsIndicatorColor="@color/white"
+            app:pstsUnderlineHeight="0dp"
+            app:pstsIndicatorHeight="1.5dp"
+            app:pstsDividerColor="@color/transparent"
+            app:pstsTextAllCaps="true"
+            app:pstsTabPaddingLeftRight="@dimen/normal"
+            />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            style="@style/Match"
+            android:layout_below="@id/viewpager_tabs"
+            />
+
+        <com.joss.voodootvdb.views.ErrorView
+            android:id="@+id/season_error_view"
+            style="@style/Match" />
+
+        <com.joss.voodootvdb.views.LoadingView
+            android:id="@+id/season_loading"
+            style="@style/Match" />
+
+    </RelativeLayout>
 
 </LinearLayout>
