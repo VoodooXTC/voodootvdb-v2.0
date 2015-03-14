@@ -88,7 +88,8 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
         apiReceiver = new ApiReceiver();
 
         username.getEditText().addTextChangedListener(this);
-
+        username.getEditText().setOnKeyListener(this);
+        
         container.setOnClickListener(this);
         loginButton.setOnClickListener(this);
 

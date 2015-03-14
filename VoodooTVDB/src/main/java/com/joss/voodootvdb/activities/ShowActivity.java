@@ -225,7 +225,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
     @Override
     public void onSeasonClicked(Season s) {
-        Log.e(TAG, "Season " + s.getNumber() + " Clicked");
+        SeasonActivity.startActivity(this, getIntent().getIntExtra(ID, 0), s.getNumber());
     }
 
     private class ApiReceiver extends BroadcastReceiver {

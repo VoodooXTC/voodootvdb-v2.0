@@ -54,4 +54,6 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.5.9'
     compile 'com.github.nirhart:parallaxscroll:1.0'
     compile 'com.github.traex.rippleeffect:library:1.2.3'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'joda-time:joda-time:2.7'
 }

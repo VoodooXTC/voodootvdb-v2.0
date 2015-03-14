@@ -2,6 +2,7 @@
 package com.joss.voodootvdb.api.models.Show;
 
 import com.google.gson.annotations.Expose;
+import com.joss.voodootvdb.api.models.Episode.Screenshot;
 
 public class Images {
 
@@ -17,6 +18,8 @@ public class Images {
     private Banner banner;
     @Expose
     private Thumb thumb;
+    @Expose
+    private Screenshot screenshot;
 
     /**
      * 
@@ -126,4 +129,11 @@ public class Images {
         this.thumb = thumb;
     }
 
+    public Screenshot getScreenshot() {
+        return screenshot == null ? new Screenshot() : screenshot;
+    }
+
+    public void setScreenshot(Screenshot screenshot) {
+        this.screenshot = screenshot;
+    }
 }

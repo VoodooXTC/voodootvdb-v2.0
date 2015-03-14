@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    style="@style/Match">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        />
+
+    <com.joss.voodootvdb.views.PagerSlidingTabStrip
+        android:id="@+id/viewpager_tabs"
+        android:background="@color/colorPrimary"
+        style="@style/MatchWidthWrapHeight"
+        app:pstsShouldExpand="true"
+        app:pstsTabSwitch="true"
+        app:pstsDeactivateTextColor="@color/white_ish"
+        app:pstsActivateTextColor="@color/white"
+        app:pstsIndicatorColor="@color/white"
+        app:pstsUnderlineHeight="0dp"
+        app:pstsIndicatorHeight="1.5dp"
+        app:pstsDividerColor="@color/transparent"
+        app:pstsTextAllCaps="true"
+        app:pstsTabPaddingLeftRight="@dimen/normal"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        style="@style/Match"
+        />
+
+</LinearLayout>

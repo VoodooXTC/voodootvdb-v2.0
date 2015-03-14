@@ -1,5 +1,8 @@
 package com.joss.voodootvdb.utils;
 
+import org.joda.time.DateTime;
+
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,5 +28,11 @@ public class DateFormatter {
         }
 
         return yearMonthDay;
+    }
+
+    public static String formatIso(String iso8601String){
+        Date date = new DateTime(iso8601String).toDate();
+        SimpleDateFormat formatOut = new SimpleDateFormat("MMM d, yyyy mm:ss", Locale.getDefault());
+        return formatOut.format(date);
     }
 }

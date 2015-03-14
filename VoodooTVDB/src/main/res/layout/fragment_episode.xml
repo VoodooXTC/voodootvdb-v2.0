@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Match"
+    tools:background="@color/black_10_percent_transparency">
+
+    <android.support.v7.widget.CardView
+        style="@style/VoodooCard"
+        android:layout_margin="@dimen/normal">
+
+        <LinearLayout
+            style="@style/MatchWidthWrapHeight"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/episode_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                tools:background="@color/black_10_percent_transparency"
+                />
+
+            <LinearLayout
+                android:id="@+id/episode_content"
+                style="@style/Match"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:background="@color/white"
+                >
+
+                <oak.widget.TextViewWithFont
+                    android:id="@+id/episode_title"
+                    style="@style/Show.Title"
+                    tools:text="Big Trouble in Little China"
+                    />
+
+                <RelativeLayout
+                    style="@style/MatchWidthWrapHeight"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="@dimen/normal"
+                    android:paddingStart="@dimen/normal"
+                    android:layout_marginBottom="@dimen/normal"
+                    >
+
+                    <RatingBar
+                        android:id="@+id/episode_rating"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginEnd="@dimen/normal"
+                        android:numStars="5"
+                        android:stepSize="0.1"
+                        android:isIndicator="true"
+                        android:progressDrawable="@drawable/ratingstars"
+                        tools:rating="4.5"
+                        />
+
+                    <oak.widget.TextViewWithFont
+                        android:id="@+id/episode_info"
+                        style="@style/Show.SubTitle"
+                        tools:text="1986 PG-13 99 Mins"
+                        android:gravity="center"
+                        android:layout_toEndOf="@+id/episode_rating"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="@dimen/normal"
+                        />
+
+                    <oak.widget.TextViewWithFont
+                        android:id="@+id/episode_guests"
+                        style="@style/Show.SubTitle"
+                        tools:text="Action|Comedy"
+                        android:gravity="center|end"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:layout_toEndOf="@+id/episode_info"
+                        />
+
+                </RelativeLayout>
+
+                <View style="@style/Divider.Grey"/>
+
+                <oak.widget.TextViewWithFont
+                    android:id="@+id/episode_description"
+                    style="@style/Show.Content"
+                    tools:text="An All-American trucker gets dragged into a centries-old mystical battle in Chinatown."
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</ScrollView>

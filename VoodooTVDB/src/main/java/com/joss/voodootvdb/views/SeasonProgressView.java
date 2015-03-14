@@ -5,6 +5,7 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
@@ -28,7 +29,7 @@ public class SeasonProgressView extends LinearLayout implements View.OnClickList
     public static final String TAG = SeasonProgressView.class.getSimpleName();
 
     @InjectView(R.id.season_container)
-    View seasonContainer;
+    RippleView seasonContainer;
     @InjectView(R.id.season_number)
     TextView seasonNumber;
     @InjectView(R.id.season_progress)
@@ -52,7 +53,15 @@ public class SeasonProgressView extends LinearLayout implements View.OnClickList
         season = new Season();
 
         seasonContainer.setOnClickListener(this);
-        menu.setOnClickListener(this);
+        menu.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(getContext(), menu);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_season, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(SeasonProgressView.this);
+                popupMenu.show();
+            }
+        });
     }
 
     public void setContent(Season s, SeasonListener l){
@@ -86,10 +95,7 @@ public class SeasonProgressView extends LinearLayout implements View.OnClickList
                     listener.onSeasonClicked(season);
                 break;
             case R.id.season_menu:
-                PopupMenu popupMenu = new PopupMenu(getContext(), menu);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_season, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(this);
-                popupMenu.show();
+
                 break;
         }
     }

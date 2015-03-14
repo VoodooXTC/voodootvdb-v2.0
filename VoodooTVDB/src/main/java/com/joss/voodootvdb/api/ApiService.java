@@ -164,7 +164,7 @@ public class ApiService extends IntentService {
                     break;
 
                 case REQUEST_EPISODES:
-                    Db.updateEpisodes(this, intent.getIntExtra(ARG_ID, 0), service.getEpisodes(intent.getIntExtra(ARG_ID, 0), intent.getIntExtra(ARG_SEASON_NUMBER, -1)));
+                    Db.updateEpisodes(this, intent.getIntExtra(ARG_ID, 0), service.getEpisodes(intent.getIntExtra(ARG_ID, 0), intent.getIntExtra(ARG_SEASON_NUMBER, -1), intent.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_EPISODES_WATCHED:

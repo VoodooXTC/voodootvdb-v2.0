@@ -66,7 +66,7 @@ public interface RestService {
     List<Season> getSeasons(@Path("id") int showTraktId, @Query(EXTENDED) String extended);
 
     @GET("/shows/{id}/seasons/{number}")
-    List<Episode> getEpisodes(@Path("id") int showTraktId, @Path("number") int seasonNumber);
+    List<Episode> getEpisodes(@Path("id") int showTraktId, @Path("number") int seasonNumber, @Query(EXTENDED) String extended);
 
     @GET("/shows/{id}/progress/watched")
     Watched getWatchedEpisodes(@Header(AUTHORIZATION) String authorization, @Path("id") int showTraktId);
