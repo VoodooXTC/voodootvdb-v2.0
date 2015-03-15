@@ -124,7 +124,7 @@ public class PersonFragment extends BaseListFragment implements
 
     @Override
     public void onShowClicked(Show show) {
-        ShowActivity.startActivity(getActivity(), show);
+        ShowActivity.startActivity(getActivity(), show.getId());
     }
 
     @Override
@@ -149,7 +149,7 @@ public class PersonFragment extends BaseListFragment implements
 
     @Override
     public void onMovieClicked(Movie movie) {
-        MovieActivity.startActivity(getActivity(), movie);
+        MovieActivity.startActivity(getActivity(), movie.getId());
     }
 
     @Override

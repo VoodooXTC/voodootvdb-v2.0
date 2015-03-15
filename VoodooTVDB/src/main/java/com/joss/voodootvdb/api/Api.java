@@ -199,4 +199,20 @@ public class Api {
         context.startService(intent);
     }
 
+    public static void search(Context context, String query, String type, int page, int limit){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SEARCH);
+        intent.putExtra(ApiService.ARG_QUERY, query);
+        intent.putExtra(ApiService.ARG_TYPE, type);
+        intent.putExtra(ApiService.ARG_PAGE, page);
+        intent.putExtra(ApiService.ARG_LIMIT, limit);
+        context.startService(intent);
+    }
+
+    public static void searchAllTypes(Context context, String query){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SEARCH_ALL_TYPES);
+        intent.putExtra(ApiService.ARG_QUERY, query);
+        context.startService(intent);
+    }
 }

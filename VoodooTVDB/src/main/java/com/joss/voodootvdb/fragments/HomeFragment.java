@@ -28,6 +28,7 @@ import com.joss.voodootvdb.views.VoodooHorizontalScrollView;
 import com.joss.voodootvdb.views.LoadingView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,9 +54,7 @@ public class HomeFragment extends BaseListFragment implements
 
     @Override
     List<Integer> getApiTypes() {
-        List<Integer> types = new ArrayList<>();
-        types.add(ApiService.REQUEST_SHOWS_POPULAR);
-        return types;
+        return Arrays.asList(ApiService.REQUEST_SHOWS_POPULAR);
     }
 
     @Override

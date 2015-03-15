@@ -44,7 +44,7 @@ public class VoodooAuthClient extends OkClient {
             if(accessToken != null){
                 AccessToken newAccessToken= null;
                 try {
-                    newAccessToken = ApiService.getApi(context).login(new AccessTokenRequest(accessToken.refresh_token));
+                    newAccessToken = ApiService.getApi(context, null).login(new AccessTokenRequest(accessToken.refresh_token));
 
                 }catch (RetrofitError error){
                     Log.d(TAG, error.toString());

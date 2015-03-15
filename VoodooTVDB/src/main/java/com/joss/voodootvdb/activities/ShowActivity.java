@@ -124,9 +124,9 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
     List<Season> seasons;
     SparseIntArray progress;
 
-    public static void startActivity(Context c, Show show) {
+    public static void startActivity(Context c, int traktId) {
         Intent i = new Intent(c, ShowActivity.class);
-        i.putExtra(ID, show.getId());
+        i.putExtra(ID, traktId);
         c.startActivity(i);
     }
 

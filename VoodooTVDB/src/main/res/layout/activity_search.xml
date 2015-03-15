@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    style="@style/Match">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        style="@style/MatchWidthWrapHeight"
+        />
+
+    <FrameLayout
+        android:id="@+id/search_content"
+        style="@style/Match"
+        />
+
+</LinearLayout>

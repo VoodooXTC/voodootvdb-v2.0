@@ -13,10 +13,17 @@ import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.Error;
 import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
+import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.utils.GGson;
+import com.squareup.okhttp.OkHttpClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
+import retrofit.client.UrlConnectionClient;
 import retrofit.converter.GsonConverter;
 
 /**
@@ -49,11 +56,18 @@ public class ApiService extends IntentService {
     public static final int REQUEST_SEASONS = 12;
     public static final int REQUEST_EPISODES = 13;
     public static final int REQUEST_EPISODES_WATCHED = 14;
+    public static final int REQUEST_SEARCH = 15;
+    public static final int REQUEST_SEARCH_ALL_TYPES = 16;
 
     public static final String ARG_ID = "id";
     public static final String ARG_EXTENDED = "extended";
     public static final String ARG_ACCESS_TOKEN = "access_token";
     public static final String ARG_SEASON_NUMBER = "season_number";
+    public static final String ARG_QUERY = "query";
+    public static final String ARG_TYPE = "type";
+    public static final String ARG_PAGE = "page";
+    public static final String ARG_LIMIT = "limit";
+    public static final String ARG_SEARCH_RESULTS = "search_results";
 
     public static final String RESULT_MESSAGE = "message";
     public static final String RESULT_STATUS = "result_status";
@@ -79,18 +93,18 @@ public class ApiService extends IntentService {
     public void onCreate() {
         super.onCreate();
 
-        service = getApi(this);
+        service = getApi(this, null);
         broadcastManager = LocalBroadcastManager.getInstance(this);
     }
 
-    public static RestService getApi(Context context) {
+    public static RestService getApi(Context context, UrlConnectionClient client) {
         if (service == null) {
 
             Gson gson = new GsonBuilder()
                     .create();
 
             VoodooRequestInterceptor requestInterceptor = new VoodooRequestInterceptor(context);
-            RestAdapter restAdapter = new RestAdapter.Builder()
+            RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Endpoints.URL)
                     .setRequestInterceptor(requestInterceptor)
                     .setClient(new VoodooAuthClient(context))
@@ -98,77 +112,102 @@ public class ApiService extends IntentService {
                     .setLogLevel(BuildConfig.DEBUG
                             ? RestAdapter.LogLevel.FULL
                             : RestAdapter.LogLevel.NONE)
-                    .build();
+                    ;
+            if(client != null)
+                builder.setClient(client);
+
+            RestAdapter restAdapter = builder.build();
             service = restAdapter.create(RestService.class);
         }
         return service;
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        int type = intent.getIntExtra(REQUEST_TYPE, -1);
+    protected void onHandleIntent(Intent i) {
+        int type = i.getIntExtra(REQUEST_TYPE, -1);
 
         try{
             switch (type){
                 case REQUEST_LOGIN_ACCESS_TOKEN:
-                    AccessTokenRequest accessTokenRequest = GGson.fromJson(intent.getStringExtra(ARG_ACCESS_TOKEN), AccessTokenRequest.class);
+                    AccessTokenRequest accessTokenRequest = GGson.fromJson(i.getStringExtra(ARG_ACCESS_TOKEN), AccessTokenRequest.class);
                     AccessToken accessToken = service.login(accessTokenRequest);
                     DataStore.persistAccessToken(this, accessToken);
                     broadcastLoginSuccess(type);
                     break;
 
                 case REQUEST_SHOW:
-                    Db.updateShow(this, service.getShow(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updateShow(this, service.getShow(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_SHOWS_POPULAR:
-                    Db.updatePopularShows(this, service.getShowsPopular(intent.getStringExtra(EXTENDED)));
+                    Db.updatePopularShows(this, service.getShowsPopular(i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_SHOWS_RELATED:
                     Db.updateShowsRelated(this,
-                            intent.getIntExtra(ARG_ID, 0),
-                            service.getShowsRelated(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                            i.getIntExtra(ARG_ID, 0),
+                            service.getShowsRelated(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_SHOWS_PEOPLE:
-                    Db.updateShowsPeople(this, intent.getIntExtra(ARG_ID, 0), service.getShowsPeople(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updateShowsPeople(this, i.getIntExtra(ARG_ID, 0), service.getShowsPeople(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_PERSON:
-                    Db.updatePerson(this, service.getPerson(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updatePerson(this, service.getPerson(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_PERSON_SHOWS:
-                    Db.updatePersonShows(this, intent.getIntExtra(ARG_ID, 0), service.getPersonShows(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updatePersonShows(this, i.getIntExtra(ARG_ID, 0), service.getPersonShows(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_PERSON_MOVIES:
-                    Db.updatePersonMovies(this, intent.getIntExtra(ARG_ID, 0), service.getPersonMovies(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updatePersonMovies(this, i.getIntExtra(ARG_ID, 0), service.getPersonMovies(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_MOVIE:
-                    Db.updateMovie(this, service.getMovie(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updateMovie(this, service.getMovie(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_MOVIES_PEOPLE:
-                    Db.updateMoviesPeople(this, intent.getIntExtra(ARG_ID, 0), service.getMoviesPeople(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updateMoviesPeople(this, i.getIntExtra(ARG_ID, 0), service.getMoviesPeople(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_MOVIES_RELATED:
-                    Db.updateMoviesRelated(this, intent.getIntExtra(ARG_ID, 0), service.getMoviesRelated(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updateMoviesRelated(this, i.getIntExtra(ARG_ID, 0), service.getMoviesRelated(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_SEASONS:
-                    Db.updateSeasons(this, intent.getIntExtra(ARG_ID, 0), service.getSeasons(intent.getIntExtra(ARG_ID, 0), intent.getStringExtra(EXTENDED)));
+                    Db.updateSeasons(this, i.getIntExtra(ARG_ID, 0), service.getSeasons(i.getIntExtra(ARG_ID, 0), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_EPISODES:
-                    Db.updateEpisodes(this, intent.getIntExtra(ARG_ID, 0), service.getEpisodes(intent.getIntExtra(ARG_ID, 0), intent.getIntExtra(ARG_SEASON_NUMBER, -1), intent.getStringExtra(EXTENDED)));
+                    Db.updateEpisodes(this, i.getIntExtra(ARG_ID, 0), service.getEpisodes(i.getIntExtra(ARG_ID, 0), i.getIntExtra(ARG_SEASON_NUMBER, -1), i.getStringExtra(EXTENDED)));
                     break;
 
                 case REQUEST_EPISODES_WATCHED:
-                    Db.updateWatchedEpisodes(this, intent.getIntExtra(ARG_ID, 0), service.getWatchedEpisodes(DataStore.getAuthorizationToken(this), intent.getIntExtra(ARG_ID, 0)));
+                    Db.updateWatchedEpisodes(this, i.getIntExtra(ARG_ID, 0), service.getWatchedEpisodes(DataStore.getAuthorizationToken(this), i.getIntExtra(ARG_ID, 0)));
+                    break;
+
+                case REQUEST_SEARCH:
+                    broadcastSearchSuccess(type, service.search(i.getStringExtra(ARG_QUERY), i.getStringExtra(ARG_TYPE), i.getIntExtra(ARG_PAGE, 1), i.getIntExtra(ARG_LIMIT, 10)));
+                    break;
+
+                case REQUEST_SEARCH_ALL_TYPES:
+                    // Set the timeout
+                    service = null;
+                    service = getApi(this, new ShortTimeOutClient(333));
+
+                    List<Search> searchResults = new ArrayList<>();
+                    String query = i.getStringExtra(ARG_QUERY);
+                    searchResults.addAll(service.search(query, Search.TYPE_SHOW, 1, 5));
+                    searchResults.addAll(service.search(query, Search.TYPE_MOVIE, 1, 5));
+                    searchResults.addAll(service.search(query, Search.TYPE_PERSON, 1, 5));
+                    broadcastSearchSuccess(type, searchResults);
+
+                    // Reset the timeout
+                    service = null;
+                    service = getApi(this, null);
                     break;
             }
         } catch(RetrofitError e){
@@ -183,6 +222,15 @@ public class ApiService extends IntentService {
         intent.setAction(BROADCAST);
         intent.putExtra(REQUEST_TYPE, type);
         intent.putExtra(RESULT_STATUS, RESULT_SUCCESS);
+        broadcastManager.sendBroadcast(intent);
+    }
+
+    private void broadcastSearchSuccess(int type, List<Search> items){
+        Intent intent = new Intent();
+        intent.setAction(BROADCAST);
+        intent.putExtra(REQUEST_TYPE, type);
+        intent.putExtra(RESULT_STATUS, RESULT_SUCCESS);
+        intent.putExtra(ARG_SEARCH_RESULTS, GGson.toJson(items));
         broadcastManager.sendBroadcast(intent);
     }
 

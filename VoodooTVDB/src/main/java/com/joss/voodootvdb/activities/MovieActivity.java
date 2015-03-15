@@ -115,9 +115,9 @@ public class MovieActivity extends BaseActivity implements LoaderManager.LoaderC
     ApiReceiver apiReceiver;
     Movie movie;
 
-    public static void startActivity(Context c, Movie movie) {
+    public static void startActivity(Context c, int traktId) {
         Intent i = new Intent(c, MovieActivity.class);
-        i.putExtra(ID, movie.getId());
+        i.putExtra(ID, traktId);
         c.startActivity(i);
     }
 
