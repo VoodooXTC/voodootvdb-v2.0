@@ -1,9 +1,16 @@
 package com.joss.voodootvdb.activities;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -62,6 +69,21 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
             selectFragment(drawerModel.id);
             swapFragments();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        // Search Menu Item
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem search = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
+        searchView.setIconifiedByDefault(true);
+
+        return true;
     }
 
     @Override

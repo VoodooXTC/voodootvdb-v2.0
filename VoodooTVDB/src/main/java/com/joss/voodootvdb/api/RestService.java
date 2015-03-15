@@ -7,6 +7,7 @@ import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
 import com.joss.voodootvdb.api.models.People.Person;
 import com.joss.voodootvdb.api.models.Progress.Watched;
+import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
 
@@ -70,4 +71,7 @@ public interface RestService {
 
     @GET("/shows/{id}/progress/watched")
     Watched getWatchedEpisodes(@Header(AUTHORIZATION) String authorization, @Path("id") int showTraktId);
+
+    @GET("/search")
+    List<Search> search(@Query("query") String query, @Query("type") String type, @Query("page") int page, @Query("limit") int limit);
 }

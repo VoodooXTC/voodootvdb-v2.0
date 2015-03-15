@@ -46,5 +46,7 @@
     <string name="season">"Season"</string>
     <string name="season_extras">"Extras"</string>
     <string name="menu_season_watched_all">Watched All</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search...</string>
 
 </resources>
