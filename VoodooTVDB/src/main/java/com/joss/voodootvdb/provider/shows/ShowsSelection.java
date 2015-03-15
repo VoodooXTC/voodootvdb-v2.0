@@ -104,16 +104,35 @@ public class ShowsSelection extends AbstractSelection<ShowsSelection> {
     }
 
 
-    public ShowsSelection firstAired(String... value) {
+    public ShowsSelection firstAired(Long... value) {
         addEquals(ShowsColumns.FIRST_AIRED, value);
         return this;
     }
     
-    public ShowsSelection firstAiredNot(String... value) {
+    public ShowsSelection firstAiredNot(Long... value) {
         addNotEquals(ShowsColumns.FIRST_AIRED, value);
         return this;
     }
 
+    public ShowsSelection firstAiredGt(long value) {
+        addGreaterThan(ShowsColumns.FIRST_AIRED, value);
+        return this;
+    }
+
+    public ShowsSelection firstAiredGtEq(long value) {
+        addGreaterThanOrEquals(ShowsColumns.FIRST_AIRED, value);
+        return this;
+    }
+
+    public ShowsSelection firstAiredLt(long value) {
+        addLessThan(ShowsColumns.FIRST_AIRED, value);
+        return this;
+    }
+
+    public ShowsSelection firstAiredLtEq(long value) {
+        addLessThanOrEquals(ShowsColumns.FIRST_AIRED, value);
+        return this;
+    }
 
     public ShowsSelection country(String... value) {
         addEquals(ShowsColumns.COUNTRY, value);
@@ -167,16 +186,35 @@ public class ShowsSelection extends AbstractSelection<ShowsSelection> {
         return this;
     }
 
-    public ShowsSelection updatedAt(String... value) {
+    public ShowsSelection updatedAt(Long... value) {
         addEquals(ShowsColumns.UPDATED_AT, value);
         return this;
     }
     
-    public ShowsSelection updatedAtNot(String... value) {
+    public ShowsSelection updatedAtNot(Long... value) {
         addNotEquals(ShowsColumns.UPDATED_AT, value);
         return this;
     }
 
+    public ShowsSelection updatedAtGt(long value) {
+        addGreaterThan(ShowsColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public ShowsSelection updatedAtGtEq(long value) {
+        addGreaterThanOrEquals(ShowsColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public ShowsSelection updatedAtLt(long value) {
+        addLessThan(ShowsColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public ShowsSelection updatedAtLtEq(long value) {
+        addLessThanOrEquals(ShowsColumns.UPDATED_AT, value);
+        return this;
+    }
 
     public ShowsSelection language(String... value) {
         addEquals(ShowsColumns.LANGUAGE, value);

@@ -52,9 +52,8 @@ public class MoviesCursor extends AbstractCursor {
      * Get the {@code released} value.
      * Can be {@code null}.
      */
-    public String getReleased() {
-        Integer index = getCachedColumnIndexOrThrow(MoviesColumns.RELEASED);
-        return getString(index);
+    public Long getReleased() {
+        return getLongOrNull(MoviesColumns.RELEASED);
     }
 
     /**
@@ -69,9 +68,8 @@ public class MoviesCursor extends AbstractCursor {
      * Get the {@code updated_at} value.
      * Can be {@code null}.
      */
-    public String getUpdatedAt() {
-        Integer index = getCachedColumnIndexOrThrow(MoviesColumns.UPDATED_AT);
-        return getString(index);
+    public Long getUpdatedAt() {
+        return getLongOrNull(MoviesColumns.UPDATED_AT);
     }
 
     /**

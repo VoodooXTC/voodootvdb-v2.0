@@ -73,7 +73,7 @@ public class EpisodesContentValues extends AbstractContentValues {
     }
 
 
-    public EpisodesContentValues putFirstAired(String value) {
+    public EpisodesContentValues putFirstAired(Long value) {
         mContentValues.put(EpisodesColumns.FIRST_AIRED, value);
         return this;
     }
@@ -84,7 +84,7 @@ public class EpisodesContentValues extends AbstractContentValues {
     }
 
 
-    public EpisodesContentValues putUpdatedAt(String value) {
+    public EpisodesContentValues putUpdatedAt(Long value) {
         mContentValues.put(EpisodesColumns.UPDATED_AT, value);
         return this;
     }

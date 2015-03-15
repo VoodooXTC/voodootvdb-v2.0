@@ -12,8 +12,6 @@ import com.joss.voodootvdb.utils.DateFormatter;
 import com.joss.voodootvdb.utils.GGson;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
-
 import butterknife.InjectView;
 
 /**
@@ -69,7 +67,7 @@ public class EpisodeFragment extends BaseFragment {
         }
         title.setText(episode.getTitle());
         ratingBar.setRating((float) (episode.getRating() / 2));
-        info.setText(DateFormatter.formatIso(episode.getFirst_aired()));
+        info.setText(DateFormatter.formatIso(episode.getFirstAired()));
         description.setText(episode.getOverview());
     }
 

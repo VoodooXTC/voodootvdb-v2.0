@@ -172,27 +172,65 @@ public class EpisodesSelection extends AbstractSelection<EpisodesSelection> {
         return this;
     }
 
-    public EpisodesSelection firstAired(String... value) {
+    public EpisodesSelection firstAired(Long... value) {
         addEquals(EpisodesColumns.FIRST_AIRED, value);
         return this;
     }
     
-    public EpisodesSelection firstAiredNot(String... value) {
+    public EpisodesSelection firstAiredNot(Long... value) {
         addNotEquals(EpisodesColumns.FIRST_AIRED, value);
         return this;
     }
 
+    public EpisodesSelection firstAiredGt(long value) {
+        addGreaterThan(EpisodesColumns.FIRST_AIRED, value);
+        return this;
+    }
 
-    public EpisodesSelection updatedAt(String... value) {
+    public EpisodesSelection firstAiredGtEq(long value) {
+        addGreaterThanOrEquals(EpisodesColumns.FIRST_AIRED, value);
+        return this;
+    }
+
+    public EpisodesSelection firstAiredLt(long value) {
+        addLessThan(EpisodesColumns.FIRST_AIRED, value);
+        return this;
+    }
+
+    public EpisodesSelection firstAiredLtEq(long value) {
+        addLessThanOrEquals(EpisodesColumns.FIRST_AIRED, value);
+        return this;
+    }
+
+    public EpisodesSelection updatedAt(Long... value) {
         addEquals(EpisodesColumns.UPDATED_AT, value);
         return this;
     }
     
-    public EpisodesSelection updatedAtNot(String... value) {
+    public EpisodesSelection updatedAtNot(Long... value) {
         addNotEquals(EpisodesColumns.UPDATED_AT, value);
         return this;
     }
 
+    public EpisodesSelection updatedAtGt(long value) {
+        addGreaterThan(EpisodesColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public EpisodesSelection updatedAtGtEq(long value) {
+        addGreaterThanOrEquals(EpisodesColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public EpisodesSelection updatedAtLt(long value) {
+        addLessThan(EpisodesColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public EpisodesSelection updatedAtLtEq(long value) {
+        addLessThanOrEquals(EpisodesColumns.UPDATED_AT, value);
+        return this;
+    }
 
     public EpisodesSelection json(String... value) {
         addEquals(EpisodesColumns.JSON, value);

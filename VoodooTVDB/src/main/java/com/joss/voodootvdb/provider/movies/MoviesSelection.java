@@ -134,16 +134,35 @@ public class MoviesSelection extends AbstractSelection<MoviesSelection> {
     }
 
 
-    public MoviesSelection released(String... value) {
+    public MoviesSelection released(Long... value) {
         addEquals(MoviesColumns.RELEASED, value);
         return this;
     }
     
-    public MoviesSelection releasedNot(String... value) {
+    public MoviesSelection releasedNot(Long... value) {
         addNotEquals(MoviesColumns.RELEASED, value);
         return this;
     }
 
+    public MoviesSelection releasedGt(long value) {
+        addGreaterThan(MoviesColumns.RELEASED, value);
+        return this;
+    }
+
+    public MoviesSelection releasedGtEq(long value) {
+        addGreaterThanOrEquals(MoviesColumns.RELEASED, value);
+        return this;
+    }
+
+    public MoviesSelection releasedLt(long value) {
+        addLessThan(MoviesColumns.RELEASED, value);
+        return this;
+    }
+
+    public MoviesSelection releasedLtEq(long value) {
+        addLessThanOrEquals(MoviesColumns.RELEASED, value);
+        return this;
+    }
 
     public MoviesSelection rating(Double... value) {
         addEquals(MoviesColumns.RATING, value);
@@ -175,16 +194,35 @@ public class MoviesSelection extends AbstractSelection<MoviesSelection> {
         return this;
     }
 
-    public MoviesSelection updatedAt(String... value) {
+    public MoviesSelection updatedAt(Long... value) {
         addEquals(MoviesColumns.UPDATED_AT, value);
         return this;
     }
     
-    public MoviesSelection updatedAtNot(String... value) {
+    public MoviesSelection updatedAtNot(Long... value) {
         addNotEquals(MoviesColumns.UPDATED_AT, value);
         return this;
     }
 
+    public MoviesSelection updatedAtGt(long value) {
+        addGreaterThan(MoviesColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public MoviesSelection updatedAtGtEq(long value) {
+        addGreaterThanOrEquals(MoviesColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public MoviesSelection updatedAtLt(long value) {
+        addLessThan(MoviesColumns.UPDATED_AT, value);
+        return this;
+    }
+
+    public MoviesSelection updatedAtLtEq(long value) {
+        addLessThanOrEquals(MoviesColumns.UPDATED_AT, value);
+        return this;
+    }
 
     public MoviesSelection language(String... value) {
         addEquals(MoviesColumns.LANGUAGE, value);

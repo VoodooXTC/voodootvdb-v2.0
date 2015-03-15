@@ -73,7 +73,7 @@ public class MoviesContentValues extends AbstractContentValues {
     }
 
 
-    public MoviesContentValues putReleased(String value) {
+    public MoviesContentValues putReleased(Long value) {
         mContentValues.put(MoviesColumns.RELEASED, value);
         return this;
     }
@@ -95,7 +95,7 @@ public class MoviesContentValues extends AbstractContentValues {
     }
 
 
-    public MoviesContentValues putUpdatedAt(String value) {
+    public MoviesContentValues putUpdatedAt(Long value) {
         mContentValues.put(MoviesColumns.UPDATED_AT, value);
         return this;
     }

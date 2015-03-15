@@ -62,7 +62,7 @@ public class ShowsContentValues extends AbstractContentValues {
     }
 
 
-    public ShowsContentValues putFirstAired(String value) {
+    public ShowsContentValues putFirstAired(Long value) {
         mContentValues.put(ShowsColumns.FIRST_AIRED, value);
         return this;
     }
@@ -106,7 +106,7 @@ public class ShowsContentValues extends AbstractContentValues {
     }
 
 
-    public ShowsContentValues putUpdatedAt(String value) {
+    public ShowsContentValues putUpdatedAt(Long value) {
         mContentValues.put(ShowsColumns.UPDATED_AT, value);
         return this;
     }

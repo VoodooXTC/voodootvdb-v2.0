@@ -5,6 +5,8 @@ import com.joss.voodootvdb.provider.shows.ShowsCursor;
 import com.google.gson.annotations.SerializedName;
 import com.joss.voodootvdb.utils.GGson;
 
+import org.joda.time.DateTime;
+
 /**
  * Model object for the {@code shows}.
  */
@@ -12,11 +14,11 @@ public class ShowsModel{
     public String title;
     public Integer traktId;
     public String imdbId;
-    public String firstAired;
+    public Long firstAired;
     public String country;
     public String status;
     public Double rating;
-    public String updatedAt;
+    public Long updatedAt;
     public String language;
     public String json;
 
@@ -39,11 +41,11 @@ public class ShowsModel{
         this.title = show.getTitle();
         this.traktId = show.getIds().getTrakt();
         this.imdbId = show.getIds().getImdb();
-        this.firstAired = show.getFirstAired();
+        this.firstAired = new DateTime(show.getFirstAired()).getMillis();
         this.country = show.getCountry();
         this.status = show.getStatus();
         this.rating = show.getRating();
-        this.updatedAt = show.getUpdatedAt();
+        this.updatedAt = new DateTime(show.getUpdatedAt()).getMillis();
         this.language = show.getLanguage();
         this.json = GGson.toJson(show);
     }

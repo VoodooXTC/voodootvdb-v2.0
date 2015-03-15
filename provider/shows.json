@@ -14,7 +14,7 @@
         },
         {
             "name" : "first_aired",
-            "type" : "String"
+            "type" : "Long"
         },
         {
             "name" : "country",
@@ -30,7 +30,7 @@
         },
         {
             "name" : "updated_at",
-            "type" : "String"
+            "type" : "Long"
         },
         {
             "name" : "language",

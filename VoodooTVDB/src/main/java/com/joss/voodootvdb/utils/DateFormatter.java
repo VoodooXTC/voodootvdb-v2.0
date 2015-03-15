@@ -2,7 +2,6 @@ package com.joss.voodootvdb.utils;
 
 import org.joda.time.DateTime;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

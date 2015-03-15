@@ -50,18 +50,16 @@ public class EpisodesCursor extends AbstractCursor {
      * Get the {@code first_aired} value.
      * Can be {@code null}.
      */
-    public String getFirstAired() {
-        Integer index = getCachedColumnIndexOrThrow(EpisodesColumns.FIRST_AIRED);
-        return getString(index);
+    public Long getFirstAired() {
+        return getLongOrNull(EpisodesColumns.FIRST_AIRED);
     }
 
     /**
      * Get the {@code updated_at} value.
      * Can be {@code null}.
      */
-    public String getUpdatedAt() {
-        Integer index = getCachedColumnIndexOrThrow(EpisodesColumns.UPDATED_AT);
-        return getString(index);
+    public Long getUpdatedAt() {
+        return getLongOrNull(EpisodesColumns.UPDATED_AT);
     }
 
     /**

@@ -18,7 +18,7 @@
         },
         {
             "name" : "released",
-            "type" : "String"
+            "type" : "Long"
         },
         {
             "name" : "rating",
@@ -26,7 +26,7 @@
         },
         {
             "name" : "updated_at",
-            "type" : "String"
+            "type" : "Long"
         },
         {
             "name" : "language",

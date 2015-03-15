@@ -44,9 +44,8 @@ public class ShowsCursor extends AbstractCursor {
      * Get the {@code first_aired} value.
      * Can be {@code null}.
      */
-    public String getFirstAired() {
-        Integer index = getCachedColumnIndexOrThrow(ShowsColumns.FIRST_AIRED);
-        return getString(index);
+    public Long getFirstAired() {
+        return getLongOrNull(ShowsColumns.FIRST_AIRED);
     }
 
     /**
@@ -79,9 +78,8 @@ public class ShowsCursor extends AbstractCursor {
      * Get the {@code updated_at} value.
      * Can be {@code null}.
      */
-    public String getUpdatedAt() {
-        Integer index = getCachedColumnIndexOrThrow(ShowsColumns.UPDATED_AT);
-        return getString(index);
+    public Long getUpdatedAt() {
+        return getLongOrNull(ShowsColumns.UPDATED_AT);
     }
 
     /**

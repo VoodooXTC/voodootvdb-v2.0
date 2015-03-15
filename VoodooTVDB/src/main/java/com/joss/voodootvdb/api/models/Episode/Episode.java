@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.api.models.Episode;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.joss.voodootvdb.api.models.Show.Ids;
 import com.joss.voodootvdb.api.models.Show.Images;
 
@@ -22,7 +23,8 @@ public class Episode {
     @Expose
     private Ids ids;
     @Expose
-    private Integer number_abs;
+    @SerializedName("number_abs")
+    private Integer numberAbs;
     @Expose
     private String overview;
     @Expose
@@ -30,11 +32,14 @@ public class Episode {
     @Expose
     private Integer votes;
     @Expose
-    private String first_aired;
+    @SerializedName("first_aired")
+    private String firstAired;
     @Expose
-    private String updated_at;
+    @SerializedName("updated_at")
+    private String updatedAt;
     @Expose
-    private List<String> available_translations = new ArrayList<>();
+    @SerializedName("available_translations")
+    private List<String> availableTranslations = new ArrayList<>();
     @Expose
     private Images images;
 
@@ -70,12 +75,12 @@ public class Episode {
         this.ids = ids;
     }
 
-    public Integer getNumber_abs() {
-        return number_abs == null ? 0 : number_abs;
+    public Integer getNumberAbs() {
+        return numberAbs == null ? 0 : numberAbs;
     }
 
-    public void setNumber_abs(Integer number_abs) {
-        this.number_abs = number_abs;
+    public void setNumberAbs(Integer numberAbs) {
+        this.numberAbs = numberAbs;
     }
 
     public String getOverview() {
@@ -102,28 +107,28 @@ public class Episode {
         this.votes = votes;
     }
 
-    public String getFirst_aired() {
-        return first_aired == null ? "" : first_aired;
+    public String getFirstAired() {
+        return firstAired == null ? "" : firstAired;
     }
 
-    public void setFirst_aired(String first_aired) {
-        this.first_aired = first_aired;
+    public void setFirstAired(String firstAired) {
+        this.firstAired = firstAired;
     }
 
-    public String getUpdated_at() {
-        return updated_at == null ? "" : updated_at;
+    public String getUpdatedAt() {
+        return updatedAt == null ? "" : updatedAt;
     }
 
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public List<String> getAvailable_translations() {
-        return available_translations == null ? new ArrayList<String>() : available_translations;
+    public List<String> getAvailableTranslations() {
+        return availableTranslations == null ? new ArrayList<String>() : availableTranslations;
     }
 
-    public void setAvailable_translations(List<String> available_translations) {
-        this.available_translations = available_translations;
+    public void setAvailableTranslations(List<String> availableTranslations) {
+        this.availableTranslations = availableTranslations;
     }
 
     public Images getImages() {
