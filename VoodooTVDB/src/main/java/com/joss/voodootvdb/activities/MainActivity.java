@@ -38,6 +38,8 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
     Fragment currentFrag;
     boolean pendingFragmentSwap = false;
 
+    SearchView searchView;
+
     @Override
     List<DrawerModel> getDrawerItems() {
         List<DrawerModel> items = new ArrayList<>();
@@ -79,7 +81,7 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
         // Search Menu Item
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         MenuItem search = menu.findItem(R.id.menu_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+        searchView = (SearchView) MenuItemCompat.getActionView(search);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
         searchView.setIconifiedByDefault(true);
 
@@ -90,6 +92,8 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
     public void onBackPressed(){
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
+        }else if(!searchView.isIconified()){
+            searchView.setIconified(true);
         }else if(currentId != R.id.drawer_home){
             selectFragment(R.id.drawer_home);
             swapFragments();

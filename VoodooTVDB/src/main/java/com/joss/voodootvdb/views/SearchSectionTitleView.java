@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.andexert.library.RippleView;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.interfaces.SearchListener;
@@ -19,13 +20,17 @@ import butterknife.InjectView;
  */
 public class SearchSectionTitleView extends LinearLayout implements View.OnClickListener {
 
+    @InjectView(R.id.search_section_title_container)
+    RippleView container;
     @InjectView(R.id.search_section_title)
     TextView title;
-    @InjectView(R.id.search_section_title_more)
-    TextView more;
 
     Search search;
     SearchListener listener;
+
+    public SearchSectionTitleView(Context context){
+        this(context, null);
+    }
 
     public SearchSectionTitleView(Context context, SearchListener listener) {
         super(context);
@@ -36,7 +41,7 @@ public class SearchSectionTitleView extends LinearLayout implements View.OnClick
     private void init() {
         inflate(getContext(), R.layout.li_search_section_header, this);
         ButterKnife.inject(this);
-        more.setOnClickListener(this);
+        container.setOnClickListener(this);
     }
 
     public void setContent(Search search){
@@ -46,11 +51,7 @@ public class SearchSectionTitleView extends LinearLayout implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.search_section_title_more:
-                if(listener != null)
-                    listener.onMoreSelected(search);
-                break;
-        }
+        if(listener != null)
+            listener.onMoreSelected(search.getTitle());
     }
 }

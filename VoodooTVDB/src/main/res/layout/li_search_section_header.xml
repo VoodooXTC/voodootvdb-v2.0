@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.andexert.library.RippleView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Wrap">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/search_section_title_container"
+    style="@style/MatchWidthWrapHeight"
+    app:rv_type="simpleRipple"
+    app:rv_color="@color/colorAccent"
+    app:rv_rippleDuration="200">
 
-    <oak.widget.TextViewWithFont
-        android:id="@+id/search_section_title"
-        style="@style/SearchSectionTitle"
-        tools:text="Movies"
-        />
+    <RelativeLayout
+        style="@style/Wrap">
 
-    <oak.widget.TextViewWithFont
-        android:id="@+id/search_section_title_more"
-        style="@style/SearchSectionTitleMore"
-        android:text="@string/search_more"
-        android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/normal"
-        />
+        <oak.widget.TextViewWithFont
+            android:id="@+id/search_section_title"
+            style="@style/SearchSectionTitle"
+            tools:text="Movies"
+            />
 
-</RelativeLayout>
+        <oak.widget.TextViewWithFont
+            android:id="@+id/search_section_title_more"
+            style="@style/SearchSectionTitleMore"
+            android:text="@string/search_more"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginEnd="@dimen/normal"
+            />
+
+    </RelativeLayout>
+
+</com.andexert.library.RippleView>

@@ -13,6 +13,6 @@ public interface SearchListener {
 
     public void onSearchItemClicked(Search search);
 
-    public void onMoreSelected(Search search);
+    public void onMoreSelected(String searchType);
 
 }

@@ -53,6 +53,11 @@ public class HomeFragment extends BaseListFragment implements
     }
 
     @Override
+    View getEmptyView() {
+        return null;
+    }
+
+    @Override
     List<Integer> getApiTypes() {
         return Arrays.asList(ApiService.REQUEST_SHOWS_POPULAR);
     }

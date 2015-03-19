@@ -11,11 +11,11 @@ import retrofit.client.UrlConnectionClient;
  * Date: 3/15/2015
  * Time: 4:28 PM
  */
-public class ShortTimeOutClient extends UrlConnectionClient {
+public class TimeOutClient extends UrlConnectionClient {
 
     private int timeout;
 
-    public ShortTimeOutClient(int timeout){
+    public TimeOutClient(int timeout){
         this.timeout = timeout;
     }
 

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.interfaces.SearchListener;
 import com.joss.voodootvdb.views.SearchItem;
@@ -79,7 +80,21 @@ public class SearchAdapter extends BaseAdapter {
 
     public void setItems(List<Search> setItems){
         this.items.clear();
+        this.items = addSectionTitles(setItems);
+        notifyDataSetChanged();
+    }
 
+    public void addItems(List<Search> addItems){
+        this.items.addAll(addItems);
+        notifyDataSetChanged();
+    }
+
+    public void clearItems(){
+        this.items.clear();
+        notifyDataSetChanged();
+    }
+
+    private List<Search> addSectionTitles(List<Search> setItems){
         List<Search> itemsPlusSections = new ArrayList<>();
         String sectionTitle = "";
 
@@ -91,12 +106,6 @@ public class SearchAdapter extends BaseAdapter {
             }
             itemsPlusSections.add(setItems.get(i));
         }
-        this.items = itemsPlusSections;
-        notifyDataSetChanged();
-    }
-
-    public void additems(List<Search> addItems){
-        this.items.addAll(addItems);
-        notifyDataSetChanged();
+        return itemsPlusSections;
     }
 }

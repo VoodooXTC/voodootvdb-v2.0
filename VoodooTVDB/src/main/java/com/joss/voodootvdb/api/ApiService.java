@@ -15,14 +15,12 @@ import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.utils.GGson;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.client.OkClient;
 import retrofit.client.UrlConnectionClient;
 import retrofit.converter.GsonConverter;
 
@@ -104,20 +102,17 @@ public class ApiService extends IntentService {
                     .create();
 
             VoodooRequestInterceptor requestInterceptor = new VoodooRequestInterceptor(context);
-            RestAdapter.Builder builder = new RestAdapter.Builder()
+            service = new RestAdapter.Builder()
                     .setEndpoint(Endpoints.URL)
                     .setRequestInterceptor(requestInterceptor)
                     .setClient(new VoodooAuthClient(context))
                     .setConverter(new GsonConverter(gson))
+                    .setClient(client == null ? new TimeOutClient(5000) : client) // Default 5 second timeout
                     .setLogLevel(BuildConfig.DEBUG
                             ? RestAdapter.LogLevel.FULL
                             : RestAdapter.LogLevel.NONE)
-                    ;
-            if(client != null)
-                builder.setClient(client);
-
-            RestAdapter restAdapter = builder.build();
-            service = restAdapter.create(RestService.class);
+                    .build()
+                    .create(RestService.class);
         }
         return service;
     }
@@ -196,7 +191,7 @@ public class ApiService extends IntentService {
                 case REQUEST_SEARCH_ALL_TYPES:
                     // Set the timeout
                     service = null;
-                    service = getApi(this, new ShortTimeOutClient(333));
+                    service = getApi(this, new TimeOutClient(333));
 
                     List<Search> searchResults = new ArrayList<>();
                     String query = i.getStringExtra(ARG_QUERY);
@@ -240,6 +235,8 @@ public class ApiService extends IntentService {
     private void handleRetrofitError(int requestType, RetrofitError error){
         if (error.getKind() == RetrofitError.Kind.NETWORK){
             broadcastRequestFailed(requestType, ERROR_NETWORK, getString(R.string.error_generic_network));
+        } else if(error.getKind() == RetrofitError.Kind.HTTP && error.getResponse().getStatus() == 503){
+            broadcastRequestFailed(requestType, ERROR_RESPONSE, getString(R.string.error_server_overloaded));
         } else {
             try {
                 broadcastRequestFailed(requestType, ERROR_RESPONSE, ((Error) error.getBodyAs(Error.class)).message);

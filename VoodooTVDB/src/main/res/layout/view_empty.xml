@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    style="@style/Match"
+    android:gravity="center"
+    >
+
+    <oak.widget.TextViewWithFont
+        android:id="@+id/empty_text"
+        style="@style/Wrap"
+        android:textColor="@color/colorPrimary"
+        android:padding="@dimen/normal"
+        android:textSize="@dimen/text_size_largest"
+        android:text="@string/empty_text"
+        app:oakFont="@string/font_roboto_light"
+        />
+
+</LinearLayout>

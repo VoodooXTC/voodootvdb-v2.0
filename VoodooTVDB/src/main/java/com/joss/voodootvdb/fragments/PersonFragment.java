@@ -70,6 +70,12 @@ public class PersonFragment extends BaseListFragment implements
     }
 
     @Override
+    View getEmptyView() {
+        // TODO
+        return null;
+    }
+
+    @Override
     List<Integer> getApiTypes() {
         List<Integer> types = new ArrayList<>();
         types.add(ApiService.REQUEST_PERSON);

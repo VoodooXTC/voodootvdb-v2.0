@@ -6,24 +6,19 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.RestService;
-import com.joss.voodootvdb.api.ShortTimeOutClient;
+import com.joss.voodootvdb.api.TimeOutClient;
 import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.utils.GGson;
-import com.squareup.okhttp.OkHttpClient;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import retrofit.client.Request;
-import retrofit.client.UrlConnectionClient;
+import retrofit.RetrofitError;
 
 /**
  * Created by Jossay
@@ -32,6 +27,7 @@ import retrofit.client.UrlConnectionClient;
  */
 public class SuggestionProvider extends SearchRecentSuggestionsProvider{
 
+    private static final String TAG = SuggestionProvider.class.getSimpleName();
     public static final String AUTHORITY = SuggestionProvider.class.getName();
     public static final int MODE = DATABASE_MODE_QUERIES;
 
@@ -63,13 +59,17 @@ public class SuggestionProvider extends SearchRecentSuggestionsProvider{
         if(query == null || query.length() < 4){
             return null;
         }else{
-            ShortTimeOutClient client = new ShortTimeOutClient(333);
+            TimeOutClient client = new TimeOutClient(333);
 
             RestService service = ApiService.getApi(getContext(), client);
             List<Search> searchResults = new ArrayList<>();
-            searchResults.addAll(service.search(query, Search.TYPE_SHOW, 1, 3));
-            searchResults.addAll(service.search(query, Search.TYPE_MOVIE, 1, 3));
-            searchResults.addAll(service.search(query, Search.TYPE_PERSON, 1, 3));
+            try{
+                searchResults.addAll(service.search(query, Search.TYPE_SHOW, 1, 3));
+                searchResults.addAll(service.search(query, Search.TYPE_MOVIE, 1, 3));
+                searchResults.addAll(service.search(query, Search.TYPE_PERSON, 1, 3));
+            } catch (RetrofitError error){
+                Log.d(TAG, error.toString());
+            }
 
             Collections.sort(searchResults, new Comparator<Search>() {
                 @Override

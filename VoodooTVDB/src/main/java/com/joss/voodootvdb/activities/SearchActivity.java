@@ -1,9 +1,15 @@
 package com.joss.voodootvdb.activities;
 
 import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.joss.voodootvdb.R;
@@ -49,6 +55,7 @@ public class SearchActivity extends BaseActivity implements ToolbarListener {
                     setContentView(R.layout.activity_search);
                     ButterKnife.inject(this);
                     setupToolbar(toolbar);
+                    setToolbarTitle("");
 
                     searchFragment = savedInstanceState == null
                             ? SearchFragment.getInstance(query)

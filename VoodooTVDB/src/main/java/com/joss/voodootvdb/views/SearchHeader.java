@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.interfaces.SearchListener;
 
 import butterknife.ButterKnife;
@@ -44,10 +45,21 @@ public class SearchHeader extends LinearLayout implements AdapterView.OnItemSele
         spinner.setOnItemSelectedListener(this);
     }
 
+    public void setType(String type){
+        for(int i = 0; i < types.length; i++){
+            if(types[i].toLowerCase().equals(type)){
+                spinner.setOnItemSelectedListener(null);
+                spinner.setSelection(i);
+                spinner.setOnItemSelectedListener(this);
+                break;
+            }
+        }
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if(listener != null)
-            listener.onSearchTypeSelected(types[position]);
+            listener.onSearchTypeSelected(types[position].toLowerCase());
     }
 
     @Override

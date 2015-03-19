@@ -103,25 +103,22 @@ public class LoginWebViewActivity extends BaseActivity implements View.OnClickLi
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 if (url.contains("?code=")) {
+                    showLoading();
+                    Uri uri = Uri.parse(url);
+                    String authCode = uri.getQueryParameter("code");
 
+                    AccessTokenRequest accessTokenRequest = new AccessTokenRequest(authCode);
+                    DataStore.persistAccessTokenRequest(LoginWebViewActivity.this, accessTokenRequest);
+
+                    setResult(RESULT_OK);
+                    Utils.hideSoftKeyboard(LoginWebViewActivity.this, webView);
+                    finish();
                 }
             }
 
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if(url.contains(REDIRECT_URI) && url.contains("?code=")){
-                onPageFinished(view, url);
                 showLoading();
-
-                Uri uri = Uri.parse(url);
-                String authCode = uri.getQueryParameter("code");
-
-                AccessTokenRequest accessTokenRequest = new AccessTokenRequest(authCode);
-                DataStore.persistAccessTokenRequest(LoginWebViewActivity.this, accessTokenRequest);
-
-                setResult(RESULT_OK);
-                Utils.hideSoftKeyboard(LoginWebViewActivity.this, webView);
-                finish();
-
                 return true;
             } else if(url.contains(REDIRECT_URI) && url.contains("error=access_denied")) {
                 setResult(RESULT_CANCELED);

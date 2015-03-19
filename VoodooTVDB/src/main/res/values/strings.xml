@@ -21,6 +21,7 @@
     <string name="error_generic_network">Please check your network connection.</string>
     <string name="error_icon">Error Icon</string>
     <string name="error_generic_retry">An error occurred. Tap here to retry.</string>
+    <string name="error_server_overloaded">server overloaded</string>
 
     <string name="feature_image">Feature Image</string>
 
@@ -46,13 +47,16 @@
     <string name="season">"Season"</string>
     <string name="season_extras">"Extras"</string>
     <string name="menu_season_watched_all">Watched All</string>
-    <string name="search">Search</string>
-    <string name="search_hint">Search…</string>
-    <string name="search_more">More</string>
+
     <string-array name="search_types">
         <item>All</item>
         <item>Show</item>
         <item>Movie</item>
         <item>Person</item>
     </string-array>
+    <string name="search">Search</string>
+    <string name="search_hint">Search for shows, movies, and people…</string>
+    <string name="search_more">More</string>
+    <string name="empty_text">No results found</string>
+
 </resources>

@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -25,7 +26,7 @@ import butterknife.InjectView;
  * Date: 3/5/15
  * Time: 5:11 PM
  */
-public abstract class BaseListFragment extends BaseFragment {
+public abstract class BaseListFragment extends BaseFragment implements AbsListView.OnScrollListener {
 
     @InjectView(R.id.listView)
     public ListView listView;
@@ -35,6 +36,7 @@ public abstract class BaseListFragment extends BaseFragment {
 
     abstract View getLoadingView();
     abstract View getErrorView();
+    abstract View getEmptyView();
     abstract List<Integer> getApiTypes();
 
     abstract void onErrorMessageReceived();
@@ -60,6 +62,14 @@ public abstract class BaseListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, @Nullable Bundle savedInstanceState) {
         RelativeLayout view = (RelativeLayout) super.onCreateView(inflater, container, savedInstanceState);
 
+        listView.setOnScrollListener(this);
+
+        if(getEmptyView() != null){
+            View emptyView = getEmptyView();
+            view.addView(emptyView);
+            listView.setEmptyView(emptyView);
+        }
+
         if(getErrorView() != null) {
             errorView = getErrorView();
             view.addView(errorView);
@@ -69,6 +79,7 @@ public abstract class BaseListFragment extends BaseFragment {
             loadingView = getLoadingView();
             view.addView(loadingView);
         }
+
 
         return view;
     }
@@ -108,6 +119,21 @@ public abstract class BaseListFragment extends BaseFragment {
         if(loadingView != null)
             loadingView.setVisibility(View.GONE);
     }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int lastItemOnScreen = firstVisibleItem + visibleItemCount;
+        boolean loadMore = lastItemOnScreen == totalItemCount;
+        if(loadMore)
+            onLoadMore();
+    }
+
+    public void onLoadMore(){};
 
     private class ApiReceiver extends BroadcastReceiver {
 
