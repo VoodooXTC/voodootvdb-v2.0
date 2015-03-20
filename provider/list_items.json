@@ -1,0 +1,20 @@
+{
+	"fields": [
+		{
+            "name" : "list_trakt_id",
+            "type" : "Integer"
+        },
+        {
+            "name" : "listed_at",
+            "type" : "Long"
+        },
+        {
+            "name" : "type",
+            "type" : "String"
+        },
+        {
+            "name" : "json",
+            "type" : "String"
+        }
+	]
+}

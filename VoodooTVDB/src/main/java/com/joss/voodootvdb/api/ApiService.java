@@ -14,6 +14,7 @@ import com.joss.voodootvdb.api.models.Error;
 import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.api.models.Search.Search;
+import com.joss.voodootvdb.api.models.Settings.Settings;
 import com.joss.voodootvdb.utils.GGson;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import retrofit.converter.GsonConverter;
 public class ApiService extends IntentService {
 
     public static final String TAG = ApiService.class.getSimpleName();
+    private static final int DEFAULT_TIMEOUT = 5000; // Default 5 second timeout per call
 
     private static RestService service;
     private LocalBroadcastManager broadcastManager;
@@ -56,6 +58,9 @@ public class ApiService extends IntentService {
     public static final int REQUEST_EPISODES_WATCHED = 14;
     public static final int REQUEST_SEARCH = 15;
     public static final int REQUEST_SEARCH_ALL_TYPES = 16;
+    public static final int REQUEST_USER_SETTINGS = 17;
+    public static final int REQUEST_USER_LISTS = 18;
+    public static final int REQUEST_USER_LIST_ITEMS = 19;
 
     public static final String ARG_ID = "id";
     public static final String ARG_EXTENDED = "extended";
@@ -107,7 +112,7 @@ public class ApiService extends IntentService {
                     .setRequestInterceptor(requestInterceptor)
                     .setClient(new VoodooAuthClient(context))
                     .setConverter(new GsonConverter(gson))
-                    .setClient(client == null ? new TimeOutClient(5000) : client) // Default 5 second timeout
+                    .setClient(client == null ? new TimeOutClient(DEFAULT_TIMEOUT) : client)
                     .setLogLevel(BuildConfig.DEBUG
                             ? RestAdapter.LogLevel.FULL
                             : RestAdapter.LogLevel.NONE)
@@ -127,7 +132,17 @@ public class ApiService extends IntentService {
                     AccessTokenRequest accessTokenRequest = GGson.fromJson(i.getStringExtra(ARG_ACCESS_TOKEN), AccessTokenRequest.class);
                     AccessToken accessToken = service.login(accessTokenRequest);
                     DataStore.persistAccessToken(this, accessToken);
-                    broadcastLoginSuccess(type);
+                    broadcastSuccess(type);
+                    break;
+
+                case REQUEST_USER_SETTINGS:
+                    Settings userSettings = service.getUserSettings(DataStore.getAuthorizationToken(this));
+                    if(userSettings != null){
+                        DataStore.persistUserSettings(this, userSettings);
+                        broadcastSuccess(type);
+                    }else{
+                        broadcastRequestFailed(type, ERROR_RESPONSE, getString(R.string.error_generic_network));
+                    }
                     break;
 
                 case REQUEST_SHOW:
@@ -204,6 +219,14 @@ public class ApiService extends IntentService {
                     service = null;
                     service = getApi(this, null);
                     break;
+
+                case REQUEST_USER_LISTS:
+                    Db.updateLists(this, service.getLists(DataStore.getUsername(this), DataStore.getAuthorizationToken(this)));
+                    break;
+
+                case REQUEST_USER_LIST_ITEMS:
+                    Db.updateListItems(this, i.getIntExtra(ARG_ID, 0), service.getListItems(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this)));
+                    break;
             }
         } catch(RetrofitError e){
             handleRetrofitError(type, e);
@@ -212,7 +235,7 @@ public class ApiService extends IntentService {
         }
     }
 
-    private void broadcastLoginSuccess(int type) {
+    private void broadcastSuccess(int type) {
         Intent intent = new Intent();
         intent.setAction(BROADCAST);
         intent.putExtra(REQUEST_TYPE, type);

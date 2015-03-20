@@ -2,6 +2,7 @@ package com.joss.voodootvdb.activities;
 
 import android.app.Activity;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,8 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.joss.voodootvdb.R;
@@ -31,12 +35,16 @@ import butterknife.InjectView;
  */
 public abstract class BaseDrawerActivity extends BaseActivity implements BaseFragmementListener, AdapterView.OnItemClickListener {
 
+    @InjectView(R.id.top_padding)
+    View topPadding;
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @InjectView(R.id.drawer_list_view)
     ListView drawerListView;
     @InjectView(R.id.content_container)
     FrameLayout contentView;
+
+    abstract View getDrawerHeader();
 
     public MenuListAdapter adapter;
     public DrawerToggle drawerToggle;
@@ -45,8 +53,18 @@ public abstract class BaseDrawerActivity extends BaseActivity implements BaseFra
     private String currentTitle;
     private String currentSubtitle;
 
+    private int padding = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            padding = getStatusBarHeight();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
@@ -101,6 +119,13 @@ public abstract class BaseDrawerActivity extends BaseActivity implements BaseFra
     }
 
     private void setupDrawerLayout() {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, padding);
+        topPadding.setLayoutParams(params);
+
+        View header = getDrawerHeader();
+        if(header != null)
+            drawerListView.addHeaderView(header, null, false);
+
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         adapter = new MenuListAdapter(this, getDrawerItems());
         drawerListView.setAdapter(adapter);
@@ -141,6 +166,15 @@ public abstract class BaseDrawerActivity extends BaseActivity implements BaseFra
         if (drawerLayout.isShown()) {
             drawerLayout.closeDrawers();
         }
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
 }

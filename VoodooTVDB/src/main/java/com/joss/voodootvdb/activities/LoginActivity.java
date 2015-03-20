@@ -1,8 +1,6 @@
 package com.joss.voodootvdb.activities;
 
 import android.app.LoaderManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -13,20 +11,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.Api;
-import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.fragments.LoginFragment;
 import com.joss.voodootvdb.interfaces.LoginListener;
 import com.joss.voodootvdb.provider.shows.ShowsProvider;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularColumns;
 import com.joss.voodootvdb.provider.shows_popular.ShowsPopularCursor;
-import com.joss.voodootvdb.provider.shows_popular.ShowsPopularProvider;
-import com.joss.voodootvdb.utils.BlurTransformation;
+import com.joss.voodootvdb.transformations.BlurTransformation;
 import com.joss.voodootvdb.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -146,7 +141,7 @@ public class LoginActivity extends BaseActivity implements LoaderManager.LoaderC
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LOGIN_CODE) {
             if (resultCode == RESULT_OK) {
-                loginFragment.attempToLogin();
+                loginFragment.attemptToLogin();
             } else if(resultCode == RESULT_CANCELED){
                 Utils.toast(this, "An error occurred authenticating with Trakt.tv please try again");
             }

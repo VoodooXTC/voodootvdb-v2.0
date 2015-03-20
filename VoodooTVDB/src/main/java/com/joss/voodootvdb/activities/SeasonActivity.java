@@ -72,7 +72,7 @@ public class SeasonActivity extends BaseActivity implements LoaderManager.Loader
         ButterKnife.inject(this);
 
         setupToolbar(toolbar);
-        setToolbarTitle("Season");
+        setToolbarTitle(getString(R.string.season));
 
         episodes = new ArrayList<>();
         broadcastManager = LocalBroadcastManager.getInstance(this);

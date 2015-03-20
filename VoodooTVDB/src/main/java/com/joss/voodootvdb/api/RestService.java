@@ -1,5 +1,7 @@
 package com.joss.voodootvdb.api;
 
+import com.joss.voodootvdb.api.models.CustomLists.CustomList;
+import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.api.models.Episode.Episode;
 import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
@@ -9,6 +11,7 @@ import com.joss.voodootvdb.api.models.People.Person;
 import com.joss.voodootvdb.api.models.Progress.Watched;
 import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.api.models.Season.Season;
+import com.joss.voodootvdb.api.models.Settings.Settings;
 import com.joss.voodootvdb.api.models.Show.Show;
 
 import java.util.List;
@@ -32,6 +35,15 @@ public interface RestService {
 
     @POST("/oauth/token")
     AccessToken login(@Body AccessTokenRequest token);
+
+    @GET("/users/settings")
+    Settings getUserSettings(@Header(AUTHORIZATION) String authorization);
+
+    @GET("/users/{username}/lists")
+    List<CustomList> getLists(@Path("username") String usernamem, @Header(AUTHORIZATION) String authorization);
+
+    @GET("/users/{username}/lists/{listTraktId}/items")
+    List<CustomListItem> getListItems(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization);
 
     @GET("/shows/{id}")
     Show getShow(@Path("id") int id, @Query(EXTENDED) String extended);

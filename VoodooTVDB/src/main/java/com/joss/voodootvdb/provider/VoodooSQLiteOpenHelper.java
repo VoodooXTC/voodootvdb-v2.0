@@ -13,6 +13,8 @@ import android.util.Log;
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.provider.episodes.EpisodesColumns;
 import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedColumns;
+import com.joss.voodootvdb.provider.list_items.ListItemsColumns;
+import com.joss.voodootvdb.provider.lists.ListsColumns;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
 import com.joss.voodootvdb.provider.movies_people.MoviesPeopleColumns;
 import com.joss.voodootvdb.provider.movies_related.MoviesRelatedColumns;
@@ -53,6 +55,26 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
             + EpisodesWatchedColumns.NUMBER + " INTEGER, "
             + EpisodesWatchedColumns.COMPLETED + " INTEGER "
             + ", CONSTRAINT UNIQUE_SHOW_TRAKT_ID_SEASON_EPISODE_COMBINATION UNIQUE (SHOW_TRAKT_ID, SEASON, NUMBER) ON CONFLICT REPLACE"
+            + " );";
+
+    private static final String SQL_CREATE_TABLE_LIST_ITEMS = "CREATE TABLE IF NOT EXISTS "
+            + ListItemsColumns.TABLE_NAME + " ( "
+            + ListItemsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ListItemsColumns.LIST_TRAKT_ID + " INTEGER, "
+            + ListItemsColumns.LISTED_AT + " INTEGER, "
+            + ListItemsColumns.TYPE + " TEXT, "
+            + ListItemsColumns.JSON + " TEXT "
+            + " );";
+
+    private static final String SQL_CREATE_TABLE_LISTS = "CREATE TABLE IF NOT EXISTS "
+            + ListsColumns.TABLE_NAME + " ( "
+            + ListsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ListsColumns.TRAKT_ID + " INTEGER, "
+            + ListsColumns.NAME + " TEXT, "
+            + ListsColumns.SLUG + " TEXT, "
+            + ListsColumns.UPDATED_AT + " INTEGER, "
+            + ListsColumns.JSON + " TEXT "
+            + ", CONSTRAINT UNIQUE_TRAKT_ID UNIQUE (TRAKT_ID) ON CONFLICT REPLACE"
             + " );";
 
     private static final String SQL_CREATE_TABLE_MOVIES = "CREATE TABLE IF NOT EXISTS "
@@ -200,6 +222,8 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
         db.execSQL(SQL_CREATE_TABLE_EPISODES);
         db.execSQL(SQL_CREATE_TABLE_EPISODES_WATCHED);
+        db.execSQL(SQL_CREATE_TABLE_LIST_ITEMS);
+        db.execSQL(SQL_CREATE_TABLE_LISTS);
         db.execSQL(SQL_CREATE_TABLE_MOVIES);
         db.execSQL(SQL_CREATE_TABLE_MOVIES_PEOPLE);
         db.execSQL(SQL_CREATE_TABLE_MOVIES_RELATED);

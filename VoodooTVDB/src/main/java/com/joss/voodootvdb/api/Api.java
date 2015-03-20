@@ -28,6 +28,12 @@ public class Api {
         context.startService(intent);
     }
 
+    public static void getUserSettings(Context context){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_SETTINGS);
+        context.startService(intent);
+    }
+
     public static void getPopularShows(Context context){
         getPopularShows(context, ApiService.EXT_IMAGES, ApiService.EXT_FULL);
     }
@@ -213,6 +219,19 @@ public class Api {
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_SEARCH_ALL_TYPES);
         intent.putExtra(ApiService.ARG_QUERY, query);
+        context.startService(intent);
+    }
+
+    public static void getLists(Context context){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_LISTS);
+        context.startService(intent);
+    }
+
+    public static void getListItems(Context context, int listTraktId){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_LIST_ITEMS);
+        intent.putExtra(ApiService.ARG_ID, listTraktId);
         context.startService(intent);
     }
 }

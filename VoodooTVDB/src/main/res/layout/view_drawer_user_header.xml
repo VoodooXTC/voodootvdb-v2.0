@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MatchWidthWrapHeight"
+    android:paddingTop="@dimen/largest"
+    android:paddingEnd="@dimen/normal"
+    android:paddingBottom="@dimen/normal"
+    android:paddingStart="@dimen/normal"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/user_avatar_image"
+        tools:src="@drawable/ic_launcher"
+        />
+
+    <oak.widget.TextViewWithFont
+        android:id="@+id/user_username"
+        style="@style/Wrap"
+        android:layout_below="@id/user_avatar"
+        tools:text="VoodooTVDB"
+        android:layout_marginTop="@dimen/normal"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/white"
+        />
+
+    <oak.widget.TextViewWithFont
+        android:id="@+id/user_real_name"
+        style="@style/Wrap"
+        android:layout_below="@id/user_username"
+        tools:text="Jossay Jacobo"
+        android:layout_marginTop="@dimen/tiny"
+        android:textSize="@dimen/text_size_small"
+        android:textColor="@color/white_ish"
+        />
+
+</RelativeLayout>

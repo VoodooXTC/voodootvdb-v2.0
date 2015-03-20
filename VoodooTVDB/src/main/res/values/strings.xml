@@ -58,5 +58,7 @@
     <string name="search_hint">Search for shows, movies, and people…</string>
     <string name="search_more">More</string>
     <string name="empty_text">No results found</string>
+    <string name="user_avatar_image">user avatar image</string>
+    <string name="list_empty">Empty List</string>
 
 </resources>

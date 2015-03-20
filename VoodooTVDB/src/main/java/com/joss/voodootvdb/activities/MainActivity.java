@@ -15,7 +15,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.Settings.Settings;
 import com.joss.voodootvdb.fragments.AboutFragment;
 import com.joss.voodootvdb.fragments.FavoritesFragment;
 import com.joss.voodootvdb.fragments.HomeFragment;
@@ -24,6 +26,7 @@ import com.joss.voodootvdb.fragments.SettingsFragment;
 import com.joss.voodootvdb.fragments.TimelineFragment;
 import com.joss.voodootvdb.interfaces.ToolbarListener;
 import com.joss.voodootvdb.model.DrawerModel;
+import com.joss.voodootvdb.views.DrawerUserHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,13 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
     boolean pendingFragmentSwap = false;
 
     SearchView searchView;
+    DrawerUserHeader userHeader;
+
+    @Override
+    View getDrawerHeader() {
+        userHeader = new DrawerUserHeader(this);
+        return userHeader;
+    }
 
     @Override
     List<DrawerModel> getDrawerItems() {
@@ -65,8 +75,16 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        Settings settings = DataStore.getUserSettings(this);
+        if(settings != null)
+            userHeader.setContent(settings);
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        DrawerModel drawerModel = ((DrawerModel) adapter.getItem(position));
+        DrawerModel drawerModel = ((DrawerModel) adapter.getItem(position - 1)); // Taking into account the Header Item
         if(drawerModel.id != currentId){
             selectFragment(drawerModel.id);
             swapFragments();
@@ -155,7 +173,7 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
             this.currentFrag = fragment;
             this.pendingFragmentSwap = true;
         }else{
-            drawerListView.setItemChecked(adapter.getPositionAndSelect(currentId), true);
+            drawerListView.setItemChecked(adapter.getPositionAndSelect(currentId) + 1, true); // Adding 1 for the Header
         }
 
         closeDrawer();
@@ -164,7 +182,7 @@ public class MainActivity extends BaseDrawerActivity implements ToolbarListener{
     private void swapFragments() {
         if(pendingFragmentSwap){
             this.pendingFragmentSwap = false;
-            drawerListView.setItemChecked(adapter.getPositionAndSelect(currentId), true);
+            drawerListView.setItemChecked(adapter.getPositionAndSelect(currentId) + 1, true); // Adding 1 for the header
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.slide_in_from_right, 0);
             ft.replace(contentView.getId(), currentFrag);

@@ -1,40 +1,42 @@
-<RelativeLayout
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:id="@+id/drawer_layout"
+    style="@style/Match"
+    >
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        style="@style/MatchWidthWrapHeight"
-        />
-
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/drawer_layout"
+    <LinearLayout
         style="@style/Match"
-        android:layout_below="@+id/toolbar"
-        >
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/top_padding"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:background="@color/colorPrimaryDark" />
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            style="@style/MatchWidthWrapHeight"
+            />
 
         <FrameLayout
             android:id="@+id/content_container"
             style="@style/Match"
             />
 
-        <ListView
-            android:id="@+id/drawer_list_view"
-            android:layout_width="@dimen/navigation_drawer_width"
-            android:layout_height="match_parent"
-            android:divider="@color/transparent"
-            android:dividerHeight="1dp"
-            android:background="@color/white_ish"
-            android:scrollbars="none"
-            android:layout_gravity="start"
-            android:choiceMode="singleChoice"
-            />
+    </LinearLayout>
 
-    </android.support.v4.widget.DrawerLayout>
+    <ListView
+        android:id="@+id/drawer_list_view"
+        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_height="match_parent"
+        android:divider="@color/transparent"
+        android:dividerHeight="1dp"
+        android:background="@color/white_ish"
+        android:scrollbars="none"
+        android:layout_gravity="start"
+        android:choiceMode="singleChoice"
+        />
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

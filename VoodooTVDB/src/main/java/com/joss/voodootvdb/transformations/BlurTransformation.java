@@ -1,4 +1,4 @@
-package com.joss.voodootvdb.utils;
+package com.joss.voodootvdb.transformations;
 
 import android.content.Context;
 import android.graphics.Bitmap;

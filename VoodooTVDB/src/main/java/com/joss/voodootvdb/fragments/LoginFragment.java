@@ -122,11 +122,10 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
         listener.onOAuthRequest(u);
     }
 
-    public void attempToLogin(){
-        setButtonInProgress();
-
+    public void attemptToLogin(){
         AccessTokenRequest accessTokenRequest = DataStore.getAccessTokenRequest(getActivity());
         Api.login(getActivity(), accessTokenRequest);
+        setButtonInProgress();
     }
 
     private class ApiReceiver extends BroadcastReceiver {
@@ -141,10 +140,24 @@ public class LoginFragment extends BaseFragment implements TextWatcher, View.OnK
                 case ApiService.REQUEST_LOGIN_ACCESS_TOKEN:
                     switch (status){
                         case ApiService.RESULT_SUCCESS:
+                            setButtonInProgress();
+                            Api.getUserSettings(getActivity());
+                            break;
+                        case ApiService.RESULT_ERROR:
+                            setButtonErrorState();
+                            Utils.toast(getActivity(), intent.getStringExtra(ApiService.RESULT_MESSAGE));
+                            break;
+                    }
+                    break;
+
+                case ApiService.REQUEST_USER_SETTINGS:
+                    switch (status){
+                        case ApiService.RESULT_SUCCESS:
                             setButtonSuccessState();
                             Utils.toast(getActivity(), getString(R.string.login_success));
                             listener.onLoginSuccess();
                             break;
+
                         case ApiService.RESULT_ERROR:
                             setButtonErrorState();
                             Utils.toast(getActivity(), intent.getStringExtra(ApiService.RESULT_MESSAGE));

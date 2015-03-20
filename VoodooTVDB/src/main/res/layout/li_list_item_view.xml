@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/VoodooCard"
+    android:layout_margin="@dimen/tiny">
+    <RelativeLayout
+        style="@style/MatchWidthWrapHeight">
+
+        <ImageView
+            android:id="@+id/list_image"
+            android:layout_width="80dp"
+            android:layout_height="120dp"
+            android:contentDescription="@string/card_image"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/placeholder_vertical"
+            />
+
+        <oak.widget.TextViewWithFont
+            android:id="@+id/list_title"
+            style="@style/Wrap"
+            tools:text="Mind Body &amp; Soul"
+            android:paddingTop="@dimen/normal"
+            android:paddingEnd="@dimen/normal"
+            android:paddingBottom="@dimen/tiny"
+            android:paddingStart="@dimen/normal"
+            android:layout_toEndOf="@id/list_image"
+            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/black"
+            />
+
+        <oak.widget.TextViewWithFont
+            android:id="@+id/list_subtitle"
+            style="@style/Wrap"
+            android:layout_toEndOf="@id/list_image"
+            android:layout_below="@id/list_title"
+            android:paddingStart="@dimen/normal"
+            android:paddingEnd="@dimen/normal"
+            android:maxLines="3"
+            android:ellipsize="end"
+            tools:text="Joss Stone"
+            />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

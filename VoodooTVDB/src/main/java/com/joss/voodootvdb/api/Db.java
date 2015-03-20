@@ -3,6 +3,8 @@ package com.joss.voodootvdb.api;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.joss.voodootvdb.api.models.CustomLists.CustomList;
+import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.api.models.Episode.Episode;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.People;
@@ -10,6 +12,7 @@ import com.joss.voodootvdb.api.models.People.Person;
 import com.joss.voodootvdb.api.models.Progress.Watched;
 import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
+import com.joss.voodootvdb.model.ListItemsModel;
 import com.joss.voodootvdb.model.MoviesModel;
 import com.joss.voodootvdb.model.MoviesPeopleModel;
 import com.joss.voodootvdb.model.PersonModel;
@@ -23,6 +26,14 @@ import com.joss.voodootvdb.provider.episodes.EpisodesProvider;
 import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedColumns;
 import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedContentValues;
 import com.joss.voodootvdb.provider.episodes_watched.EpisodesWatchedProvider;
+import com.joss.voodootvdb.provider.list_items.ListItemsColumns;
+import com.joss.voodootvdb.provider.list_items.ListItemsContentValues;
+import com.joss.voodootvdb.provider.list_items.ListItemsProvider;
+import com.joss.voodootvdb.provider.list_items.ListItemsSelection;
+import com.joss.voodootvdb.provider.lists.ListsColumns;
+import com.joss.voodootvdb.provider.lists.ListsContentValues;
+import com.joss.voodootvdb.provider.lists.ListsProvider;
+import com.joss.voodootvdb.provider.lists.ListsSelection;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
 import com.joss.voodootvdb.provider.movies.MoviesContentValues;
 import com.joss.voodootvdb.provider.movies.MoviesProvider;
@@ -150,5 +161,21 @@ public class Db {
     public static void updateWatchedEpisodes(Context context, int showTraktId, Watched watched) {
         ContentValues[] watchedEpisodesCV = EpisodesWatchedContentValues.getContentValues(EpisodesWatchedProvider.get(showTraktId, watched));
         context.getContentResolver().bulkInsert(EpisodesWatchedColumns.CONTENT_URI, watchedEpisodesCV);
+    }
+
+    public static void updateLists(Context context, List<CustomList> lists) {
+        context.getContentResolver().delete(ListsColumns.CONTENT_URI, null, null);
+
+        ContentValues[] listsCV = ListsContentValues.getContentValues(ListsProvider.get(lists));
+        context.getContentResolver().bulkInsert(ListsColumns.CONTENT_URI, listsCV);
+    }
+
+    public static void updateListItems(Context context, int listTraktId, List<CustomListItem> listItems) {
+        ListItemsSelection where = new ListItemsSelection();
+        where.listTraktId(listTraktId);
+        context.getContentResolver().delete(ListItemsColumns.CONTENT_URI, where.sel(), where.args());
+
+        ContentValues[] listItemsCV = ListItemsContentValues.getContentValues(ListItemsProvider.get(listTraktId, listItems));
+        context.getContentResolver().bulkInsert(ListItemsColumns.CONTENT_URI, listItemsCV);
     }
 }
