@@ -2,6 +2,7 @@ package com.joss.voodootvdb.api;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
@@ -33,6 +34,7 @@ import com.joss.voodootvdb.provider.list_items.ListItemsProvider;
 import com.joss.voodootvdb.provider.list_items.ListItemsSelection;
 import com.joss.voodootvdb.provider.lists.ListsColumns;
 import com.joss.voodootvdb.provider.lists.ListsContentValues;
+import com.joss.voodootvdb.provider.lists.ListsCursor;
 import com.joss.voodootvdb.provider.lists.ListsProvider;
 import com.joss.voodootvdb.provider.lists.ListsSelection;
 import com.joss.voodootvdb.provider.movies.MoviesColumns;
@@ -66,6 +68,7 @@ import com.joss.voodootvdb.provider.shows_related.ShowsRelatedContentValues;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedProvider;
 import com.joss.voodootvdb.provider.shows_related.ShowsRelatedSelection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -166,11 +169,42 @@ public class Db {
         context.getContentResolver().bulkInsert(EpisodesWatchedColumns.CONTENT_URI, watchedEpisodesCV);
     }
 
+    // TODO check if this works as intended
     public static void updateLists(Context context, List<CustomList> lists) {
-        context.getContentResolver().delete(ListsColumns.CONTENT_URI, null, null);
+        // Get a list of traktIds of all the current lists in the db
+        List<Integer> currentListsIds = getLists(context);
 
-        ContentValues[] listsCV = ListsContentValues.getContentValues(ListsProvider.get(lists, true, (long) 0));
+        // Update new lists
+        ContentValues[] listsCV = ListsContentValues.getContentValues(ListsProvider.get(context, lists, currentListsIds, (long) 0));
         context.getContentResolver().bulkInsert(ListsColumns.CONTENT_URI, listsCV);
+
+        // Remove all listTraktId matches between both lists to get the remaining list of IDs to be deleted
+        for(CustomList cl : lists){
+            if(currentListsIds.contains(cl.getIds().getTrakt())){
+                currentListsIds.remove(cl.getIds().getTrakt());
+            }
+        }
+
+        // Remaining ids in currentListIds will be deleted
+        for(int listTraktId : currentListsIds){
+            ListsProvider.delete(context, listTraktId);
+        }
+    }
+
+    private static List<Integer> getLists(Context context) {
+        List<Integer> ids = new ArrayList<>();
+        Cursor c = context.getContentResolver().query(ListsColumns.CONTENT_URI, new String[]{ListsColumns.TRAKT_ID}, null, null, null);
+        ListsCursor listsCursor = new ListsCursor(c);
+        if(listsCursor.moveToFirst()){
+            while(!listsCursor.isAfterLast()){
+                ids.add(listsCursor.getTraktId());
+                c.moveToNext();
+            }
+        }
+
+        c.close();
+        listsCursor.close();
+        return ids;
     }
 
     public static void updateListItems(Context context, int listTraktId, List<CustomListItem> listItems) {

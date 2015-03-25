@@ -20,13 +20,30 @@ import java.util.List;
  */
 public class ListsProvider {
 
-    public static List<ListsModel> get(List<CustomList> lists, boolean overrideLastUpdatedTime, Long millis) {
+    public static ListsModel getListModel(Context context, int listTraktId){
+        ListsSelection where = new ListsSelection();
+        where.traktId(listTraktId);
+        ListsCursor cursor = where.query(context.getContentResolver());
+
+        ListsModel l = new ListsModel();
+        if(cursor.moveToFirst()){
+            l = new ListsModel(cursor);
+        }
+
+        cursor.close();
+        return l;
+    }
+
+    public static List<ListsModel> get(Context context, List<CustomList> lists, List<Integer> currentLists, Long millis) {
         List<ListsModel> items = new ArrayList<>();
         for(CustomList l : lists){
             ListsModel list = new ListsModel(l);
 
-            if(overrideLastUpdatedTime)
-                list.updatedAt = millis == null ? DateTime.now().getMillis() : millis;
+            if(!currentLists.contains(list.traktId)) {
+                list.updatedAt = millis == null ? 0 : millis;
+            }else{
+                list.updatedAt = getListModel(context, list.traktId).updatedAt;
+            }
 
             items.add(list);
         }
@@ -86,5 +103,11 @@ public class ListsProvider {
 
         ContentValues listCV = ListsContentValues.getSingleContentValue(listsModel);
         context.getContentResolver().update(ListsColumns.CONTENT_URI, listCV, where.sel(), where.args());
+    }
+
+    public static void delete(Context context, int listTraktId) {
+        ListsSelection where = new ListsSelection();
+        where.traktId(listTraktId);
+        context.getContentResolver().delete(ListsColumns.CONTENT_URI, where.sel(), where.args());
     }
 }
