@@ -229,9 +229,14 @@ public class Api {
     }
 
     public static void getListItems(Context context, int listTraktId){
+        getListItems(context, listTraktId, ApiService.EXT_IMAGES, ApiService.EXT_FULL);
+    }
+
+    public static void getListItems(Context context, int listTraktId, String... extended){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_LIST_ITEMS);
         intent.putExtra(ApiService.ARG_ID, listTraktId);
+        intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
         context.startService(intent);
     }
 }

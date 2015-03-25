@@ -43,7 +43,7 @@ public interface RestService {
     List<CustomList> getLists(@Path("username") String usernamem, @Header(AUTHORIZATION) String authorization);
 
     @GET("/users/{username}/lists/{listTraktId}/items")
-    List<CustomListItem> getListItems(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization);
+    List<CustomListItem> getListItems(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Query(EXTENDED) String extended);
 
     @GET("/shows/{id}")
     Show getShow(@Path("id") int id, @Query(EXTENDED) String extended);

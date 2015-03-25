@@ -226,7 +226,7 @@ public class ApiService extends IntentService {
                     break;
 
                 case REQUEST_USER_LIST_ITEMS:
-                    List<CustomListItem> customListItems = service.getListItems(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this));
+                    List<CustomListItem> customListItems = service.getListItems(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this), i.getStringExtra(EXTENDED));
                     Db.updateListItems(this, i.getIntExtra(ARG_ID, 0), customListItems);
                     if(customListItems.size() == 0)
                         broadcastRequestFailed(type, ERROR_RESPONSE, "");
