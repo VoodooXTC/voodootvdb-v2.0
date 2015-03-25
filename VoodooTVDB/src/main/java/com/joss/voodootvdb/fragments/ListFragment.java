@@ -18,6 +18,7 @@ import com.joss.voodootvdb.provider.list_items.ListItemsColumns;
 import com.joss.voodootvdb.provider.list_items.ListItemsCursor;
 import com.joss.voodootvdb.provider.list_items.ListItemsProvider;
 import com.joss.voodootvdb.provider.list_items.ListItemsSelection;
+import com.joss.voodootvdb.provider.lists.ListsProvider;
 import com.joss.voodootvdb.utils.GGson;
 import com.joss.voodootvdb.views.EmptyView;
 import com.joss.voodootvdb.views.ErrorView;
@@ -60,8 +61,7 @@ public class ListFragment extends BaseListFragment implements LoaderManager.Load
 
     @Override
     void onErrorMessageReceived() {
-        if(adapter.items.size() == 0)
-            showErrorView();
+        showContent();
     }
 
     public static ListFragment getInstance(CustomList list){
@@ -92,7 +92,11 @@ public class ListFragment extends BaseListFragment implements LoaderManager.Load
     @Override
     public void onResume(){
         super.onResume();
-        if(listItems.size() == 0){
+
+        showContent();
+        if(listItems.size() == 0 && ListsProvider.isLastUpdatedMoreThanOneWeekAgo(
+                                                    getActivity(),
+                                                    list.getIds().getTrakt())){
             showLoadingView();
             Api.getListItems(getActivity(), list.getIds().getTrakt());
         }

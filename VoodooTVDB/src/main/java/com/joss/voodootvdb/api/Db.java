@@ -13,6 +13,7 @@ import com.joss.voodootvdb.api.models.Progress.Watched;
 import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.model.ListItemsModel;
+import com.joss.voodootvdb.model.ListsModel;
 import com.joss.voodootvdb.model.MoviesModel;
 import com.joss.voodootvdb.model.MoviesPeopleModel;
 import com.joss.voodootvdb.model.PersonModel;
@@ -73,6 +74,8 @@ import java.util.List;
  * Time: 6:04 PM
  */
 public class Db {
+
+    // TODO use providers here for all CRUD activities
 
     public static void updateShow(Context context, Show show) {
         ContentValues showCV = ShowsContentValues.getSingleContentValue(new ShowsModel(show));
@@ -166,16 +169,16 @@ public class Db {
     public static void updateLists(Context context, List<CustomList> lists) {
         context.getContentResolver().delete(ListsColumns.CONTENT_URI, null, null);
 
-        ContentValues[] listsCV = ListsContentValues.getContentValues(ListsProvider.get(lists));
+        ContentValues[] listsCV = ListsContentValues.getContentValues(ListsProvider.get(lists, true, (long) 0));
         context.getContentResolver().bulkInsert(ListsColumns.CONTENT_URI, listsCV);
     }
 
     public static void updateListItems(Context context, int listTraktId, List<CustomListItem> listItems) {
-        ListItemsSelection where = new ListItemsSelection();
-        where.listTraktId(listTraktId);
-        context.getContentResolver().delete(ListItemsColumns.CONTENT_URI, where.sel(), where.args());
+        ListItemsProvider.update(context, listTraktId, listItems, true);
 
-        ContentValues[] listItemsCV = ListItemsContentValues.getContentValues(ListItemsProvider.get(listTraktId, listItems));
-        context.getContentResolver().bulkInsert(ListItemsColumns.CONTENT_URI, listItemsCV);
+        // Mark List as not Stale
+        CustomList model = ListsProvider.get(context, listTraktId);
+        if(model != null)
+            ListsProvider.update(context, model);
     }
 }

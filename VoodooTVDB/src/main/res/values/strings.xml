@@ -10,6 +10,8 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="user_avatar_image">user avatar image</string>
+
     <string name="login_bg_image">login background image</string>
     <string name="login_username_hint">Trakt Username or Email</string>
     <string name="login_password_hint">Trakt Password</string>
@@ -57,8 +59,8 @@
     <string name="search">Search</string>
     <string name="search_hint">Search for shows, movies, and people…</string>
     <string name="search_more">More</string>
+
     <string name="empty_text">No results found</string>
-    <string name="user_avatar_image">user avatar image</string>
-    <string name="list_empty">Empty List</string>
+    <string name="list_empty">You can add Show, Movies, etc. to your lists by tapping on the + button.</string>
 
 </resources>

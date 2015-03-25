@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.api.models.Error;
 import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
@@ -225,7 +226,10 @@ public class ApiService extends IntentService {
                     break;
 
                 case REQUEST_USER_LIST_ITEMS:
-                    Db.updateListItems(this, i.getIntExtra(ARG_ID, 0), service.getListItems(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this)));
+                    List<CustomListItem> customListItems = service.getListItems(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this));
+                    Db.updateListItems(this, i.getIntExtra(ARG_ID, 0), customListItems);
+                    if(customListItems.size() == 0)
+                        broadcastRequestFailed(type, ERROR_RESPONSE, "");
                     break;
             }
         } catch(RetrofitError e){
