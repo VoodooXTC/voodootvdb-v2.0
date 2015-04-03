@@ -30,8 +30,13 @@
         android:id="@+id/favorites_error_view"
         style="@style/Match" />
 
+    <com.joss.voodootvdb.views.EmptyView
+        android:id="@+id/favorites_empty"
+        style="@style/Match" />
+
     <com.joss.voodootvdb.views.LoadingView
         android:id="@+id/favorites_loading"
         style="@style/Match" />
+
 
 </RelativeLayout>

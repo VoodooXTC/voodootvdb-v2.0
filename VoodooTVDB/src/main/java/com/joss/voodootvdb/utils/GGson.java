@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.BufferedReader;
@@ -24,6 +25,12 @@ public class GGson {
 
     public static String toJson(Object object) {
         return getGson().toJson(object);
+    }
+
+    public static String toJson(Object object, boolean prettyPrint){
+        return prettyPrint
+                ? new GsonBuilder().setPrettyPrinting().create().toJson(object)
+                : toJson(object);
     }
 
     public static <T> T fromJson(String s, Class<T> c) {

@@ -1,6 +1,7 @@
 package com.joss.voodootvdb.views;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +22,15 @@ public class EmptyView extends LinearLayout {
     TextView emptyText;
 
     public EmptyView(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public EmptyView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public EmptyView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         init();
     }
 

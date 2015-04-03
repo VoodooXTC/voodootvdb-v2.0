@@ -136,6 +136,11 @@ public class Show implements VoodooItem {
         this.ids = ids;
     }
 
+    public Show setTraktId(int traktId){
+        this.setIds(getIds().setTrakt(traktId));
+        return this;
+    }
+
     /**
      * 
      * @return

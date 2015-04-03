@@ -3,6 +3,7 @@ package com.joss.voodootvdb.api;
 import android.content.Context;
 import android.content.Intent;
 
+import com.joss.voodootvdb.api.models.ListsResponse.Items;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.utils.GGson;
 
@@ -237,6 +238,14 @@ public class Api {
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_LIST_ITEMS);
         intent.putExtra(ApiService.ARG_ID, listTraktId);
         intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
+    public static void addListItems(Context context, int listTraktId, Items items){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_LIST_ITEMS_ADD);
+        intent.putExtra(ApiService.ARG_ID, listTraktId);
+        intent.putExtra(ApiService.ARG_ITEMS, GGson.toJson(items));
         context.startService(intent);
     }
 }

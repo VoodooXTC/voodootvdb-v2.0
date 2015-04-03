@@ -71,6 +71,11 @@ public class Episode {
         return ids == null ? new Ids() : ids;
     }
 
+    public Episode setTraktId(int traktId){
+        this.setIds(getIds().setTrakt(traktId));
+        return this;
+    }
+
     public void setIds(Ids ids) {
         this.ids = ids;
     }

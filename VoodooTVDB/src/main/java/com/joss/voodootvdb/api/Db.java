@@ -169,7 +169,6 @@ public class Db {
         context.getContentResolver().bulkInsert(EpisodesWatchedColumns.CONTENT_URI, watchedEpisodesCV);
     }
 
-    // TODO check if this works as intended
     public static void updateLists(Context context, List<CustomList> lists) {
         // Get a list of traktIds of all the current lists in the db
         List<Integer> currentListsIds = getLists(context);

@@ -60,6 +60,7 @@
     <string name="search_hint">Search for shows, movies, and people…</string>
     <string name="search_more">More</string>
 
+    <string name="favorites_empty">Create lists to track movies, shows, season, episodes, and people.</string>
     <string name="empty_text">No results found</string>
     <string name="list_empty">You can add Show, Movies, Episodes, etc. to your lists by tapping on the + button.</string>
 

@@ -46,6 +46,11 @@ public class Season {
         this.ids = ids;
     }
 
+    public Season setTraktId(int traktId){
+        this.setIds(getIds().setTrakt(traktId));
+        return this;
+    }
+
     public Double getRating() {
         return rating == null ? 0 : rating;
     }

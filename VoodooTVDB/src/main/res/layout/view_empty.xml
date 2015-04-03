@@ -4,6 +4,7 @@
     android:orientation="vertical"
     style="@style/Match"
     android:gravity="center"
+    android:background="@color/white_ish"
     >
 
     <oak.widget.TextViewWithFont

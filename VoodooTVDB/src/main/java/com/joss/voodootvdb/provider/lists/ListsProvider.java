@@ -94,20 +94,31 @@ public class ListsProvider {
         return null;
     }
 
+    public static void update(Context context, ListsModel model){
+        ListsSelection where = new ListsSelection();
+        where.traktId(model.traktId);
+
+        ContentValues listCV = ListsContentValues.getSingleContentValue(model);
+        context.getContentResolver().update(ListsColumns.CONTENT_URI, listCV, where.sel(), where.args());
+    }
+
     public static void update(Context context, CustomList customList) {
         ListsModel listsModel = new ListsModel(customList);
         listsModel.updatedAt = DateTime.now().getMillis();
 
-        ListsSelection where = new ListsSelection();
-        where.traktId(listsModel.traktId);
-
-        ContentValues listCV = ListsContentValues.getSingleContentValue(listsModel);
-        context.getContentResolver().update(ListsColumns.CONTENT_URI, listCV, where.sel(), where.args());
+        update(context, listsModel);
     }
 
     public static void delete(Context context, int listTraktId) {
         ListsSelection where = new ListsSelection();
         where.traktId(listTraktId);
         context.getContentResolver().delete(ListsColumns.CONTENT_URI, where.sel(), where.args());
+    }
+
+    public static void markListStale(Context context, int listTraktId) {
+        ListsModel listsModel = getListModel(context, listTraktId);
+        listsModel.updatedAt = (long) 0;
+
+        update(context, listsModel);
     }
 }

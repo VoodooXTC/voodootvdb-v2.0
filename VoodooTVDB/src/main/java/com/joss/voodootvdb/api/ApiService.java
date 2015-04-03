@@ -4,18 +4,23 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.joss.voodootvdb.BuildConfig;
 import com.joss.voodootvdb.DataStore;
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.api.models.Error;
+import com.joss.voodootvdb.api.models.ListsResponse.Items;
+import com.joss.voodootvdb.api.models.ListsResponse.ListResponse;
 import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.api.models.Settings.Settings;
+import com.joss.voodootvdb.provider.lists.ListsProvider;
 import com.joss.voodootvdb.utils.GGson;
 
 import java.util.ArrayList;
@@ -62,6 +67,7 @@ public class ApiService extends IntentService {
     public static final int REQUEST_USER_SETTINGS = 17;
     public static final int REQUEST_USER_LISTS = 18;
     public static final int REQUEST_USER_LIST_ITEMS = 19;
+    public static final int REQUEST_USER_LIST_ITEMS_ADD = 20;
 
     public static final String ARG_ID = "id";
     public static final String ARG_EXTENDED = "extended";
@@ -72,6 +78,7 @@ public class ApiService extends IntentService {
     public static final String ARG_PAGE = "page";
     public static final String ARG_LIMIT = "limit";
     public static final String ARG_SEARCH_RESULTS = "search_results";
+    public static final String ARG_ITEMS = "items";
 
     public static final String RESULT_MESSAGE = "message";
     public static final String RESULT_STATUS = "result_status";
@@ -82,6 +89,7 @@ public class ApiService extends IntentService {
     public static final int ERROR_UNSPECIFIED = -1;
     public static final int ERROR_NETWORK = 1;
     public static final int ERROR_RESPONSE = 2;
+    public static final int ERROR_EMPTY = 3;
 
     public static final String EXTENDED = "extended";
     public static final String EXT_MIN = "min";
@@ -222,14 +230,25 @@ public class ApiService extends IntentService {
                     break;
 
                 case REQUEST_USER_LISTS:
-                    Db.updateLists(this, service.getLists(DataStore.getUsername(this), DataStore.getAuthorizationToken(this)));
+                    List<CustomList> lists = service.getLists(DataStore.getUsername(this), DataStore.getAuthorizationToken(this));
+                    Db.updateLists(this, lists);
+                    if(lists == null || lists.size() == 0)
+                        broadcastRequestFailed(type, ERROR_EMPTY, "");
                     break;
 
                 case REQUEST_USER_LIST_ITEMS:
                     List<CustomListItem> customListItems = service.getListItems(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this), i.getStringExtra(EXTENDED));
                     Db.updateListItems(this, i.getIntExtra(ARG_ID, 0), customListItems);
-                    if(customListItems.size() == 0)
+                    if(customListItems == null || customListItems.size() == 0)
                         broadcastRequestFailed(type, ERROR_RESPONSE, "");
+                    break;
+
+                case REQUEST_USER_LIST_ITEMS_ADD:
+                    Items items = GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class);
+                    ListResponse listResponse = service.addItemsToList(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this), items);
+                    Log.e(TAG, GGson.toJson(listResponse, true));
+                    if(listResponse.addedSize() > 0)
+                        ListsProvider.markListStale(this, i.getIntExtra(ARG_ID, 0));
                     break;
             }
         } catch(RetrofitError e){
@@ -272,12 +291,13 @@ public class ApiService extends IntentService {
             }
         }
     }
+
     private void broadcastRequestFailed(int requestType, int errorType, String message){
         Intent intent = new Intent(BROADCAST);
         intent.putExtra(REQUEST_TYPE, requestType);
-        intent.putExtra(ERROR_TYPE, errorType);
         intent.putExtra(RESULT_STATUS, RESULT_ERROR);
         intent.putExtra(RESULT_MESSAGE, message);
+        intent.putExtra(ERROR_TYPE, errorType);
         broadcastManager.sendBroadcast(intent);
     }
 }

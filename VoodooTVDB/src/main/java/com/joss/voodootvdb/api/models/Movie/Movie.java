@@ -92,6 +92,11 @@ public class Movie implements VoodooItem {
         return ids == null ? new Ids() : ids;
     }
 
+    public Movie setTraktId(int traktId){
+        this.ids = getIds().setTrakt(traktId);
+        return this;
+    }
+
     public String getTagline(){
         return tagline == null ? "" : tagline;
     }

@@ -3,6 +3,8 @@ package com.joss.voodootvdb.api;
 import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.api.models.Episode.Episode;
+import com.joss.voodootvdb.api.models.ListsResponse.Items;
+import com.joss.voodootvdb.api.models.ListsResponse.ListResponse;
 import com.joss.voodootvdb.api.models.Login.AccessToken;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
 import com.joss.voodootvdb.api.models.Movie.Movie;
@@ -38,12 +40,6 @@ public interface RestService {
 
     @GET("/users/settings")
     Settings getUserSettings(@Header(AUTHORIZATION) String authorization);
-
-    @GET("/users/{username}/lists")
-    List<CustomList> getLists(@Path("username") String usernamem, @Header(AUTHORIZATION) String authorization);
-
-    @GET("/users/{username}/lists/{listTraktId}/items")
-    List<CustomListItem> getListItems(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Query(EXTENDED) String extended);
 
     @GET("/shows/{id}")
     Show getShow(@Path("id") int id, @Query(EXTENDED) String extended);
@@ -86,4 +82,19 @@ public interface RestService {
 
     @GET("/search")
     List<Search> search(@Query("query") String query, @Query("type") String type, @Query("page") int page, @Query("limit") int limit);
+
+    /**
+     * Lists
+     */
+    @GET("/users/{username}/lists")
+    List<CustomList> getLists(@Path("username") String usernamem, @Header(AUTHORIZATION) String authorization);
+
+    @GET("/users/{username}/lists/{listTraktId}/items")
+    List<CustomListItem> getListItems(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Query(EXTENDED) String extended);
+
+    @POST("/users/{username}/lists/{listTraktId}/items")
+    ListResponse addItemsToList(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Body Items items);
+
+    @POST("/users/{username}/lists/{listTraktId}/items/remove")
+    ListResponse removeItemsFromList(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Body Items items);
 }
