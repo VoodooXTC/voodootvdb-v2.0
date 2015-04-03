@@ -312,6 +312,8 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                     if(show != null) {
                         showContent();
                         setContent(show);
+
+                        // TODO remove this line once I create Dialog to add
                         Api.addListItems(this, 1054740, new Items().add(show));
                     }
                     break;
