@@ -92,6 +92,10 @@ public class Episode {
         return overview == null ? "" : overview;
     }
 
+    public String getOverview(String defaultValue){
+        return overview == null || overview.isEmpty() ? defaultValue : overview;
+    }
+
     public void setOverview(String overview) {
         this.overview = overview;
     }

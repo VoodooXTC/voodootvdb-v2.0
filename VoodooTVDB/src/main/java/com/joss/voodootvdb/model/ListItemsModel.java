@@ -2,10 +2,8 @@ package com.joss.voodootvdb.model;
 
 import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.provider.list_items.ListItemsCursor;
-import com.google.gson.annotations.SerializedName;
+import com.joss.voodootvdb.utils.DateFormatter;
 import com.joss.voodootvdb.utils.GGson;
-
-import org.joda.time.DateTime;
 
 /**
  * Model object for the {@code list_items}.
@@ -27,7 +25,7 @@ public class ListItemsModel{
 
     public ListItemsModel(int listTraktId, CustomListItem c) {
         this.listTraktId = listTraktId;
-        this.listedAt = new DateTime(c.getListedAt()).getMillis();
+        this.listedAt = DateFormatter.toMillis(c.getListedAt(), 0);
         this.type = c.getType();
         this.json = GGson.toJson(c);
     }

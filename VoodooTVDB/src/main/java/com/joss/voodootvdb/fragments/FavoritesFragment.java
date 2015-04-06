@@ -81,14 +81,25 @@ public class FavoritesFragment extends BaseFragment implements LoaderManager.Loa
         lists = new ArrayList<>();
         emptyView.setText(getString(R.string.favorites_empty));
         getLoaderManager().initLoader(LISTS_CALLBACK, null, this);
+
+        // Add Watchlist
+        lists.add(getWatchlist());
+
+        adapter = new ListsPagerAdapter(getChildFragmentManager(), lists);
+        pager.setAdapter(adapter);
+
+        tabs.setTypeface(OakUtils.getStaticTypeFace(getActivity(), getString(R.string.font_roboto_thin)), 0);
+        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+        tabs.setViewPager(pager);
+
+        showContent();
     }
 
     @Override
     public void onResume(){
         super.onResume();
         broadcastManager.registerReceiver(apiReceiver, new IntentFilter(ApiService.BROADCAST));
-        if(lists.size() == 0){
-            showLoading();
+        if(lists.size() <= 1){
             Api.getLists(getActivity());
         }
     }
@@ -133,19 +144,12 @@ public class FavoritesFragment extends BaseFragment implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(data != null){
             ListsCursor cursor = new ListsCursor(data);
-            lists = ListsProvider.get(cursor);
-            if(lists.size() > 0){
-                showContent();
+            List<CustomList> customLists = ListsProvider.get(cursor);
 
-                if(adapter == null) {
-                    adapter = new ListsPagerAdapter(getChildFragmentManager(), lists);
-                    pager.setAdapter(adapter);
-
-                    tabs.setTypeface(OakUtils.getStaticTypeFace(getActivity(), getString(R.string.font_roboto_thin)), 0);
-                    tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-                    tabs.setViewPager(pager);
-
-                }else if(!adapter.equals(lists)){
+            if(customLists.size() > 0){
+                customLists.add(0, getWatchlist());
+                if(!adapter.equals(customLists)){
+                    lists = customLists;
                     adapter.setItems(lists);
                     tabs.setViewPager(pager);
                 }
@@ -156,6 +160,12 @@ public class FavoritesFragment extends BaseFragment implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    public CustomList getWatchlist() {
+        return new CustomList()
+                .setName(getString(R.string.watchlist))
+                .setTraktId(CustomList.WATCHLIST_ID);
     }
 
     private void onEmptyMessageReceived() {

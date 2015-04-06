@@ -63,5 +63,8 @@
     <string name="favorites_empty">Create lists to track movies, shows, season, episodes, and people.</string>
     <string name="empty_text">No results found</string>
     <string name="list_empty">You can add Show, Movies, Episodes, etc. to your lists by tapping on the + button.</string>
+    <string name="tba">TBA</string>
+    <string name="no_overview_available">No overview available</string>
+    <string name="watchlist">Watchlist</string>
 
 </resources>

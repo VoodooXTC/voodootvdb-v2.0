@@ -2,10 +2,8 @@ package com.joss.voodootvdb.model;
 
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.provider.movies.MoviesCursor;
-import com.google.gson.annotations.SerializedName;
+import com.joss.voodootvdb.utils.DateFormatter;
 import com.joss.voodootvdb.utils.GGson;
-
-import org.joda.time.DateTime;
 
 /**
  * Model object for the {@code movies}.
@@ -40,9 +38,9 @@ public class MoviesModel{
         this.year = movie.getYear();
         this.traktId = movie.getIds().getTrakt();
         this.imdbId = movie.getIds().getImdb();
-        this.released = new DateTime(movie.getReleased()).getMillis();
+        this.released = DateFormatter.toMillis(movie.getReleased(), 0);
         this.rating = movie.getRating();
-        this.updatedAt = new DateTime(movie.getUpdatedAt()).getMillis();
+        this.updatedAt = DateFormatter.toMillis(movie.getUpdatedAt(), 0);
         this.language = movie.getLanguage();
         this.json = GGson.toJson(movie);
     }

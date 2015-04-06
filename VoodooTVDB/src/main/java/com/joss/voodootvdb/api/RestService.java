@@ -16,6 +16,8 @@ import com.joss.voodootvdb.api.models.Season.Season;
 import com.joss.voodootvdb.api.models.Settings.Settings;
 import com.joss.voodootvdb.api.models.Show.Show;
 
+import org.apache.http.auth.AUTH;
+
 import java.util.List;
 
 import retrofit.http.Body;
@@ -93,8 +95,17 @@ public interface RestService {
     List<CustomListItem> getListItems(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Query(EXTENDED) String extended);
 
     @POST("/users/{username}/lists/{listTraktId}/items")
-    ListResponse addItemsToList(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Body Items items);
+    ListResponse addItemsToList(@Path("username") String username, @Path("listTraktId") String listTraktId, @Header(AUTHORIZATION) String authorization, @Body Items items);
 
     @POST("/users/{username}/lists/{listTraktId}/items/remove")
     ListResponse removeItemsFromList(@Path("username") String username, @Path("listTraktId") int listTraktId, @Header(AUTHORIZATION) String authorization, @Body Items items);
+
+    @GET("/sync/watchlist")
+    List<CustomListItem> getWatchlist(@Header(AUTHORIZATION) String authorization, @Query(EXTENDED) String extended);
+
+    @POST("/sync/watchlist")
+    ListResponse addWatchlist(@Header(AUTHORIZATION) String authorization, @Body Items items);
+
+    @POST("/sync/watchlist/remove")
+    ListResponse removeWatchlist(@Header(AUTHORIZATION) String authorization, @Body Items items);
 }

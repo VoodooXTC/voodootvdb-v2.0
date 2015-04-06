@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.ApiService;
+import com.joss.voodootvdb.utils.Utils;
 
 import java.util.List;
 
@@ -146,6 +147,14 @@ public abstract class BaseListFragment extends BaseFragment implements AbsListVi
                     if (status == ApiService.RESULT_ERROR) {
                         onErrorMessageReceived();
                     }
+                }
+            }
+
+            int status = intent.getIntExtra(ApiService.RESULT_STATUS, ApiService.RESULT_ERROR);
+            if (status == ApiService.RESULT_NETWORK_STATUS){
+                String s = intent.getStringExtra(ApiService.ARG_STATUS);
+                if(s.equals("POOR")){
+                    Utils.toast(getActivity(), s);
                 }
             }
         }

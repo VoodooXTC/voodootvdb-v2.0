@@ -29,9 +29,21 @@ public class DateFormatter {
         return yearMonthDay;
     }
 
-    public static String formatIso(String iso8601String){
-        Date date = new DateTime(iso8601String).toDate();
-        SimpleDateFormat formatOut = new SimpleDateFormat("MMM d, yyyy mm:ss", Locale.getDefault());
-        return formatOut.format(date);
+    public static String formatIso(String iso8601String, String defaultValue){
+        try{
+            Date date = new DateTime(iso8601String).toDate();
+            SimpleDateFormat formatOut = new SimpleDateFormat("MMM d, yyyy mm:ss", Locale.getDefault());
+            return formatOut.format(date);
+        } catch (Exception e){
+            return defaultValue;
+        }
+    }
+
+    public static long toMillis(String time, long defaultValue){
+        try{
+            return new DateTime(time).getMillis();
+        } catch (Exception e){
+            return defaultValue;
+        }
     }
 }

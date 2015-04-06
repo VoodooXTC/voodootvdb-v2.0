@@ -11,6 +11,8 @@ import com.joss.voodootvdb.api.models.Show.Ids;
  */
 public class CustomList {
 
+    public static final int WATCHLIST_ID = -1;
+
     @Expose
     private String name;
     @Expose
@@ -38,8 +40,9 @@ public class CustomList {
         return name == null ? "" : name;
     }
 
-    public void setName(String name) {
+    public CustomList setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getDescription() {
@@ -96,5 +99,10 @@ public class CustomList {
 
     public void setIds(Ids ids) {
         this.ids = ids;
+    }
+
+    public CustomList setTraktId(int traktId){
+        this.ids = getIds().setTrakt(traktId);
+        return this;
     }
 }

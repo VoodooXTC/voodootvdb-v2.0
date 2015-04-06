@@ -8,11 +8,18 @@ import android.support.v4.content.Loader;
 import android.view.View;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.activities.MovieActivity;
+import com.joss.voodootvdb.activities.PersonActivity;
+import com.joss.voodootvdb.activities.ShowActivity;
 import com.joss.voodootvdb.adapters.ListAdapter;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
 import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
+import com.joss.voodootvdb.api.models.Episode.Episode;
+import com.joss.voodootvdb.api.models.Movie.Movie;
+import com.joss.voodootvdb.api.models.People.Person;
+import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.interfaces.ListListener;
 import com.joss.voodootvdb.provider.list_items.ListItemsColumns;
 import com.joss.voodootvdb.provider.list_items.ListItemsCursor;
@@ -20,6 +27,7 @@ import com.joss.voodootvdb.provider.list_items.ListItemsProvider;
 import com.joss.voodootvdb.provider.list_items.ListItemsSelection;
 import com.joss.voodootvdb.provider.lists.ListsProvider;
 import com.joss.voodootvdb.utils.GGson;
+import com.joss.voodootvdb.utils.Utils;
 import com.joss.voodootvdb.views.EmptyView;
 import com.joss.voodootvdb.views.ErrorView;
 import com.joss.voodootvdb.views.LoadingView;
@@ -56,7 +64,8 @@ public class ListFragment extends BaseListFragment implements LoaderManager.Load
 
     @Override
     List<Integer> getApiTypes() {
-    return Arrays.asList(ApiService.REQUEST_USER_LIST_ITEMS);
+    return Arrays.asList(ApiService.REQUEST_USER_LIST_ITEMS,
+            ApiService.REQUEST_WATCHLIST);
     }
 
     @Override
@@ -94,11 +103,20 @@ public class ListFragment extends BaseListFragment implements LoaderManager.Load
         super.onResume();
 
         showContent();
-        if(listItems.size() == 0 && ListsProvider.isLastUpdatedMoreThanOneWeekAgo(
-                                                    getActivity(),
-                                                    list.getIds().getTrakt())){
+        if(listItems.size() == 0
+                && ListsProvider.isLastUpdatedMoreThanOneWeekAgo(getActivity(), list.getIds().getTrakt())){
             showLoadingView();
-            Api.getListItems(getActivity(), list.getIds().getTrakt());
+            fetchListItems();
+        }
+    }
+
+    private void fetchListItems() {
+        switch (list.getIds().getTrakt()){
+            case CustomList.WATCHLIST_ID:
+                Api.getWatchlistItems(getActivity());
+                break;
+            default:
+                Api.getListItems(getActivity(), list.getIds().getTrakt());
         }
     }
 
@@ -132,5 +150,25 @@ public class ListFragment extends BaseListFragment implements LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onClick(Movie movie) {
+        MovieActivity.startActivity(getActivity(), movie.getIds().getTrakt());
+    }
+
+    @Override
+    public void onClick(Show show) {
+        ShowActivity.startActivity(getActivity(), show.getIds().getTrakt());
+    }
+
+    @Override
+    public void onClick(Person person) {
+        PersonActivity.startActivity(getActivity(), person.getIds().getTrakt());
+    }
+
+    @Override
+    public void onClick(Episode episode) {
+        Utils.toast(getActivity(), episode.getTitle());
     }
 }

@@ -15,7 +15,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.widget.ImageView;
@@ -77,7 +76,7 @@ import oak.util.OakUtils;
  * Time: 10:01 AM
  */
 public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCallbacks<Cursor>,
-        View.OnClickListener, VoodooClickListener, SeasonListener {
+        View.OnClickListener, VoodooClickListener, SeasonListener{
 
     public static final String TAG = ShowActivity.class.getSimpleName();
     public static final String ID = "id";
@@ -314,7 +313,8 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
                         setContent(show);
 
                         // TODO remove this line once I create Dialog to add
-                        Api.addListItems(this, 1054740, new Items().add(show));
+//                        Api.addListItems(this, 1054740, new Items().add(show));
+                        Api.addListItems(this, "watchlist", new Items().add(show));
                     }
                     break;
                 case SHOW_RELATED_CALLBACK:

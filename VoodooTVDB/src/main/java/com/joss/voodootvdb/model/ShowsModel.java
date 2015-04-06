@@ -3,6 +3,7 @@ package com.joss.voodootvdb.model;
 import com.joss.voodootvdb.api.models.Show.Show;
 import com.joss.voodootvdb.provider.shows.ShowsCursor;
 import com.google.gson.annotations.SerializedName;
+import com.joss.voodootvdb.utils.DateFormatter;
 import com.joss.voodootvdb.utils.GGson;
 
 import org.joda.time.DateTime;
@@ -41,11 +42,11 @@ public class ShowsModel{
         this.title = show.getTitle();
         this.traktId = show.getIds().getTrakt();
         this.imdbId = show.getIds().getImdb();
-        this.firstAired = new DateTime(show.getFirstAired()).getMillis();
+        this.firstAired = DateFormatter.toMillis(show.getFirstAired(), 0);
         this.country = show.getCountry();
         this.status = show.getStatus();
         this.rating = show.getRating();
-        this.updatedAt = new DateTime(show.getUpdatedAt()).getMillis();
+        this.updatedAt = DateFormatter.toMillis(show.getUpdatedAt(), 0);
         this.language = show.getLanguage();
         this.json = GGson.toJson(show);
     }

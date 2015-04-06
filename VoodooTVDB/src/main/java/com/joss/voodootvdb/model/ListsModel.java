@@ -2,10 +2,8 @@ package com.joss.voodootvdb.model;
 
 import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.provider.lists.ListsCursor;
-import com.google.gson.annotations.SerializedName;
+import com.joss.voodootvdb.utils.DateFormatter;
 import com.joss.voodootvdb.utils.GGson;
-
-import org.joda.time.DateTime;
 
 /**
  * Model object for the {@code lists}.
@@ -31,7 +29,7 @@ public class ListsModel{
         this.traktId = l.getIds().getTrakt();
         this.name = l.getName();
         this.slug = l.getIds().getSlug();
-        this.updatedAt = new DateTime(l.getUpdatedAt()).getMillis();
+        this.updatedAt = DateFormatter.toMillis(l.getUpdatedAt(), 0);
         this.json = GGson.toJson(l);
     }
 }

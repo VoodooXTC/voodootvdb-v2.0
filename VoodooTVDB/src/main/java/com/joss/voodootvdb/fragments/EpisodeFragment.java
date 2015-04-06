@@ -67,8 +67,8 @@ public class EpisodeFragment extends BaseFragment {
         }
         title.setText(episode.getTitle());
         ratingBar.setRating((float) (episode.getRating() / 2));
-        info.setText(DateFormatter.formatIso(episode.getFirstAired()));
-        description.setText(episode.getOverview());
+        info.setText(DateFormatter.formatIso(episode.getFirstAired(), getString(R.string.tba)));
+        description.setText(episode.getOverview(getString(R.string.no_overview_available)));
     }
 
 }

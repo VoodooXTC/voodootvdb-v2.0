@@ -4,8 +4,8 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
+import com.facebook.stetho.okhttp.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.joss.voodootvdb.BuildConfig;
@@ -22,12 +22,14 @@ import com.joss.voodootvdb.api.models.Search.Search;
 import com.joss.voodootvdb.api.models.Settings.Settings;
 import com.joss.voodootvdb.provider.lists.ListsProvider;
 import com.joss.voodootvdb.utils.GGson;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.UrlConnectionClient;
 import retrofit.converter.GsonConverter;
 
@@ -68,6 +70,10 @@ public class ApiService extends IntentService {
     public static final int REQUEST_USER_LISTS = 18;
     public static final int REQUEST_USER_LIST_ITEMS = 19;
     public static final int REQUEST_USER_LIST_ITEMS_ADD = 20;
+    public static final int REQUEST_USER_LIST_ITEMS_REMOVE = 21;
+    public static final int REQUEST_WATCHLIST = 22;
+    public static final int REQUEST_WATCHLIST_ADD = 23;
+    public static final int REQUEST_WATCHLIST_REMOVE = 24;
 
     public static final String ARG_ID = "id";
     public static final String ARG_EXTENDED = "extended";
@@ -79,11 +85,13 @@ public class ApiService extends IntentService {
     public static final String ARG_LIMIT = "limit";
     public static final String ARG_SEARCH_RESULTS = "search_results";
     public static final String ARG_ITEMS = "items";
+    public static final String ARG_STATUS = "status";
 
     public static final String RESULT_MESSAGE = "message";
     public static final String RESULT_STATUS = "result_status";
     public static final int RESULT_ERROR = 0;
     public static final int RESULT_SUCCESS = 1;
+    public static final int RESULT_NETWORK_STATUS = 2;
 
     public static final String ERROR_TYPE = "api_error_type";
     public static final int ERROR_UNSPECIFIED = -1;
@@ -115,13 +123,17 @@ public class ApiService extends IntentService {
             Gson gson = new GsonBuilder()
                     .create();
 
+            OkHttpClient client1 = new OkHttpClient();
+            client1.networkInterceptors().add(new StethoInterceptor());
+
             VoodooRequestInterceptor requestInterceptor = new VoodooRequestInterceptor(context);
             service = new RestAdapter.Builder()
                     .setEndpoint(Endpoints.URL)
                     .setRequestInterceptor(requestInterceptor)
                     .setClient(new VoodooAuthClient(context))
                     .setConverter(new GsonConverter(gson))
-                    .setClient(client == null ? new TimeOutClient(DEFAULT_TIMEOUT) : client)
+                    .setClient(new OkClient(client1))
+//                    .setClient(client == null ? new TimeOutClient(DEFAULT_TIMEOUT) : client)
                     .setLogLevel(BuildConfig.DEBUG
                             ? RestAdapter.LogLevel.FULL
                             : RestAdapter.LogLevel.NONE)
@@ -244,11 +256,22 @@ public class ApiService extends IntentService {
                     break;
 
                 case REQUEST_USER_LIST_ITEMS_ADD:
-                    Items items = GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class);
-                    ListResponse listResponse = service.addItemsToList(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this), items);
-                    Log.e(TAG, GGson.toJson(listResponse, true));
+                    ListResponse listResponse = service.addItemsToList(DataStore.getUsername(this), i.getStringExtra(ARG_ID), DataStore.getAuthorizationToken(this), GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class));
                     if(listResponse.addedSize() > 0)
                         ListsProvider.markListStale(this, i.getIntExtra(ARG_ID, 0));
+                    break;
+
+                case REQUEST_USER_LIST_ITEMS_REMOVE:
+                    ListResponse removeListResponse = service.removeItemsFromList(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this), GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class));
+                    if(removeListResponse.removedSize() > 0)
+                        ListsProvider.markListStale(this, i.getIntExtra(ARG_ID, 0));
+                    break;
+
+                case REQUEST_WATCHLIST:
+                    List<CustomListItem> watchlistItems = service.getWatchlist(DataStore.getAuthorizationToken(this), i.getStringExtra(EXTENDED));
+                    Db.updateListItems(this, CustomList.WATCHLIST_ID, watchlistItems);
+                    if(watchlistItems == null || watchlistItems.size() == 0)
+                        broadcastRequestFailed(type, ERROR_EMPTY, "");
                     break;
             }
         } catch(RetrofitError e){
@@ -256,6 +279,14 @@ public class ApiService extends IntentService {
         } catch (Exception e) {
             broadcastRequestFailed(type, ERROR_RESPONSE, getString(R.string.error_generic_network));
         }
+    }
+
+    private void broadcastNetworkStatus(String status) {
+        Intent intent = new Intent();
+        intent.setAction(BROADCAST);
+        intent.putExtra(RESULT_STATUS, RESULT_NETWORK_STATUS);
+        intent.putExtra(ARG_STATUS, status);
+        broadcastManager.sendBroadcast(intent);
     }
 
     private void broadcastSuccess(int type) {

@@ -8,6 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joss.voodootvdb.R;
+import com.joss.voodootvdb.activities.MovieActivity;
+import com.joss.voodootvdb.activities.PersonActivity;
+import com.joss.voodootvdb.activities.ShowActivity;
 import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.interfaces.ListListener;
 import com.squareup.picasso.Picasso;
@@ -43,6 +46,7 @@ public class CustomListItemView extends LinearLayout implements View.OnClickList
 
     public CustomListItemView(Context context, ListListener listener) {
         super(context);
+        this.listener = listener;
         init();
     }
 
@@ -71,6 +75,22 @@ public class CustomListItemView extends LinearLayout implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        switch (customListItem.getType()){
+            case CustomListItem.TYPE_EPISODE:
+                listener.onClick(customListItem.getEpisode());
+                break;
 
+            case CustomListItem.TYPE_MOVIE:
+                listener.onClick(customListItem.getMovie());
+                break;
+
+            case CustomListItem.TYPE_PERSON:
+                listener.onClick(customListItem.getPerson());
+                break;
+
+            case CustomListItem.TYPE_SHOW:
+                listener.onClick(customListItem.getShow());
+                break;
+        }
     }
 }

@@ -1,0 +1,52 @@
+VoodooTVDB v.2.0
+
+Lists Feature
+	Favorites Fragment
+	Add to List Dialog
+	Create List Dialog
+	Add to list on Show
+	Add to list on Episode
+	Add to list on Movies
+	Add to list on Person
+
+Watched Feature
+	Mark all Season as Watched
+	Unmark all season as Watched
+	Watched Button on Episode
+	Watched all previous on Episode
+
+Home Fragment
+	Next Section
+	Upcoming Section
+	Personalized Recommendations for you
+
+Timeline
+	Timeline Fragment View Pager
+
+Settings
+	Spoilers Toggle
+	Update Frequency
+	Reminders
+
+About 
+
+Potentially Launch at this mark? 1.0
+
+Notifications
+	Create notifications for upcoming episodes
+
+On Boot 
+	Add all notifications back to the notification manager
+
+Background Update Server
+	Update Content on Lists daily
+
+Spoilers Feature
+	Show Spoiler Image on Episodes
+	Truncate Descriptions
+
+// Implement Should I Api call for this content??
+
+if CONTENT in a library - Don't make the call (will get updated daily)
+else if CONTENT lastupdated more than 1 week or other arbitrary number (make the call)
+else dont

@@ -2,6 +2,7 @@ package com.joss.voodootvdb.model;
 
 import com.joss.voodootvdb.api.models.Episode.Episode;
 import com.joss.voodootvdb.provider.episodes.EpisodesCursor;
+import com.joss.voodootvdb.utils.DateFormatter;
 import com.joss.voodootvdb.utils.GGson;
 
 import org.joda.time.DateTime;
@@ -35,8 +36,8 @@ public class EpisodesModel{
         this.episodeTraktId = e.getIds().getTrakt();
         this.season = e.getSeason();
         this.number = e.getNumber();
-        this.firstAired = new DateTime(e.getFirstAired()).getMillis();
-        this.updatedAt = new DateTime(e.getUpdatedAt()).getMillis();
+        this.firstAired = DateFormatter.toMillis(e.getFirstAired(), 0);
+        this.updatedAt = DateFormatter.toMillis(e.getUpdatedAt(), 0);
         this.json = GGson.toJson(e);
     }
 }

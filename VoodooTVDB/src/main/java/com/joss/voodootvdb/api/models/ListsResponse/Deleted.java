@@ -17,4 +17,7 @@ public class Deleted {
 
     public int people;
 
+    public int size() {
+        return movies + shows + seasons + episodes + people;
+    }
 }

@@ -21,4 +21,8 @@ public class ListResponse {
     public int addedSize() {
         return added.size();
     }
+
+    public int removedSize(){
+        return deleted.size();
+    }
 }
