@@ -82,6 +82,36 @@ public class ListItemsSelection extends AbstractSelection<ListItemsSelection> {
         return this;
     }
 
+    public ListItemsSelection itemtraktid(Integer... value) {
+        addEquals(ListItemsColumns.ITEMTRAKTID, value);
+        return this;
+    }
+    
+    public ListItemsSelection itemtraktidNot(Integer... value) {
+        addNotEquals(ListItemsColumns.ITEMTRAKTID, value);
+        return this;
+    }
+
+    public ListItemsSelection itemtraktidGt(int value) {
+        addGreaterThan(ListItemsColumns.ITEMTRAKTID, value);
+        return this;
+    }
+
+    public ListItemsSelection itemtraktidGtEq(int value) {
+        addGreaterThanOrEquals(ListItemsColumns.ITEMTRAKTID, value);
+        return this;
+    }
+
+    public ListItemsSelection itemtraktidLt(int value) {
+        addLessThan(ListItemsColumns.ITEMTRAKTID, value);
+        return this;
+    }
+
+    public ListItemsSelection itemtraktidLtEq(int value) {
+        addLessThanOrEquals(ListItemsColumns.ITEMTRAKTID, value);
+        return this;
+    }
+
     public ListItemsSelection listedAt(Long... value) {
         addEquals(ListItemsColumns.LISTED_AT, value);
         return this;

@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.Api;
 import com.joss.voodootvdb.api.ApiService;
-import com.joss.voodootvdb.api.models.ListsResponse.Items;
 import com.joss.voodootvdb.api.models.Movie.Movie;
 import com.joss.voodootvdb.api.models.People.Cast;
 import com.joss.voodootvdb.api.models.Season.Season;
@@ -314,7 +313,7 @@ public class ShowActivity extends BaseActivity implements LoaderManager.LoaderCa
 
                         // TODO remove this line once I create Dialog to add
 //                        Api.addListItems(this, 1054740, new Items().add(show));
-                        Api.addListItems(this, "watchlist", new Items().add(show));
+                        ListAddDialogActivity.startActivity(this, show);
                     }
                     break;
                 case SHOW_RELATED_CALLBACK:

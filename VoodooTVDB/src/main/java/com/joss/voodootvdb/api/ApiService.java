@@ -257,14 +257,18 @@ public class ApiService extends IntentService {
 
                 case REQUEST_USER_LIST_ITEMS_ADD:
                     ListResponse listResponse = service.addItemsToList(DataStore.getUsername(this), i.getStringExtra(ARG_ID), DataStore.getAuthorizationToken(this), GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class));
-                    if(listResponse.addedSize() > 0)
+                    if(listResponse.addedSize() > 0) {
                         ListsProvider.markListStale(this, i.getIntExtra(ARG_ID, 0));
+                        Api.getListItems(this, i.getIntExtra(ARG_ID, 0));
+                    }
                     break;
 
                 case REQUEST_USER_LIST_ITEMS_REMOVE:
                     ListResponse removeListResponse = service.removeItemsFromList(DataStore.getUsername(this), i.getIntExtra(ARG_ID, 0), DataStore.getAuthorizationToken(this), GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class));
-                    if(removeListResponse.removedSize() > 0)
+                    if(removeListResponse.removedSize() > 0) {
                         ListsProvider.markListStale(this, i.getIntExtra(ARG_ID, 0));
+                        Api.getListItems(this, i.getIntExtra(ARG_ID, 0));
+                    }
                     break;
 
                 case REQUEST_WATCHLIST:
@@ -272,6 +276,24 @@ public class ApiService extends IntentService {
                     Db.updateListItems(this, CustomList.WATCHLIST_ID, watchlistItems);
                     if(watchlistItems == null || watchlistItems.size() == 0)
                         broadcastRequestFailed(type, ERROR_EMPTY, "");
+                    break;
+
+                case REQUEST_WATCHLIST_ADD:
+                    ListResponse addWatchListResponse = service.addWatchlist(DataStore.getAuthorizationToken(this), GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class));
+                    if(addWatchListResponse.addedSize() == 0) {
+                        broadcastRequestFailed(type, ERROR_EMPTY, "");
+                    }else{
+                        Api.getWatchlistItems(this);
+                    }
+                    break;
+
+                case REQUEST_WATCHLIST_REMOVE:
+                    ListResponse removeWatchListResponse = service.removeWatchlist(DataStore.getAuthorizationToken(this), GGson.fromJson(i.getStringExtra(ARG_ITEMS), Items.class));
+                    if(removeWatchListResponse.removedSize() == 0) {
+                        broadcastRequestFailed(type, ERROR_EMPTY, "");
+                    }else{
+                        Api.getWatchlistItems(this);
+                    }
                     break;
             }
         } catch(RetrofitError e){

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 
+import com.joss.voodootvdb.activities.ListAddDialogActivity;
 import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.api.models.ListsResponse.Items;
 import com.joss.voodootvdb.api.models.Login.AccessTokenRequest;
@@ -243,9 +244,17 @@ public class Api {
         context.startService(intent);
     }
 
-    public static void addListItems(Context context, String listTraktId, Items items){
+    public static void addListItems(Context context, int listTraktId, Items items){
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_LIST_ITEMS_ADD);
+        intent.putExtra(ApiService.ARG_ID, listTraktId);
+        intent.putExtra(ApiService.ARG_ITEMS, GGson.toJson(items));
+        context.startService(intent);
+    }
+
+    public static void removeListItems(Context context, int listTraktId, Items items){
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_USER_LIST_ITEMS_REMOVE);
         intent.putExtra(ApiService.ARG_ID, listTraktId);
         intent.putExtra(ApiService.ARG_ITEMS, GGson.toJson(items));
         context.startService(intent);
@@ -259,6 +268,20 @@ public class Api {
         Intent intent = new Intent(context, ApiService.class);
         intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_WATCHLIST);
         intent.putExtra(ApiService.ARG_EXTENDED, buildExtendedValues(extended));
+        context.startService(intent);
+    }
+
+    public static void addWatchlistItems(Context context, Items items) {
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_WATCHLIST_ADD);
+        intent.putExtra(ApiService.ARG_ITEMS, GGson.toJson(items));
+        context.startService(intent);
+    }
+
+    public static void removeWatchlistItems(Context context, Items items) {
+        Intent intent = new Intent(context, ApiService.class);
+        intent.putExtra(ApiService.REQUEST_TYPE, ApiService.REQUEST_WATCHLIST_REMOVE);
+        intent.putExtra(ApiService.ARG_ITEMS, GGson.toJson(items));
         context.startService(intent);
     }
 }

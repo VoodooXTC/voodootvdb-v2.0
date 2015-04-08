@@ -23,6 +23,14 @@ public class ListItemsCursor extends AbstractCursor {
     }
 
     /**
+     * Get the {@code itemtraktid} value.
+     * Can be {@code null}.
+     */
+    public Integer getItemtraktid() {
+        return getIntegerOrNull(ListItemsColumns.ITEMTRAKTID);
+    }
+
+    /**
      * Get the {@code listed_at} value.
      * Can be {@code null}.
      */

@@ -2,7 +2,9 @@ package com.joss.voodootvdb.provider.list_items;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.SparseArray;
 
+import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.api.models.CustomLists.CustomListItem;
 import com.joss.voodootvdb.model.ListItemsModel;
 import com.joss.voodootvdb.utils.GGson;
@@ -47,5 +49,25 @@ public class ListItemsProvider {
         // Insert New Items
         ContentValues[] listItemsCV = ListItemsContentValues.getContentValues(ListItemsProvider.get(listTraktId, listItems));
         context.getContentResolver().bulkInsert(ListItemsColumns.CONTENT_URI, listItemsCV);
+    }
+
+    public static SparseArray<Boolean> getSelection(Context context, int itemTraktId, List<CustomList> lists) {
+        SparseArray<Boolean> selection = new SparseArray<>();
+        for(int i = 0; i < lists.size(); i++){
+            int listTraktId = lists.get(i).getIds().getTrakt();
+            selection.put(listTraktId, contains(context, listTraktId, itemTraktId));
+        }
+        return selection;
+    }
+
+    public static Boolean contains(Context context, Integer listTraktId, int itemTraktId) {
+        ListItemsSelection where = new ListItemsSelection();
+        where.listTraktId(listTraktId).and().itemtraktid(itemTraktId);
+        ListItemsCursor cursor = where.query(context.getContentResolver());
+
+        boolean result = cursor.moveToFirst();
+        cursor.close();
+
+        return result;
     }
 }

@@ -3,6 +3,7 @@ package com.joss.voodootvdb.provider.lists;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.joss.voodootvdb.R;
 import com.joss.voodootvdb.api.models.CustomLists.CustomList;
 import com.joss.voodootvdb.model.ListsModel;
 import com.joss.voodootvdb.utils.GGson;
@@ -19,6 +20,12 @@ import java.util.List;
  * Time: 1:51 PM
  */
 public class ListsProvider {
+
+    public static CustomList getWatchlist(Context context) {
+        return new CustomList()
+                .setName(context.getString(R.string.watchlist))
+                .setTraktId(CustomList.WATCHLIST_ID);
+    }
 
     public static ListsModel getListModel(Context context, int listTraktId){
         ListsSelection where = new ListsSelection();
@@ -120,5 +127,32 @@ public class ListsProvider {
         listsModel.updatedAt = (long) 0;
 
         update(context, listsModel);
+    }
+
+    public static CharSequence[] get(List<CustomList> lists) {
+        ArrayList<String> titles = new ArrayList<>();
+        for(CustomList list : lists){
+            titles.add(list.getName());
+        }
+        return titles.toArray(new CharSequence[titles.size()]);
+    }
+
+    public static List<CustomList> getAll(Context context) {
+        return get(new ListsSelection().query(context.getContentResolver()));
+    }
+
+    public static boolean equals(List<CustomList> lists1, List<CustomList> lists2) {
+        if(lists1 == null || lists2 == null)
+            return false;
+
+        if(lists1.size() != lists2.size())
+            return false;
+
+        for(int i = 0; i < lists1.size(); i++){
+            if(!lists1.get(i).getIds().getTrakt().equals(lists2.get(i).getIds().getTrakt()))
+                return false;
+        }
+
+        return true;
     }
 }

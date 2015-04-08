@@ -66,5 +66,9 @@
     <string name="tba">TBA</string>
     <string name="no_overview_available">No overview available</string>
     <string name="watchlist">Watchlist</string>
+    <string name="lists">Lists</string>
+    <string name="done">Done</string>
+    <string name="nah">Nah</string>
+    <string name="create">Create</string>
 
 </resources>

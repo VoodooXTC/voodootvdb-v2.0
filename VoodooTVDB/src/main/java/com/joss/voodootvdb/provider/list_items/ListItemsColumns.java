@@ -14,6 +14,7 @@ public interface ListItemsColumns extends BaseColumns {
 
     String _ID = BaseColumns._ID;
     String LIST_TRAKT_ID = "list_trakt_id";
+    String ITEMTRAKTID = "itemtraktid";
     String LISTED_AT = "listed_at";
     String TYPE = "type";
     String JSON = "json";
@@ -24,6 +25,7 @@ public interface ListItemsColumns extends BaseColumns {
     String[] FULL_PROJECTION = new String[] {
             _ID,
             LIST_TRAKT_ID,
+            ITEMTRAKTID,
             LISTED_AT,
             TYPE,
             JSON

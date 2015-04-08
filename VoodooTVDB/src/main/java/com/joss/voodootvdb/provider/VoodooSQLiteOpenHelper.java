@@ -61,6 +61,7 @@ public class VoodooSQLiteOpenHelper extends SQLiteOpenHelper {
             + ListItemsColumns.TABLE_NAME + " ( "
             + ListItemsColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + ListItemsColumns.LIST_TRAKT_ID + " INTEGER, "
+            + ListItemsColumns.ITEMTRAKTID + " INTEGER, "
             + ListItemsColumns.LISTED_AT + " INTEGER, "
             + ListItemsColumns.TYPE + " TEXT, "
             + ListItemsColumns.JSON + " TEXT "

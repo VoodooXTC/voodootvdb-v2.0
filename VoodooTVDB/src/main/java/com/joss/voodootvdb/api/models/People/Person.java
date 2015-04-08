@@ -58,6 +58,11 @@ public class Person {
         this.ids = ids;
     }
 
+    public Person setTraktId(Integer traktId) {
+        this.setIds(this.getIds().setTrakt(traktId));
+        return this;
+    }
+
     /**
      * 
      * @return

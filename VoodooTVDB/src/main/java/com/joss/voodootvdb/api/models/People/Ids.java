@@ -30,8 +30,9 @@ public class Ids {
      * @param trakt
      *     The trakt
      */
-    public void setTrakt(Integer trakt) {
+    public Ids setTrakt(Integer trakt) {
         this.trakt = trakt;
+        return this;
     }
 
     /**

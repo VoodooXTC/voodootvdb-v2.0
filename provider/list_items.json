@@ -5,6 +5,10 @@
             "type" : "Integer"
         },
         {
+            "name" : "itemTraktId",
+            "type" : "Integer"
+        },
+        {
             "name" : "listed_at",
             "type" : "Long"
         },

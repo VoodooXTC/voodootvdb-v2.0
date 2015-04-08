@@ -83,7 +83,7 @@ public class FavoritesFragment extends BaseFragment implements LoaderManager.Loa
         getLoaderManager().initLoader(LISTS_CALLBACK, null, this);
 
         // Add Watchlist
-        lists.add(getWatchlist());
+        lists.add(ListsProvider.getWatchlist(getActivity()));
 
         adapter = new ListsPagerAdapter(getChildFragmentManager(), lists);
         pager.setAdapter(adapter);
@@ -146,13 +146,11 @@ public class FavoritesFragment extends BaseFragment implements LoaderManager.Loa
             ListsCursor cursor = new ListsCursor(data);
             List<CustomList> customLists = ListsProvider.get(cursor);
 
-            if(customLists.size() > 0){
-                customLists.add(0, getWatchlist());
-                if(!adapter.equals(customLists)){
-                    lists = customLists;
-                    adapter.setItems(lists);
-                    tabs.setViewPager(pager);
-                }
+            customLists.add(0, ListsProvider.getWatchlist(getActivity()));
+            if(!adapter.equals(customLists)){
+                lists = customLists;
+                adapter.setItems(lists);
+                tabs.setViewPager(pager);
             }
         }
     }
@@ -160,12 +158,6 @@ public class FavoritesFragment extends BaseFragment implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
-
-    public CustomList getWatchlist() {
-        return new CustomList()
-                .setName(getString(R.string.watchlist))
-                .setTraktId(CustomList.WATCHLIST_ID);
     }
 
     private void onEmptyMessageReceived() {

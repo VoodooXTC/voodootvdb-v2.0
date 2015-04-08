@@ -81,6 +81,21 @@ public class CustomListItem {
         this.person = person;
     }
 
+    public int getTraktId() {
+        switch (type){
+            case TYPE_MOVIE:
+                return movie.getIds().getTrakt();
+            case TYPE_SHOW:
+                return show.getIds().getTrakt();
+            case TYPE_EPISODE:
+                return episode.getIds().getTrakt();
+            case TYPE_PERSON:
+                return person.getIds().getTrakt();
+            default:
+                return 0;
+        }
+    }
+
     public String getTitle() {
         switch (type){
             case TYPE_MOVIE:

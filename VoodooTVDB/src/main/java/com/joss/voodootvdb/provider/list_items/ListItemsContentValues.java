@@ -40,6 +40,17 @@ public class ListItemsContentValues extends AbstractContentValues {
     }
 
 
+    public ListItemsContentValues putItemtraktid(Integer value) {
+        mContentValues.put(ListItemsColumns.ITEMTRAKTID, value);
+        return this;
+    }
+
+    public ListItemsContentValues putItemtraktidNull() {
+        mContentValues.putNull(ListItemsColumns.ITEMTRAKTID);
+        return this;
+    }
+
+
     public ListItemsContentValues putListedAt(Long value) {
         mContentValues.put(ListItemsColumns.LISTED_AT, value);
         return this;
@@ -84,6 +95,7 @@ public class ListItemsContentValues extends AbstractContentValues {
     public static ContentValues getSingleContentValue(ListItemsModel item){
         ListItemsContentValues values = new ListItemsContentValues();
         values.putListTraktId(item.listTraktId);
+        values.putItemtraktid(item.itemtraktid);
         values.putListedAt(item.listedAt);
         values.putType(item.type);
         values.putJson(item.json);
